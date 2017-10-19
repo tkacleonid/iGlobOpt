@@ -1,3 +1,8 @@
-build
-.settings
-.cproject
+/build/*
+/.settings/*
+*.cmake
+Makefile
+CMakeCache.txt
+CMakeFiles
+Testing/
+*~
