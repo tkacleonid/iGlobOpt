@@ -1,0 +1,1 @@
+/usr/bin/c++    -rdynamic CMakeFiles/iGlobOpt.dir/src/iGlobOpt.cpp.o CMakeFiles/iGlobOpt.dir/src/CPUGlobOptBFS.cpp.o CMakeFiles/iGlobOpt.dir/src/testFuncWithLib.cpp.o  -o iGlobOpt 

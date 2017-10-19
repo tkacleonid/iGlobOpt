@@ -1,0 +1,58 @@
+/*
+ * iGlobOpt.h
+ *
+ *  Created on: 10 Aug 2017
+ *      Author: Leonid Tkachenko
+ */
+
+#ifndef INCLUDE_IGLOBOPT_H_
+#define INCLUDE_IGLOBOPT_H_
+
+
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <omp.h>
+#include <chrono>
+#include <sys/mman.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <iostream>
+#include <exception>
+#include <time.h>
+
+
+
+const std::string MMAP_FILEPATH = "mmaped.bin";
+const int MAX_BOXES_IN_BUFFER = 5000000;
+const int ARRAY_BOUNDS_LENGTH = 3;
+
+//Poisitions in computing box
+enum PositionBounds
+{
+	GO_POSITION_LB = 0,
+	GO_POSITION_RB = 1,
+	GO_POSITION_FUN_RECORD = 2
+};
+
+//ToDO : For future use. Operation with errors
+enum GlobOptErrors
+{
+	GO_WORKSBUFFER_IS_FULL,
+	GO_WORKBUFFER_IS_EMPTY,
+	GO_SUCCESS
+};
+
+
+void calcOptValueOnCPU(const double *_boxes, int _numBoxes,int _rank, int _splitCoeff, void (*_fun)(const double *, int, double *), double _eps, double *_min, GlobOptErrors *_status, double *_argmin);
+
+
+
+
+
+
+
+#endif /* INCLUDE_IGLOBOPT_H_ */
