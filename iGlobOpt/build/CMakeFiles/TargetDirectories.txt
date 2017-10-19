@@ -1,3 +1,0 @@
-/root/git/iGlobOpt/iGlobOpt/build/CMakeFiles/rebuild_cache.dir
-/root/git/iGlobOpt/iGlobOpt/build/CMakeFiles/iGlobOpt.dir
-/root/git/iGlobOpt/iGlobOpt/build/CMakeFiles/edit_cache.dir
