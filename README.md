@@ -60,7 +60,12 @@
 45. Rosenbrock function 5: [-30.0, 30.0] ... [-30.0, 30.0]   "argMin": [1.0...] "globMinY": 0.0 AnyDim: True	Dim: 5
 46. Rosenbrock function 10: [-30.0, 30.0] ... [-30.0, 30.0]   "argMin": [1.0...] "globMinY": 0.0 AnyDim: True	Dim: 10
 47. Rosenbrock function 15: [-30.0, 30.0] ... [-30.0, 30.0]   "argMin": [1.0...] "globMinY": 0.0 AnyDim: True	Dim: 15
-58. Rosenbrock function 20: [-30.0, 30.0] ... [-30.0, 30.0]   "argMin": [1.0...] "globMinY": 0.0 AnyDim: True	Dim: 20
-59. Rosenbrock Modified function: [-2.0, 2.0] [-2.0, 2.0]   "argMin": [-0.9, -0.95] "34.371238966161798": 0.0 AnyDim: False	Dim: 2
+48. Rosenbrock function 20: [-30.0, 30.0] ... [-30.0, 30.0]   "argMin": [1.0...] "globMinY": 0.0 AnyDim: True	Dim: 20
+49. Rosenbrock Modified function: [-2.0, 2.0] [-2.0, 2.0]   "argMin": [-0.9, -0.95] "34.371238966161798": 0.0 AnyDim: False	Dim: 2
+50. Rosenbrock function 5 Own Implementation: [-30.0, 30.0] ... [-30.0, 30.0]   "argMin": [1.0...] "globMinY": 0.0 AnyDim: True	Dim: 5
+51. Rosenbrock function 10 Own Implementation: [-30.0, 30.0] ... [-30.0, 30.0]   "argMin": [1.0...] "globMinY": 0.0 AnyDim: True	Dim: 10
+52. Rosenbrock function 15 Own Implementation: [-30.0, 30.0] ... [-30.0, 30.0]   "argMin": [1.0...] "globMinY": 0.0 AnyDim: True	Dim: 15
+53. Rosenbrock function 20 Own Implementation: [-30.0, 30.0] ... [-30.0, 30.0]   "argMin": [1.0...] "globMinY": 0.0 AnyDim: True	Dim: 20
+54. Aluffi Pentini Function Own Implementation: [-30.0, 30.0] [-30.0, 30.0]   "argMin": [−1.046680576580755,0] "globMinY": −0.352386073800034 AnyDim: False	Dim: 2
 
 
