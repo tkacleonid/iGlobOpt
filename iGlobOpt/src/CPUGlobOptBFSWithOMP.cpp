@@ -113,7 +113,7 @@ void calcOptValueOnCPUBFSWithOMP(const double *_boxes, int _numBoxes, int _rank,
 		}
 
 		funLB = funBounds[GO_POSITION_LB];
-#pragma omp parallel  for num_threads(numThreads) reduction(min: funRecord, min: funLB)
+#pragma omp parallel for reduction(min: funRecord) reduction(min: funLB)
 		for(int i = 0; i < numWorkBoxes*_splitCoeff; i++)
 		{
 			 if(funRecord > funBounds[i*ARRAY_BOUNDS_LENGTH + GO_POSITION_FUN_RECORD] )
