@@ -1,5 +1,5 @@
 /*
- * CPUGlobOptBFS.cpp
+ * CPUGlobOptBFSWithMmap.cpp
  *
  *  Created on: 10 Aug 2017
  *  Author: Leonid Tkachenko
@@ -32,7 +32,7 @@
 */
 
 
-void calcOptValueOnCPUBFS(const double *_boxes, int _numBoxes, int _rank, int _splitCoeff, void (*_fun)(const double *, int, double *), double _eps, double *_min, GlobOptErrors *_status, double *_argmin)
+void calcOptValueOnCPUBFSWithMmap(const double *_boxes, int _numBoxes, int _rank, int _splitCoeff, void (*_fun)(const double *, int, double *), double _eps, double *_min, GlobOptErrors *_status, double *_argmin)
 {
 
 	double *workBoxes = new double[_rank*MAX_BOXES_IN_BUFFER*2];
@@ -68,9 +68,101 @@ void calcOptValueOnCPUBFS(const double *_boxes, int _numBoxes, int _rank, int _s
 
 	int numWorkBoxes = _numBoxes;
 
+
+
+	int fd = open(FILEPATH,O_RDWR | O_CREAT | O_TRUNC, (mode_t)0600);
+	if(fd == -1)
+	{
+		perror("Error opening file for writing");
+		exit(EXIT_FAILURE);
+
+	}
+
+	int result = lseek(fd, SIZE_BUFFER_FILE,SEEK_SET);
+	if(result == -1)
+	{
+		close(fd);
+		perror("Error calling lseel");
+		exit(EXIT_FAILURE);
+	}
+
+	result = write(fd,"",1);
+	if(result != 1)
+	{
+		close(fd);
+		perror("Error calling write");
+		exit(EXIT_FAILURE);
+	}
+
+
+	int numBoxesInFile = 0;
+	int s;
+	double *map;
+	off_t pa_offset,offset;
+
 	//While global optimum not found
 	while(true)
 	{
+
+		//Workin with file
+		if(numWorkBoxes*_splitCoeff >= MAX_BOXES_IN_BUFFER)
+		{
+			s = numWorkBoxes/PART_BUFFER_TO_FILE;
+			offset = numBoxesInFile*_rank*2*sizeof(double);
+			pa_offset = offset & ~(sysconf(_SC_PAGE_SIZE) - 1);
+			map = (double *)mmap(0,s*_rank*2*sizeof(double),PROT_READ | PROT_WRITE, MAP_SHARED, fd, pa_offset);
+			if(map == MAP_FAILED)
+			{
+				close(fd);
+				delete [] restBoxesToSplit;
+				delete [] workBoxes;
+				delete [] funBounds;
+				perror("MAP FAILED");
+				exit(EXIT_FAILURE);
+			}
+			numBoxesInFile += s;
+			memcpy(map,restBoxesToSplit+(numWorkBoxes - s)*_rank*2,s*_rank*2*sizeof(double));
+			if(munmap(map,s*_rank*2*sizeof(double)) == -1)
+			{
+				close(fd);
+				delete [] restBoxesToSplit;
+				delete [] workBoxes;
+				delete [] funBounds;
+				perror("Error un-mapping the file");
+				exit(EXIT_FAILURE);
+			}
+			numWorkBoxes -= s;
+
+		}
+		else if(numBoxes*_splitCoeff <= MAX_BOXES_IN_BUFFER/PART_BUFFER_FROM_FILE && numBoxesInFile > 0)
+		{
+			s = maxArrayLen/4;
+			if(numBoxesInFile <= s)  s = numBoxesInFile;
+
+			offset = numBoxesInFile-s > 0? numBoxesInFile-s : 0;
+
+			offset = offset*_rank*2*sizeof(double);
+			pa_offset = offset & ~(sysconf(_SC_PAGE_SIZE) - 1);
+
+			map = (double *)mmap(0,s*_rank*2*sizeof(double),PROT_READ | PROT_WRITE, MAP_SHARED, fd, pa_offset);
+			if(map == MAP_FAILED)
+			{
+				close(fd);
+				delete [] restBoxesToSplit;
+				delete [] workBoxes;
+				delete [] funBounds;
+				perror("MAP FAILED");
+				exit(EXIT_FAILURE);
+			}
+			numBoxesInFile -= s;
+			memcpy(restBoxesToSplit+numWorkBoxes*_rank*2,map,s*_rank*2*sizeof(double));
+			if(munmap(map,s*_rank*2*sizeof(double)) == -1)
+			{
+				perror("Error un-mapping the file");
+				exit(EXIT_FAILURE);
+			}
+			numWorkBoxes += s;
+		}
 
 		//Splitting all work Boxes
 		for(int k = 0; k < numWorkBoxes; k++)
@@ -121,13 +213,14 @@ void calcOptValueOnCPUBFS(const double *_boxes, int _numBoxes, int _rank, int _s
 
 		//checking if the global minimum is found
 		double curEps = funRecord - funLB < 0 ? -(funRecord - funLB) : funRecord - funLB;
-		if(curEps < _eps)
+		if(curEps < _eps  && numBoxesInFile == 0)
 		{
 			*_min = funRecord;
 			*_status = GO_SUCCESS;
 			delete [] restBoxesToSplit;
 			delete [] workBoxes;
 			delete [] funBounds;
+			close(fd);
 			return;
 		}
 
@@ -147,21 +240,13 @@ void calcOptValueOnCPUBFS(const double *_boxes, int _numBoxes, int _rank, int _s
 		}
 		numWorkBoxes = cnt;
 
-		if(numWorkBoxes == 0)
+		if(numWorkBoxes == 0 && numBoxesInFile == 0)
 		{
 			*_status = GO_WORKBUFFER_IS_EMPTY;
 			delete [] restBoxesToSplit;
 			delete [] workBoxes;
 			delete [] funBounds;
-			return;
-		}
-
-		if(numWorkBoxes*_splitCoeff > MAX_BOXES_IN_BUFFER)
-		{
-			*_status = GO_WORKBUFFER_IS_FULL;
-			delete [] restBoxesToSplit;
-			delete [] workBoxes;
-			delete [] funBounds;
+			close(fd);
 			return;
 		}
 

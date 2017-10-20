@@ -29,6 +29,9 @@
 const std::string MMAP_FILEPATH = "mmaped.bin";
 const int MAX_BOXES_IN_BUFFER = 5000000;
 const int ARRAY_BOUNDS_LENGTH = 3;
+const int SIZE_BUFFER_FILE = MAX_BOXES_IN_BUFFER*1000;
+const int PART_BUFFER_TO_FILE = 2;
+const int PART_BUFFER_FROM_FILE = 4;
 
 //Poisitions in computing box
 enum PositionBounds
@@ -41,13 +44,17 @@ enum PositionBounds
 //ToDO : For future use. Operation with errors
 enum GlobOptErrors
 {
-	GO_WORKSBUFFER_IS_FULL,
+	GO_WORKBUFFER_IS_FULL,
 	GO_WORKBUFFER_IS_EMPTY,
 	GO_SUCCESS
 };
 
 
-void calcOptValueOnCPU(const double *_boxes, int _numBoxes,int _rank, int _splitCoeff, void (*_fun)(const double *, int, double *), double _eps, double *_min, GlobOptErrors *_status, double *_argmin);
+void calcOptValueOnCPUBFS(const double *_boxes, int _numBoxes,int _rank, int _splitCoeff, void (*_fun)(const double *, int, double *), double _eps, double *_min, GlobOptErrors *_status, double *_argmin);
+
+void calcOptValueOnCPUBFSWithMmap(const double *_boxes, int _numBoxes,int _rank, int _splitCoeff, void (*_fun)(const double *, int, double *), double _eps, double *_min, GlobOptErrors *_status, double *_argmin);
+
+void calcOptValueOnCPUBFSWithOMP(const double *_boxes, int _numBoxes,int _rank, int _splitCoeff, void (*_fun)(const double *, int, double *), double _eps, double *_min, GlobOptErrors *_status, double *_argmin);
 
 
 

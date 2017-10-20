@@ -33,6 +33,8 @@ int main() {
 
     printf("Введите тип функции оптимизации и номер тестовой функции через пробел: ");
     scanf("%d %d",&type_opt,&type_test_fun);
+    printf("\nВведите точность оценивания: ");
+    scanf("%lf",&inEps);
 
     switch (type_test_fun)
     {
@@ -562,26 +564,36 @@ int main() {
 
    	GlobOptErrors st;
     switch (type_opt) {
-        case 1: calcOptValueOnCPU(inBox,1, inRank, inNumBoxesSplitCoeff, inFun, inEps, &outMin, &st,argMin); break;
-        case 2: calcOptValueOnCPU(inBox, 1,inRank, inNumBoxesSplitCoeff,   inFun, inEps, &outMin,  &st,argMin); break;
-        case 3: calcOptValueOnCPU(inBox, 1,inRank, inNumBoxesSplitCoeff,  inFun, inEps, &outMin,  &st,argMin); break;
-        default: calcOptValueOnCPU(inBox,1, inRank, inNumBoxesSplitCoeff,  inFun, inEps, &outMin,  &st,argMin);
+        case 1: calcOptValueOnCPUBFS(inBox,1, inRank, inNumBoxesSplitCoeff, inFun, inEps, &outMin, &st,argMin); break;
+        case 2: calcOptValueOnCPUBFSWithMmap(inBox, 1,inRank, inNumBoxesSplitCoeff,   inFun, inEps, &outMin,  &st,argMin); break;
+        case 3: calcOptValueOnCPUBFSWithOMP(inBox, 1,inRank, inNumBoxesSplitCoeff,  inFun, inEps, &outMin,  &st,argMin); break;
+        default: calcOptValueOnCPUBFS(inBox,1, inRank, inNumBoxesSplitCoeff,  inFun, inEps, &outMin,  &st,argMin);
     }
 
     auto end = std::chrono::high_resolution_clock::now();
 
+	if(st == GO_WORKBUFFER_IS_FULL)
+	{
+		std::cout << "Optimization is not finished: Work buffer is full. Reached function record " << outMin << std::endl;
+	}
+	else	if(st == GO_WORKBUFFER_IS_EMPTY)
+	{
+		std::cout << "Optimization is not finished: Work buffer is empty. Reached function record " << outMin << std::endl;
+	}
+	else if(st == GO_SUCCESS)
+	{
+	    std::cout << "Result: ";
+	    for (int i = 0; i < inRank; i++) {
+	        printf("[%.8lf; %.8lf]\t",argMin[i*2],argMin[i*2+1]);
+	    }
 
-    std::cout << "Result: ";
-    for (int i = 0; i < inRank; i++) {
-        printf("[%.8lf; %.8lf]\t",argMin[i*2],argMin[i*2+1]);
-    }
+	    std::cout << "\n";
+	    printf("Record of function: [%.8lf]\t",outMin);
+	    std::cout << "\n";
+	    std::cout << "time in millisecs: " << ((std::chrono::duration_cast<std::chrono::milliseconds>(end - start)).count())/1 << "\t";
+	    std::cout << "\n";
 
-    std::cout << "\n";
-    printf("Record of function: [%.8lf]\t",outMin);
-    std::cout << "\n";
-    std::cout << "time in millisecs: " << ((std::chrono::duration_cast<std::chrono::milliseconds>(end - start)).count())/1 << "\t";
-    std::cout << "\n";
-
+	}
 
     delete [] inBox;
     delete [] argMin;

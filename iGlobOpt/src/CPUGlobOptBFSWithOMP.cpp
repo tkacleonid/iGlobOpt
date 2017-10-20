@@ -32,9 +32,10 @@
 */
 
 
-void calcOptValueOnCPUBFS(const double *_boxes, int _numBoxes, int _rank, int _splitCoeff, void (*_fun)(const double *, int, double *), double _eps, double *_min, GlobOptErrors *_status, double *_argmin)
+void calcOptValueOnCPUBFSWithOMP(const double *_boxes, int _numBoxes, int _rank, int _splitCoeff, void (*_fun)(const double *, int, double *), double _eps, double *_min, GlobOptErrors *_status, double *_argmin)
 {
 
+	int numThreads = omp_get_num_threads();
 	double *workBoxes = new double[_rank*MAX_BOXES_IN_BUFFER*2];
 	double *restBoxesToSplit = new double[_rank*MAX_BOXES_IN_BUFFER*2];
 	double *funBounds = new double[ARRAY_BOUNDS_LENGTH*MAX_BOXES_IN_BUFFER];
@@ -72,6 +73,7 @@ void calcOptValueOnCPUBFS(const double *_boxes, int _numBoxes, int _rank, int _s
 	while(true)
 	{
 
+#pragma omp parallel  for num_threads(numThreads)
 		//Splitting all work Boxes
 		for(int k = 0; k < numWorkBoxes; k++)
 		{
@@ -107,15 +109,19 @@ void calcOptValueOnCPUBFS(const double *_boxes, int _numBoxes, int _rank, int _s
 				}
 
 				_fun(&workBoxes[((k*_splitCoeff + n)*_rank)*2],_rank,&funBounds[(k*_splitCoeff + n)*ARRAY_BOUNDS_LENGTH]);
-
-				 if(funRecord > funBounds[(k*_splitCoeff + n)*ARRAY_BOUNDS_LENGTH + GO_POSITION_FUN_RECORD] )
-				{
-					funRecord = funBounds[(k*_splitCoeff + n)*3+2];
-					memcpy(_argmin,&workBoxes[((k*_splitCoeff + n)*_rank)*2],sizeof(double)*_rank*2);
-				}
-				if( k == 0 && n == 0) funLB = funBounds[(k*_splitCoeff + n)*ARRAY_BOUNDS_LENGTH + GO_POSITION_LB];
-				else if (funLB > funBounds[(k*_splitCoeff + n)*ARRAY_BOUNDS_LENGTH + GO_POSITION_LB]) funLB = funBounds[(k*_splitCoeff + n)*ARRAY_BOUNDS_LENGTH + GO_POSITION_LB];
 			}
+		}
+
+		funLB = funBounds[GO_POSITION_LB]
+#pragma omp parallel  for num_threads(numThreads) reduction(min: funRecord, min: funLB)
+		for(int i = 0; i < numWorkBoxes*_splitCoeff; i++)
+		{
+			 if(funRecord > funBounds[i*ARRAY_BOUNDS_LENGTH + GO_POSITION_FUN_RECORD] )
+			{
+				funRecord = funBounds[i*ARRAY_BOUNDS_LENGTH+GO_POSITION_FUN_RECORD];
+			}
+
+			if (funLB > funBounds[i*ARRAY_BOUNDS_LENGTH + GO_POSITION_LB]) funLB = funBounds[i*ARRAY_BOUNDS_LENGTH + GO_POSITION_LB];
 		}
 
 

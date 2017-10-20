@@ -13,7 +13,8 @@ set(HEADERS
 
 set(SHARED_SOURCES
 	${SRC_ROOT}/CPUGlobOptBFS.cpp 
-	${SRC_ROOT}/testFuncWithLib.cpp 
+	${SRC_ROOT}/CPUGlobOptBFSWithMmap.cpp 
+	${SRC_ROOT}/CPUGlobOptBFSWithOMP.cpp 
 )
 
 include_directories(
