@@ -24,14 +24,16 @@
 #include <exception>
 #include <time.h>
 
+#define FILEPATH "mmaped.bin"
 
 
 const std::string MMAP_FILEPATH = "mmaped.bin";
 const int MAX_BOXES_IN_BUFFER = 5000000;
 const int ARRAY_BOUNDS_LENGTH = 3;
-const int SIZE_BUFFER_FILE = MAX_BOXES_IN_BUFFER*1000;
+const long long SIZE_BUFFER_FILE = MAX_BOXES_IN_BUFFER*1000;
 const int PART_BUFFER_TO_FILE = 2;
 const int PART_BUFFER_FROM_FILE = 4;
+
 
 //Poisitions in computing box
 enum PositionBounds
