@@ -23,6 +23,7 @@ set(SHARED_SOURCES
 	${SRC_ROOT}/CPUGlobOptBFS.cpp 
 	${SRC_ROOT}/CPUGlobOptBFSWithMmap.cpp 
 	${SRC_ROOT}/CPUGlobOptBFSWithOMP.cpp 
+	${SRC_ROOT}/CPUGlobOptBFSWithMmapAndOMP.cpp
 )
 
 include_directories(

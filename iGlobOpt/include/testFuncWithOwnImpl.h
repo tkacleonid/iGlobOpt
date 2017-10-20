@@ -12,7 +12,9 @@
 
 #pragma once
 
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 /**
 *	Calculus Interval for Multiple function on CPU
@@ -133,6 +135,8 @@ void fnCalcFunLimitsRozenbroke(const double *inBox, int inRank, double *outLimit
 	double sup1,sub1,sup2,sub2, a,b, val = 0,var1,var2,var3,x1,x2;
 
 
+	double pb = rand()%5+1;
+
 	for(int i = 0; i < inRank - 1; i++)
 	{
 		sub1 = 1 - inBox[i*2 + 1];
@@ -169,8 +173,11 @@ void fnCalcFunLimitsRozenbroke(const double *inBox, int inRank, double *outLimit
 		sub += sub1 + sub2;
 		sup += sup1 + sup2;
 
-		x1 = (inBox[i*2 + 1] + inBox[i*2])/2;
-		x2 = (inBox[(i+1)*2 + 1] + inBox[(i+1)*2])/2;
+		//srand(time(NULL));
+
+		//printf("%f\n",pb);
+		x1 = inBox[i*2] + (inBox[i*2 + 1] - inBox[i*2])/pb;
+		x2 = inBox[(i+1)*2] + (inBox[(i+1)*2 + 1] - inBox[(i+1)*2])/pb;
 		val += ((1 - x1)*(1 - x1) + 100*(x2-x1*x1)*(x2-x1*x1));
 
 	}

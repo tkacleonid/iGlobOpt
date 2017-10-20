@@ -73,7 +73,7 @@ void calcOptValueOnCPUBFSWithOMP(const double *_boxes, int _numBoxes, int _rank,
 	while(true)
 	{
 
-#pragma omp parallel  for
+#pragma omp parallel for
 		//Splitting all work Boxes
 		for(int k = 0; k < numWorkBoxes; k++)
 		{
