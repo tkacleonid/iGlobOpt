@@ -50,8 +50,8 @@ void calcFunc(const std::string& name, Expr<double> expr, const std::vector<doub
 void calcInterval(const std::string& name, Expr<Interval<double>> expr, const std::vector<Interval<double>>& vars, double *outLimits)
 {
 	auto result = expr.calc(InterEvalAlg<double>(vars));
-        outLimits[0] = result.lb();
-        outLimits[1] = result.rb();
+    outLimits[0] = result.lb();
+    outLimits[1] = result.rb();
 }
 
 /**
@@ -62,10 +62,10 @@ void calcInterval(const std::string& name, Expr<Interval<double>> expr, const st
 */
 void calcFunBoundsAckley1WithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = Ackley1<double>(2);
+    static auto expr= Ackley1<double>(2);
     calcFunc("Ackley1", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
 
-    auto exprInterval = Ackley1<Interval<double>>(2);
+    static auto exprInterval = Ackley1<Interval<double>>(2);
     calcInterval("Ackley1 estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] } }, outLimits);
 }
 
@@ -77,10 +77,10 @@ void calcFunBoundsAckley1WithLib(const double *inBox, const int inRank, double *
 */
 void calcFunBoundsAckley2WithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = Ackley2<double>(2);
+   static auto expr= Ackley2<double>(2);
     calcFunc("Ackley12", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
 
-    auto exprInterval = Ackley2<Interval<double>>(2);
+   static auto exprInterval = Ackley2<Interval<double>>(2);
     calcInterval("Ackley2 estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] } }, outLimits);
 }
 
@@ -92,10 +92,10 @@ void calcFunBoundsAckley2WithLib(const double *inBox, const int inRank, double *
 */
 void calcFunBoundsAckley3WithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = Ackley3<double>();
+   static auto expr= Ackley3<double>();
     calcFunc("Ackley3", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
 
-    auto exprInterval = Ackley3<Interval<double>>();
+   static auto exprInterval = Ackley3<Interval<double>>();
     calcInterval("Ackley3 estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] } }, outLimits);
 }
 
@@ -107,10 +107,10 @@ void calcFunBoundsAckley3WithLib(const double *inBox, const int inRank, double *
 */
 void calcFunBoundsAckley4WithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = Ackley4<double>();
+   static auto expr= Ackley4<double>();
     calcFunc("Ackley4", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
 
-    auto exprInterval = Ackley4<Interval<double>>();
+   static auto exprInterval = Ackley4<Interval<double>>();
     calcInterval("Ackley4 estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] } }, outLimits);
 }
 
@@ -122,10 +122,10 @@ void calcFunBoundsAckley4WithLib(const double *inBox, const int inRank, double *
 */
 void calcFunBoundsAdjimanWithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = Adjiman<double>();
+   static auto expr= Adjiman<double>();
     calcFunc("Adjiman", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
 
-    auto exprInterval = Adjiman<Interval<double>>();
+   static auto exprInterval = Adjiman<Interval<double>>();
     calcInterval("Adjiman estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] } }, outLimits);
 }
 
@@ -137,7 +137,7 @@ void calcFunBoundsAdjimanWithLib(const double *inBox, const int inRank, double *
 */
 void calcFunBoundsAlpine1WithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    static auto expr = Alpine1<double>(2);
+    static auto expr= Alpine1<double>(2);
     calcFunc("Alpine1", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
 
     static auto exprInterval = Alpine1<Interval<double>>(2);
@@ -152,10 +152,10 @@ void calcFunBoundsAlpine1WithLib(const double *inBox, const int inRank, double *
 */
 void calcFunBoundsAlpine2WithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = Alpine2<double>();
+   static auto expr= Alpine2<double>();
     calcFunc("Alpine2", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2,(inBox[4]+inBox[5])/2},outLimits);
 
-    auto exprInterval = Alpine2<Interval<double>>();
+   static auto exprInterval = Alpine2<Interval<double>>();
     calcInterval("Alpine2 estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] } , { inBox[4], inBox[5] }}, outLimits);
 }
 
@@ -167,10 +167,10 @@ void calcFunBoundsAlpine2WithLib(const double *inBox, const int inRank, double *
 */
 void calcFunBoundsBradWithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = Brad<double>();
+   static auto expr= Brad<double>();
     calcFunc("Brad", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2,(inBox[4]+inBox[5])/2},outLimits);
 
-    auto exprInterval = Brad<Interval<double>>();
+   static auto exprInterval = Brad<Interval<double>>();
     calcInterval("Brad estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] } , { inBox[4], inBox[5] }}, outLimits);
 }
 
@@ -182,10 +182,10 @@ void calcFunBoundsBradWithLib(const double *inBox, const int inRank, double *out
 */
 void calcFunBoundsBartelsConnWithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = BartelsConn<double>();
+   static auto expr= BartelsConn<double>();
     calcFunc("BartelsConn", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
 
-    auto exprInterval = BartelsConn<Interval<double>>();
+   static auto exprInterval = BartelsConn<Interval<double>>();
     calcInterval("BartelsConn estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] }}, outLimits);
 }
 
@@ -197,10 +197,10 @@ void calcFunBoundsBartelsConnWithLib(const double *inBox, const int inRank, doub
 */
 void calcFunBoundsBealeWithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = Beale<double>();
+   static auto expr= Beale<double>();
     calcFunc("Beale", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
 
-    auto exprInterval = Beale<Interval<double>>();
+   static auto exprInterval = Beale<Interval<double>>();
     calcInterval("Beale estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] }}, outLimits);
 }
 
@@ -212,10 +212,10 @@ void calcFunBoundsBealeWithLib(const double *inBox, const int inRank, double *ou
 */
 void calcFunBoundsBiggsExpr2WithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = BiggsExpr2<double>();
+   static auto expr= BiggsExpr2<double>();
     calcFunc("BiggsExpr2", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
 
-    auto exprInterval = BiggsExpr2<Interval<double>>();
+   static auto exprInterval = BiggsExpr2<Interval<double>>();
     calcInterval("BiggsExpr2 estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] }}, outLimits);
 }
 
@@ -227,10 +227,10 @@ void calcFunBoundsBiggsExpr2WithLib(const double *inBox, const int inRank, doubl
 */
 void calcFunBoundsBiggsExpr3WithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = BiggsExpr3<double>();
+   static auto expr= BiggsExpr3<double>();
     calcFunc("BiggsExpr3", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2,(inBox[4]+inBox[5])/2},outLimits);
 
-    auto exprInterval = BiggsExpr3<Interval<double>>();
+   static auto exprInterval = BiggsExpr3<Interval<double>>();
     calcInterval("BiggsExpr3 estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] },{ inBox[4], inBox[5] }}, outLimits);
 }
 
@@ -242,10 +242,10 @@ void calcFunBoundsBiggsExpr3WithLib(const double *inBox, const int inRank, doubl
 */
 void calcFunBoundsBiggsExpr4WithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = BiggsExpr4<double>();
+   static auto expr= BiggsExpr4<double>();
     calcFunc("BiggsExpr4", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2,(inBox[4]+inBox[5])/2,(inBox[6]+inBox[7])/2},outLimits);
 
-    auto exprInterval = BiggsExpr4<Interval<double>>();
+   static auto exprInterval = BiggsExpr4<Interval<double>>();
     calcInterval("BiggsExpr4 estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] },{ inBox[4], inBox[5] },{ inBox[6], inBox[7] }}, outLimits);
 }
 
@@ -259,10 +259,10 @@ void calcFunBoundsBiggsExpr4WithLib(const double *inBox, const int inRank, doubl
 //auto exprInterval = BiggsExpr5<Interval<double>>();
 void calcFunBoundsBiggsExpr5WithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = BiggsExpr5<double>();
+   static auto expr= BiggsExpr5<double>();
     calcFunc("BiggsExpr5", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2,(inBox[4]+inBox[5])/2,(inBox[6]+inBox[7])/2,(inBox[8]+inBox[9])/2},outLimits);
 
-    auto exprInterval = BiggsExpr5<Interval<double>>();
+   static auto exprInterval = BiggsExpr5<Interval<double>>();
     calcInterval("BiggsExpr5 estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] },{ inBox[4], inBox[5] },{ inBox[6], inBox[7] },{ inBox[8], inBox[9] }}, outLimits);
 }
 
@@ -274,10 +274,10 @@ void calcFunBoundsBiggsExpr5WithLib(const double *inBox, const int inRank, doubl
 */
 void calcFunBoundsBiggsExpr6WithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = BiggsExpr6<double>();
+   static auto expr= BiggsExpr6<double>();
     calcFunc("BiggsExpr6", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2,(inBox[4]+inBox[5])/2,(inBox[6]+inBox[7])/2,(inBox[8]+inBox[9])/2,(inBox[10]+inBox[11])/2},outLimits);
 
-    auto exprInterval = BiggsExpr6<Interval<double>>();
+   static auto exprInterval = BiggsExpr6<Interval<double>>();
     calcInterval("BiggsExpr6 estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] },{ inBox[4], inBox[5] },{ inBox[6], inBox[7] },{ inBox[8], inBox[9] },{ inBox[10], inBox[11] }}, outLimits);
 }
 
@@ -289,10 +289,10 @@ void calcFunBoundsBiggsExpr6WithLib(const double *inBox, const int inRank, doubl
 */
 void calcFunBoundsBirdWithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = Bird<double>();
+   static auto expr= Bird<double>();
     calcFunc("Bird", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
 
-    auto exprInterval = Bird<Interval<double>>();
+   static auto exprInterval = Bird<Interval<double>>();
     calcInterval("Bird estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] }}, outLimits);
 }
 
@@ -304,10 +304,10 @@ void calcFunBoundsBirdWithLib(const double *inBox, const int inRank, double *out
 */
 void calcFunBoundsBohachevsky1WithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = Bohachevsky1<double>();
+   static auto expr= Bohachevsky1<double>();
     calcFunc("Bohachevsky1", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
 
-    auto exprInterval = Bohachevsky1<Interval<double>>();
+   static auto exprInterval = Bohachevsky1<Interval<double>>();
     calcInterval("Bohachevsky1 estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] }}, outLimits);
 }
 
@@ -319,10 +319,10 @@ void calcFunBoundsBohachevsky1WithLib(const double *inBox, const int inRank, dou
 */
 void calcFunBoundsBohachevsky2WithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = Bohachevsky2<double>();
+   static auto expr= Bohachevsky2<double>();
     calcFunc("Bohachevsky2", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
 
-    auto exprInterval = Bohachevsky2<Interval<double>>();
+   static auto exprInterval = Bohachevsky2<Interval<double>>();
     calcInterval("Bohachevsky2 estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] }}, outLimits);
 }
 
@@ -334,10 +334,10 @@ void calcFunBoundsBohachevsky2WithLib(const double *inBox, const int inRank, dou
 */
 void calcFunBoundsBoothWithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = Booth<double>();
+   static auto expr= Booth<double>();
     calcFunc("Booth", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
 
-    auto exprInterval = Booth<Interval<double>>();
+   static auto exprInterval = Booth<Interval<double>>();
     calcInterval("Booth estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] }}, outLimits);
 }
 
@@ -349,10 +349,10 @@ void calcFunBoundsBoothWithLib(const double *inBox, const int inRank, double *ou
 */
 void calcFunBoundsBohachevsky3WithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = Bohachevsky3<double>();
+   static auto expr= Bohachevsky3<double>();
     calcFunc("Bohachevsky3", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
 
-    auto exprInterval = Bohachevsky3<Interval<double>>();
+   static auto exprInterval = Bohachevsky3<Interval<double>>();
     calcInterval("Bohachevsky3 estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] }}, outLimits);
 }
 
@@ -364,10 +364,10 @@ void calcFunBoundsBohachevsky3WithLib(const double *inBox, const int inRank, dou
 */
 void calcFunBoundsBoxBettsQuadraticSumWithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = BoxBettsQuadraticSum<double>();
+   static auto expr= BoxBettsQuadraticSum<double>();
     calcFunc("BoxBettsQuadraticSum", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2,(inBox[4]+inBox[5])/2},outLimits);
 
-    auto exprInterval = BoxBettsQuadraticSum<Interval<double>>();
+   static auto exprInterval = BoxBettsQuadraticSum<Interval<double>>();
     calcInterval("BoxBettsQuadraticSum estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] },{ inBox[4], inBox[5] }}, outLimits);
 }
 
@@ -379,10 +379,10 @@ void calcFunBoundsBoxBettsQuadraticSumWithLib(const double *inBox, const int inR
 */
 void calcFunBoundsBraninRCOSWithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = BraninRCOS<double>();
+   static auto expr= BraninRCOS<double>();
     calcFunc("BraninRCOS", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
 
-    auto exprInterval = BraninRCOS<Interval<double>>();
+   static auto exprInterval = BraninRCOS<Interval<double>>();
     calcInterval("BraninRCOS estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] }}, outLimits);
 }
 
@@ -394,10 +394,10 @@ void calcFunBoundsBraninRCOSWithLib(const double *inBox, const int inRank, doubl
 */
 void calcFunBoundsBraninRCOS2WithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = BraninRCOS2<double>();
+   static auto expr= BraninRCOS2<double>();
     calcFunc("BraninRCOS2", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
 
-    auto exprInterval = BraninRCOS2<Interval<double>>();
+   static auto exprInterval = BraninRCOS2<Interval<double>>();
     calcInterval("BraninRCOS2 estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] }}, outLimits);
 }
 
@@ -409,10 +409,10 @@ void calcFunBoundsBraninRCOS2WithLib(const double *inBox, const int inRank, doub
 */
 void calcFunBoundsBrentWithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = Brent<double>();
+   static auto expr= Brent<double>();
     calcFunc("Brent", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
 
-    auto exprInterval = Brent<Interval<double>>();
+   static auto exprInterval = Brent<Interval<double>>();
     calcInterval("Brent estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] }}, outLimits);
 }
 
@@ -424,10 +424,10 @@ void calcFunBoundsBrentWithLib(const double *inBox, const int inRank, double *ou
 */
 void calcFunBoundsBrownWithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = Brown<double>(2);
+   static auto expr= Brown<double>(2);
     calcFunc("Brown", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
 
-    auto exprInterval = Brown<Interval<double>>(2);
+   static auto exprInterval = Brown<Interval<double>>(2);
     calcInterval("Brown estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] }}, outLimits);
 }
 
@@ -439,10 +439,10 @@ void calcFunBoundsBrownWithLib(const double *inBox, const int inRank, double *ou
 */
 void calcFunBoundsBukin2WithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = Bukin2<double>();
+   static auto expr= Bukin2<double>();
     calcFunc("Bukin2", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
 
-    auto exprInterval = Bukin2<Interval<double>>();
+   static auto exprInterval = Bukin2<Interval<double>>();
     calcInterval("Bukin2 estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] }}, outLimits);
 }
 
@@ -454,10 +454,10 @@ void calcFunBoundsBukin2WithLib(const double *inBox, const int inRank, double *o
 */
 void calcFunBoundsBukin4WithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = Bukin4<double>();
+   static auto expr= Bukin4<double>();
     calcFunc("Bukin4", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
 
-    auto exprInterval = Bukin4<Interval<double>>();
+   static auto exprInterval = Bukin4<Interval<double>>();
     calcInterval("Bukin4 estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] }}, outLimits);
 }
 
@@ -469,10 +469,10 @@ void calcFunBoundsBukin4WithLib(const double *inBox, const int inRank, double *o
 */
 void calcFunBoundsBukin6WithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = Bukin6<double>();
+   static auto expr= Bukin6<double>();
     calcFunc("Bukin6", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
 
-    auto exprInterval = Bukin6<Interval<double>>();
+   static auto exprInterval = Bukin6<Interval<double>>();
     calcInterval("Bukin6 estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] }}, outLimits);
 }
 
@@ -484,10 +484,10 @@ void calcFunBoundsBukin6WithLib(const double *inBox, const int inRank, double *o
 */
 void calcFunBoundsCamelThreeHumpWithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = CamelThreeHump<double>();
+   static auto expr= CamelThreeHump<double>();
     calcFunc("CamelThreeHump", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
 
-    auto exprInterval = CamelThreeHump<Interval<double>>();
+   static auto exprInterval = CamelThreeHump<Interval<double>>();
     calcInterval("CamelThreeHump estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] }}, outLimits);
 }
 
@@ -499,10 +499,10 @@ void calcFunBoundsCamelThreeHumpWithLib(const double *inBox, const int inRank, d
 */
 void calcFunBoundsCamelSixHumpWithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = CamelSixHump<double>();
+   static auto expr= CamelSixHump<double>();
     calcFunc("CamelSixHump", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
 
-    auto exprInterval = CamelSixHump<Interval<double>>();
+   static auto exprInterval = CamelSixHump<Interval<double>>();
     calcInterval("CamelSixHump estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] }}, outLimits);
 }
 
@@ -514,10 +514,10 @@ void calcFunBoundsCamelSixHumpWithLib(const double *inBox, const int inRank, dou
 */
 void calcFunBoundsChichinadzeWithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = Chichinadze<double>();
+   static auto expr= Chichinadze<double>();
     calcFunc("Chichinadze", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
 
-    auto exprInterval = Chichinadze<Interval<double>>();
+   static auto exprInterval = Chichinadze<Interval<double>>();
     calcInterval("Chichinadze estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] }}, outLimits);
 }
 
@@ -529,10 +529,10 @@ void calcFunBoundsChichinadzeWithLib(const double *inBox, const int inRank, doub
 */
 void calcFunBoundsChungReynoldsWithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = ChungReynolds<double>(2);
+   static auto expr= ChungReynolds<double>(2);
     calcFunc("ChungReynolds", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
 
-    auto exprInterval = ChungReynolds<Interval<double>>(2);
+   static auto exprInterval = ChungReynolds<Interval<double>>(2);
     calcInterval("ChungReynolds estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] }}, outLimits);
 }
 
@@ -545,10 +545,10 @@ void calcFunBoundsChungReynoldsWithLib(const double *inBox, const int inRank, do
 */
 void calcFunBoundsColvilleWithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = Colville<double>();
+   static auto expr= Colville<double>();
     calcFunc("Colville", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2, (inBox[4]+inBox[5])/2, (inBox[6]+inBox[7])/2},outLimits);
 
-    auto exprInterval = Colville<Interval<double>>();
+   static auto exprInterval = Colville<Interval<double>>();
     calcInterval("Colville estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] }, { inBox[4], inBox[5] }, { inBox[6], inBox[7] }}, outLimits);
 }
 
@@ -560,10 +560,10 @@ void calcFunBoundsColvilleWithLib(const double *inBox, const int inRank, double 
 */
 void calcFunBoundsComplexWithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = Complex<double>();
+   static auto expr= Complex<double>();
     calcFunc("Complex", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
 
-    auto exprInterval = Complex<Interval<double>>();
+   static auto exprInterval = Complex<Interval<double>>();
     calcInterval("Complex estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] }}, outLimits);
 }
 
@@ -575,10 +575,10 @@ void calcFunBoundsComplexWithLib(const double *inBox, const int inRank, double *
 */
 void calcFunBoundsCosineMixtureWithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = CosineMixture<double>();
+   static auto expr= CosineMixture<double>();
     calcFunc("CosineMixture", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
 
-    auto exprInterval = CosineMixture<Interval<double>>();
+   static auto exprInterval = CosineMixture<Interval<double>>();
     calcInterval("CosineMixture estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] }}, outLimits);
 }
 
@@ -590,10 +590,10 @@ void calcFunBoundsCosineMixtureWithLib(const double *inBox, const int inRank, do
 */
 void calcFunBoundsCrossInTrayWithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = CrossInTray<double>();
+   static auto expr= CrossInTray<double>();
     calcFunc("CrossInTray", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
 
-    auto exprInterval = CrossInTray<Interval<double>>();
+   static auto exprInterval = CrossInTray<Interval<double>>();
     calcInterval("CrossInTray estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] }}, outLimits);
 }
 
@@ -605,10 +605,10 @@ void calcFunBoundsCrossInTrayWithLib(const double *inBox, const int inRank, doub
 */
 void calcFunBoundsCrossLegWithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = CrossLeg<double>();
+   static auto expr= CrossLeg<double>();
     calcFunc("CrossLeg", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
 
-    auto exprInterval = CrossLeg<Interval<double>>();
+   static auto exprInterval = CrossLeg<Interval<double>>();
     calcInterval("CrossLeg estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] }}, outLimits);
 }
 
@@ -620,10 +620,10 @@ void calcFunBoundsCrossLegWithLib(const double *inBox, const int inRank, double 
 */
 void calcFunBoundsCubeWithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = Cube<double>();
+   static auto expr= Cube<double>();
     calcFunc("Cube", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
 
-    auto exprInterval = Cube<Interval<double>>();
+   static auto exprInterval = Cube<Interval<double>>();
     calcInterval("Cube estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] }}, outLimits);
 }
 
@@ -635,10 +635,10 @@ void calcFunBoundsCubeWithLib(const double *inBox, const int inRank, double *out
 */
 void calcFunBoundsDeb1WithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = Deb1<double>(2);
+   static auto expr= Deb1<double>(2);
     calcFunc("Deb1", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
 
-    auto exprInterval = Deb1<Interval<double>>(2);
+   static auto exprInterval = Deb1<Interval<double>>(2);
     calcInterval("Deb1 estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] }}, outLimits);
 }
 
@@ -650,10 +650,10 @@ void calcFunBoundsDeb1WithLib(const double *inBox, const int inRank, double *out
 */
 void calcFunBoundsDavisWithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = Davis<double>();
+   static auto expr= Davis<double>();
     calcFunc("Davis", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
 
-    auto exprInterval = Davis<Interval<double>>();
+   static auto exprInterval = Davis<Interval<double>>();
     calcInterval("Davis estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] }}, outLimits);
 }
 
@@ -665,10 +665,10 @@ void calcFunBoundsDavisWithLib(const double *inBox, const int inRank, double *ou
 */
 void calcFunBoundsDeckkersAartsWithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = DeckkersAarts<double>();
+   static auto expr= DeckkersAarts<double>();
     calcFunc("DeckkersAarts", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
 
-    auto exprInterval = DeckkersAarts<Interval<double>>();
+   static auto exprInterval = DeckkersAarts<Interval<double>>();
     calcInterval("DeckkersAarts estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] }}, outLimits);
 }
 
@@ -680,10 +680,10 @@ void calcFunBoundsDeckkersAartsWithLib(const double *inBox, const int inRank, do
 */
 void calcFunBoundsDixonPriceWithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = DixonPrice<double>();
+   static auto expr= DixonPrice<double>();
     calcFunc("DixonPrice", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
 
-    auto exprInterval = DixonPrice<Interval<double>>();
+   static auto exprInterval = DixonPrice<Interval<double>>();
     calcInterval("DixonPrice estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] }}, outLimits);
 }
 
@@ -695,10 +695,10 @@ void calcFunBoundsDixonPriceWithLib(const double *inBox, const int inRank, doubl
 */
 void calcFunBoundsDolanWithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = Dolan<double>();
+   static auto expr= Dolan<double>();
     calcFunc("Dolan", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2,(inBox[4]+inBox[5])/2,(inBox[6]+inBox[7])/2,(inBox[8]+inBox[9])/2},outLimits);
 
-    auto exprInterval = Dolan<Interval<double>>();
+   static auto exprInterval = Dolan<Interval<double>>();
     calcInterval("Dolan estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] },{ inBox[4], inBox[5] },{ inBox[6], inBox[7] },{ inBox[8], inBox[9] }}, outLimits);
 }
 
@@ -710,45 +710,91 @@ void calcFunBoundsDolanWithLib(const double *inBox, const int inRank, double *ou
 */
 void calcFunBoundsDropWaveWithLib(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = DropWave<double>();
+   static auto expr= DropWave<double>();
     calcFunc("DropWave", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
 
-    auto exprInterval = DropWave<Interval<double>>();
+   static auto exprInterval = DropWave<Interval<double>>();
     calcInterval("DropWave estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] }}, outLimits);
 }
 
 /**
-*	Calculus Interval for Rosenbrock function on CPU
+*	Calculus Interval for Rosenbrock function on CPU. Dimension 5
 *	@param inbox pointer to Box
 *	@param inRank number of variables
 *	@param outlimits pointer to estimated function limits
 */
 void calcFunBoundsRosenbrockWithLib5(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = Rosenbrock<double>(inRank);
+   static auto expr= Rosenbrock<double>(inRank);
 
     calcFunc("Rosenbrock", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2, (inBox[4]+inBox[5])/2, (inBox[6]+inBox[7])/2, (inBox[8]+inBox[9])/2},outLimits);
 
-    auto exprInterval = Rosenbrock<Interval<double>>(inRank);
+   static auto exprInterval = Rosenbrock<Interval<double>>(inRank);
     calcInterval("Rosenbrock estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] }, { inBox[4], inBox[5] }, { inBox[6], inBox[7] }, { inBox[8], inBox[9] }}, outLimits);
 }
 
 /**
-*	Calculus Interval for Rosenbrock function on CPU
+*	Calculus Interval for Rosenbrock function on CPU. Dimention 10
 *	@param inbox pointer to Box
 *	@param inRank number of variables
 *	@param outlimits pointer to estimated function limits
 */
 void calcFunBoundsRosenbrockWithLib10(const double *inBox, const int inRank, double *outLimits)
 {
-    auto expr = Rosenbrock<double>(inRank);
+   static auto expr= Rosenbrock<double>(inRank);
 
     calcFunc("Rosenbrock", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2, (inBox[4]+inBox[5])/2, (inBox[6]+inBox[7])/2, (inBox[8]+inBox[9])/2,(inBox[10]+inBox[11])/2, (inBox[12]+inBox[13])/2, (inBox[14]+inBox[15])/2, (inBox[16]+inBox[17])/2, (inBox[18]+inBox[19])/2},outLimits);
 
-    auto exprInterval = Rosenbrock<Interval<double>>(inRank);
+   static auto exprInterval = Rosenbrock<Interval<double>>(inRank);
     calcInterval("Rosenbrock estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] }, { inBox[4], inBox[5] }, { inBox[6], inBox[7] }, { inBox[8], inBox[9] },{ inBox[10], inBox[11] }, { inBox[12], inBox[13] }, { inBox[14], inBox[15] }, { inBox[16], inBox[17] }, { inBox[18], inBox[19] }}, outLimits);
 }
 
+/**
+*	Calculus Interval for Rosenbrock function on CPU. Dimention 15
+*	@param inbox pointer to Box
+*	@param inRank number of variables
+*	@param outlimits pointer to estimated function limits
+*/
+void calcFunBoundsRosenbrockWithLib15(const double *inBox, const int inRank, double *outLimits)
+{
+   static auto expr= Rosenbrock<double>(inRank);
+
+    calcFunc("Rosenbrock", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2, (inBox[4]+inBox[5])/2, (inBox[6]+inBox[7])/2, (inBox[8]+inBox[9])/2,(inBox[10]+inBox[11])/2, (inBox[12]+inBox[13])/2, (inBox[14]+inBox[15])/2, (inBox[16]+inBox[17])/2, (inBox[18]+inBox[19])/2, (inBox[20]+inBox[21])/2, (inBox[22]+inBox[23])/2, (inBox[24]+inBox[25])/2, (inBox[26]+inBox[27])/2, (inBox[28]+inBox[29])/2},outLimits);
+
+   static auto exprInterval = Rosenbrock<Interval<double>>(inRank);
+    calcInterval("Rosenbrock estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] }, { inBox[4], inBox[5] }, { inBox[6], inBox[7] }, { inBox[8], inBox[9] },{ inBox[10], inBox[11] }, { inBox[12], inBox[13] }, { inBox[14], inBox[15] }, { inBox[16], inBox[17] }, { inBox[18], inBox[19] },{ inBox[20], inBox[21] }, { inBox[22], inBox[23] }, { inBox[24], inBox[25] }, { inBox[26], inBox[27] }, { inBox[28], inBox[29] }}, outLimits);
+}
+
+/**
+*	Calculus Interval for Rosenbrock function on CPU. Dimention 20
+*	@param inbox pointer to Box
+*	@param inRank number of variables
+*	@param outlimits pointer to estimated function limits
+*/
+void calcFunBoundsRosenbrockWithLib20(const double *inBox, const int inRank, double *outLimits)
+{
+   static auto expr= Rosenbrock<double>(inRank);
+
+    calcFunc("Rosenbrock", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2, (inBox[4]+inBox[5])/2, (inBox[6]+inBox[7])/2, (inBox[8]+inBox[9])/2,(inBox[10]+inBox[11])/2, (inBox[12]+inBox[13])/2, (inBox[14]+inBox[15])/2, (inBox[16]+inBox[17])/2, (inBox[18]+inBox[19])/2, (inBox[20]+inBox[21])/2, (inBox[22]+inBox[23])/2, (inBox[24]+inBox[25])/2, (inBox[26]+inBox[27])/2, (inBox[28]+inBox[29])/2,(inBox[30]+inBox[31])/2, (inBox[32]+inBox[33])/2, (inBox[34]+inBox[35])/2, (inBox[36]+inBox[37])/2, (inBox[38]+inBox[39])/2},outLimits);
+
+   static auto exprInterval = Rosenbrock<Interval<double>>(inRank);
+    calcInterval("Rosenbrock estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] }, { inBox[4], inBox[5] }, { inBox[6], inBox[7] }, { inBox[8], inBox[9] },{ inBox[10], inBox[11] }, { inBox[12], inBox[13] }, { inBox[14], inBox[15] }, { inBox[16], inBox[17] }, { inBox[18], inBox[19] },{ inBox[20], inBox[21] }, { inBox[22], inBox[23] }, { inBox[24], inBox[25] }, { inBox[26], inBox[27] }, { inBox[28], inBox[29] },{ inBox[30], inBox[31] }, { inBox[32], inBox[33] }, { inBox[34], inBox[35] }, { inBox[36], inBox[37] }, { inBox[38], inBox[39] }}, outLimits);
+}
+
+/**
+*	Calculus Interval for Modified Rosenbrock function on CPU
+*	@param inbox pointer to Box
+*	@param inRank number of variables
+*	@param outlimits pointer to estimated function limits
+*/
+void calcFunBoundsRosenbrockModifiedWithLib(const double *inBox, const int inRank, double *outLimits)
+{
+   static auto expr= RosenbrockModified<double>();
+    calcFunc("RosenbrockModified", expr, {(inBox[0]+inBox[1])/2, (inBox[2]+inBox[3])/2},outLimits);
+
+   static auto exprInterval = RosenbrockModified<Interval<double>>();
+    calcInterval("RosenbrockModified estimation", exprInterval, { { inBox[0], inBox[1] }, { inBox[2], inBox[3] }}, outLimits);
+}
 
 
 

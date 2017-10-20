@@ -454,31 +454,56 @@ int main() {
              inFun = calcFunBoundsRosenbrockWithLib5;
              inRank = 5;
              inBox = new double[inRank * 2];
-
-
-             inBox[0] = -100; inBox[1] = 100;
-             inBox[2] = -100; inBox[3] = 100;
-             inBox[4] = -100; inBox[5] = 100;
-             inBox[6] = -100; inBox[7] = 100;
-             inBox[8] = -100; inBox[9] = 100;
+             for(int i = 0; i < inRank; i++)
+             {
+            	 inBox[i*2] = -30.0;
+            	 inBox[i*2+1] = 30.0;
+             }
+             break;
         case 46:
              inFun = calcFunBoundsRosenbrockWithLib10;
              inRank = 10;
              inBox = new double[inRank * 2];
+             for(int i = 0; i < inRank; i++)
+             {
+            	 inBox[i*2] = -30.0;
+            	 inBox[i*2+1] = 30.0;
+             }
+             break;
+        case 47:
+             inFun = calcFunBoundsRosenbrockWithLib15;
+             inRank = 15;
+             inBox = new double[inRank * 2];
+             for(int i = 0; i < inRank; i++)
+             {
+            	 inBox[i*2] = -30.0;
+            	 inBox[i*2+1] = 30.0;
+             }
+
+             break;
+        case 48:
+             inFun = calcFunBoundsRosenbrockWithLib20;
+             inRank = 20;
+             inBox = new double[inRank * 2];
+             for(int i = 0; i < inRank; i++)
+             {
+            	 inBox[i*2] = -30.0;
+            	 inBox[i*2+1] = 30.0;
+             }
+             break;
+        case 49:
+             inFun = calcFunBoundsRosenbrockModifiedWithLib;
+             inRank = 2;
+             inBox = new double[inRank * 2];
 
 
-             inBox[0] = -100; inBox[1] = 100;
-             inBox[2] = -100; inBox[3] = 100;
-             inBox[4] = -100; inBox[5] = 100;
-             inBox[6] = -100; inBox[7] = 100;
-             inBox[8] = -100; inBox[9] = 100;
-             inBox[10] = -100; inBox[11] = 100;
-             inBox[12] = -100; inBox[13] = 100;
-             inBox[14] = -100; inBox[15] = 100;
-             inBox[16] = -100; inBox[17] = 100;
-             inBox[18] = -100; inBox[19] = 100;
+             inBox[0] = -2.0; inBox[1] = 2.0;
+             inBox[2] = -2.0; inBox[3] = 2.0;
 
-                    break;
+             break;
+
+             break;
+
         default: exit(0);
     }
 
