@@ -150,6 +150,7 @@ void calcOptValueOnCPUBFS(const double *_boxes, int _numBoxes, int _rank, int _s
 		if(numWorkBoxes == 0)
 		{
 			*_status = GO_WORKBUFFER_IS_EMPTY;
+			*_min = funRecord;
 			delete [] restBoxesToSplit;
 			delete [] workBoxes;
 			delete [] funBounds;
@@ -159,6 +160,7 @@ void calcOptValueOnCPUBFS(const double *_boxes, int _numBoxes, int _rank, int _s
 		if(numWorkBoxes*_splitCoeff > MAX_BOXES_IN_BUFFER)
 		{
 			*_status = GO_WORKBUFFER_IS_FULL;
+			*_min = funRecord;
 			delete [] restBoxesToSplit;
 			delete [] workBoxes;
 			delete [] funBounds;

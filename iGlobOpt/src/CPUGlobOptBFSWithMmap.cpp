@@ -107,6 +107,8 @@ void calcOptValueOnCPUBFSWithMmap(const double *_boxes, int _numBoxes, int _rank
 		//Workin with file
 		if(numWorkBoxes*_splitCoeff >= MAX_BOXES_IN_BUFFER)
 		{
+			printf("\nnumBoxesInFile = %d\n",numBoxesInFile);
+
 			s = numWorkBoxes/PART_BUFFER_TO_FILE;
 			offset = numBoxesInFile*_rank*2*sizeof(double);
 			pa_offset = offset & ~(sysconf(_SC_PAGE_SIZE) - 1);
@@ -138,6 +140,8 @@ void calcOptValueOnCPUBFSWithMmap(const double *_boxes, int _numBoxes, int _rank
 		{
 			s = MAX_BOXES_IN_BUFFER/PART_BUFFER_FROM_FILE;
 			if(numBoxesInFile <= s)  s = numBoxesInFile;
+
+			printf("\nssssssssssssssssss = %d\n",s);
 
 			offset = numBoxesInFile-s > 0? numBoxesInFile-s : 0;
 
