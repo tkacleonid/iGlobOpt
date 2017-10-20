@@ -8,6 +8,7 @@ set(INCLUDE_ROOT "${PROJECT_SOURCE_DIR}/include")
 set(HEADERS
 	${INCLUDE_ROOT}/iGlobOpt.h
 	${INCLUDE_ROOT}/testFuncWithLib.h
+	${INCLUDE_ROOT}/testFuncWithOwnImpl.h
 )
 
 set(SHARED_SOURCES
