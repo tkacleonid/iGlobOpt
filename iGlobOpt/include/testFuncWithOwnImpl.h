@@ -135,7 +135,7 @@ void fnCalcFunLimitsRozenbroke(const double *inBox, int inRank, double *outLimit
 	double sup1,sub1,sup2,sub2, a,b, val = 0,var1,var2,var3,x1,x2;
 
 
-	double pb = rand()%5+1;
+	double pb = 2;//rand()%5+1;
 
 	for(int i = 0; i < inRank - 1; i++)
 	{
