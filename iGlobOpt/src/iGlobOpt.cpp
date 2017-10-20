@@ -10,6 +10,7 @@
 
 #include "iGlobOpt.h"
 #include "testFuncWithLib.h"
+#include "testFuncWithOwnImpl.h"
 
 void (*inFun)(const double *,int,double *);
 
@@ -501,7 +502,55 @@ int main() {
              inBox[2] = -2.0; inBox[3] = 2.0;
 
              break;
-
+        case 50:
+             inFun = fnCalcFunLimitsRozenbroke;
+             inRank = 5;
+             inBox = new double[inRank * 2];
+             for(int i = 0; i < inRank; i++)
+             {
+            	 inBox[i*2] = -30.0;
+            	 inBox[i*2+1] = 30.0;
+             }
+             break;
+        case 51:
+             inFun = fnCalcFunLimitsRozenbroke;
+             inRank = 10;
+             inBox = new double[inRank * 2];
+             for(int i = 0; i < inRank; i++)
+             {
+            	 inBox[i*2] = -30.0;
+            	 inBox[i*2+1] = 30.0;
+             }
+             break;
+        case 52:
+             inFun = fnCalcFunLimitsRozenbroke;
+             inRank = 15;
+             inBox = new double[inRank * 2];
+             for(int i = 0; i < inRank; i++)
+             {
+            	 inBox[i*2] = -30.0;
+            	 inBox[i*2+1] = 30.0;
+             }
+             break;
+        case 53:
+             inFun = fnCalcFunLimitsRozenbroke;
+             inRank = 20;
+             inBox = new double[inRank * 2];
+             for(int i = 0; i < inRank; i++)
+             {
+            	 inBox[i*2] = -30.0;
+            	 inBox[i*2+1] = 30.0;
+             }
+             break;
+        case 54:
+             inFun = fnCalcFunLimitsAluffiPentini2;
+             inRank = 2;
+             inBox = new double[inRank * 2];
+             for(int i = 0; i < inRank; i++)
+             {
+            	 inBox[i*2] = -30.0;
+            	 inBox[i*2+1] = 30.0;
+             }
              break;
 
         default: exit(0);
