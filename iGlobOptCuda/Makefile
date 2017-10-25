@@ -17,7 +17,7 @@ ${BINDIR}/${PROGRAM}: crdir ${OBJS}
 	${CLINK} ${CLINKFLAGS} -o ${BINDIR}/${PROGRAM} ${OBJS} ${C_LIB}
 
 ${OBJ}/kernel.o: ${SRC}/kernel.cu ${INC}/interval.h ${INC}/CUDAGlobalOptimization.h
-	$(CC) $(CFLAGS) -c ${SRC}/kernel.c -o ${OBJ}/kernel.o
+	$(CC) $(CFLAGS) -c ${SRC}/kernel.cu -o ${OBJ}/kernel.o
 
 crdir:
 	mkdir -p build
