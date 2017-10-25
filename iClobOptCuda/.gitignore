@@ -1,0 +1,9 @@
+/build/*
+/.settings/*
+*.cmake
+*.project
+Makefile
+CMakeCache.txt
+CMakeFiles
+Testing/
+*~
