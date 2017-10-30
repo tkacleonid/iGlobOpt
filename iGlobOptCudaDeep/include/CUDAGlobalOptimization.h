@@ -11,7 +11,6 @@
 #include "interval.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "CPUGlobalOptimization.h"
 
 // Send Data to GPU to calculate limits
 void sendDataToCuda(double *outLimits, const double *inBox, int inRank, int inFunc, int numBoxes);
