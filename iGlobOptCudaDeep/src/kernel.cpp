@@ -8,63 +8,6 @@
 #include <exception>
 
 
-void testFunc(double *inBox, int inRank, int inNumBoxesSplitCoeffCPU, int inNumBoxesSplitCoeffGPU, double inEps, int inMaxIter, int inFun, double * outBox, double * outMin, double *outEps, int *status, std::ofstream &fout){
-
-	time_t t_startCPU, t_endCPU,t_startGPU, t_endGPU;
-	try{
-		switch(inFun){
-		case 1:
-			fout << "Произведение параметров (" << inRank << " переменных)" << "\t";
-			time(&t_startCPU);
-			fnGetOptValueOnCPU(inBox, inRank, inNumBoxesSplitCoeffCPU, inEps, inMaxIter, fnCalcFunLimitsMultiple2, outBox,outMin, outEps, status);
-			time(&t_endCPU);
-			
-			time(&t_startGPU);
-			fnGetOptValueWithCUDA(inBox, inRank, inNumBoxesSplitCoeffGPU, inEps, inMaxIter, 1, outBox,outMin, outEps, status);
-			time(&t_endGPU);
-			break;
-		case 2:
-			fout << "Гиперболическая функция (" << inRank << " переменных)" << "\t";
-			time(&t_startCPU);
-			fnGetOptValueOnCPU(inBox, inRank, inNumBoxesSplitCoeffCPU, inEps, inMaxIter, fnCalcFunLimitsHypebolic2, outBox,outMin, outEps, status);
-			time(&t_endCPU);
-			
-			time(&t_startGPU);
-			fnGetOptValueWithCUDA(inBox, inRank, inNumBoxesSplitCoeffGPU, inEps, inMaxIter, 2, outBox,outMin, outEps, status);
-			time(&t_endGPU);
-			break;
-		case 3:
-			fout << "Функция Алуффи-Пентини (" << inRank << " переменных)" << "\t";
-			time(&t_startCPU);
-			fnGetOptValueOnCPU(inBox, inRank, inNumBoxesSplitCoeffCPU, inEps, inMaxIter, fnCalcFunLimitsAluffiPentini2, outBox,outMin, outEps, status);
-			time(&t_endCPU);
-			
-			time(&t_startGPU);
-			fnGetOptValueWithCUDA(inBox, inRank, inNumBoxesSplitCoeffGPU, inEps, inMaxIter, 3, outBox,outMin, outEps, status);
-			time(&t_endGPU);
-			break;
-		case 4:
-			fout << "Функция розенброка (" << inRank << " переменных)" << "\t";
-			time(&t_startCPU);
-			fnGetOptValueOnCPU(inBox, inRank, inNumBoxesSplitCoeffCPU, inEps, inMaxIter, fnCalcFunLimitsRozenbroke, outBox,outMin, outEps, status);
-			time(&t_endCPU);
-			
-			time(&t_startGPU);
-			fnGetOptValueWithCUDA(inBox, inRank, inNumBoxesSplitCoeffGPU, inEps, inMaxIter, 4, outBox,outMin, outEps, status);
-			time(&t_endGPU);
-			break;
-		}
-	}
-	catch(std::exception ex){
-		std::cout << "Произошла ошибка при решении задачи оптимизации: " << ex.what() << "\n";
-		exit(EXIT_FAILURE); 
-	}
-	fout << inEps << "\t";
-	fout << inNumBoxesSplitCoeffCPU << "\t";
-	fout << inNumBoxesSplitCoeffGPU << "\t";
-	fout << (t_endCPU-t_startCPU) << "\t";
-	fout << (t_endGPU-t_startGPU) << "\n";
-}
 
 int main()
 {
