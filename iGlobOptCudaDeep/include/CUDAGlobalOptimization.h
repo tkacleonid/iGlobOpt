@@ -476,7 +476,7 @@ __global__ void calculateLimitsOnCUDA_deep(double *inBox,int inRank,int inFunc, 
 					}
 				}
 
-				fnCalcFunLimitsAluffiPentini2_CUDA(&work[((j*koeffSplit + s)*(2*inRank+3))], inRank, &work[((j*koeffSplit + s)*(2*inRank+3))+ 2*inRank]);
+				fnCalcFunLimitsRozenbroke_CUDA(&work[((j*koeffSplit + s)*(2*inRank+3))], inRank, &work[((j*koeffSplit + s)*(2*inRank+3))+ 2*inRank]);
 			}	
 		}
 
@@ -643,7 +643,7 @@ void fnGetOptValueWithCUDA_deep(double *inBox, int inRank, int inNumBoxesSplitCo
 	double funcMin = 0;
 	int boxMinIndex = 0;
 
-	fnCalcFunLimitsAluffiPentini2(inBox,inRank,boxesResult);
+	fnCalcFunLimitsRozenbroke(inBox,inRank,boxesResult);
 	funcMin = boxesResult[2];
 
 	double indexMinLimit = 0;
