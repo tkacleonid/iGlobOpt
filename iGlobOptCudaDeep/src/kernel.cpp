@@ -1,6 +1,5 @@
 
 #include "CUDAGlobalOptimization.h"
-#include "CPUGlobalOptimization.h"
 #include "interval.h"
 #include <time.h>
 #include <stdio.h>
