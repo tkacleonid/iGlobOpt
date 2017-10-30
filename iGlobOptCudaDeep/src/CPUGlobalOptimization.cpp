@@ -228,14 +228,12 @@ void fnGetOptValueOnCPU(double *inBox, int inRank, int inNumBoxesSplitCoeff, dou
 	double *boxes =  new double[numBoxes*inRank*2];
 	double *boxesResult = new double[numBoxes*3];
 	double *restBoxes = new double[inRank*2];
-	double *newRestBoxes = NULL,*tempRestBoxes = NULL;
 	double *h = new double[inRank];
 	int numNewBoxes = 0;
 
 	memcpy(restBoxes,inBox,inRank*2*sizeof(double));
 
 	int numRestBoxes = 1;
-	int countBox = 0;
 	int index = 0;
 	double temp;
 
@@ -245,8 +243,7 @@ void fnGetOptValueOnCPU(double *inBox, int inRank, int inNumBoxesSplitCoeff, dou
 	
 	inFun(inBox,inRank,boxesResult);
 	double funcMin = boxesResult[2];
-	int boxMinIndex = 0;
-	double indexMinLimit = 0;
+
 
 	int i,j,k,n;
 
