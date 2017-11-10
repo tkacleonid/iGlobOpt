@@ -301,7 +301,11 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 
 	CHECKED_CALL(cudaEventRecord(start, 0));
 	std::cout << "call CUDA\n";
-	globOptCUDA<<<GridSize, 1024>>>(dev_inBox, inRank,dev_workLen,dev_mins,funcMin, 0.001);	
+	globOptCUDA<<<GridSize, 1024>>>(dev_inBox, inRank,dev_workLen,dev_mins,funcMin, 0.001);
+
+__global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min, double inRec, double inEps)
+
+	
 	std::cout << "stop CUDA\n";
     CHECKED_CALL(cudaGetLastError());
 
@@ -417,6 +421,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 	
 	while(workLen_s[threadId] > 0 && count[threadId] < 100)
 	{
+		/*
 		bInd = threadId*1024*(2*inRank+3) + (workLen_s[threadId] - 1)*(2*inRank+3);
 		fnCalcFunLimitsRozenbroke_CUDA(inBox + bInd, inRank);
 		if(min_s[threadId] > inBox[bInd + 2*inRank + 2])
@@ -467,6 +472,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 			}
 			++workLen_s[threadId];
 		}
+		*/
 		++count[threadId];		
 	}		
 }
