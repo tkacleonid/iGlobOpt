@@ -439,7 +439,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 	count[threadId] = 0;
 	
 	__syncthreads();
-	
+/*	
 	while(workLen_s[threadId] > 0 && workLen_s[threadId] < 1024)// && count[threadId] < 100)
 	{
 		
@@ -501,7 +501,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 	}
 	workLen[threadId] = workLen_s[threadId];
 	min[threadId] = minRec;
-		
+	*/	
 }
 
 
