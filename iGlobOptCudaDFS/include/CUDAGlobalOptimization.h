@@ -278,7 +278,7 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 
 	cudaEvent_t start, stop;
 
-	//CHECKED_CALL(cudaSetDevice(DEVICE));
+	CHECKED_CALL(cudaSetDevice(DEVICE));
 	
 	CHECKED_CALL(cudaDeviceReset());
 	
@@ -286,19 +286,18 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 	
 	std::cout << "size CUDA malloc 1" << sizeInBox << "\n";
 	
-	sizeInBox = 4000;
-    //CHECKED_CALL(cudaMalloc((void **)&dev_inBox, sizeInBox));
+    CHECKED_CALL(cudaMalloc((void **)&dev_inBox, sizeInBox));
 	
 	std::cout << "start CUDA malloc 2\n";
 	
-	//CHECKED_CALL(cudaMalloc((void **)&dev_workLen, numThreads*sizeof(int)));
+	CHECKED_CALL(cudaMalloc((void **)&dev_workLen, numThreads*sizeof(int)));
 	
 	std::cout << "start CUDA malloc 3\n";
 	
-	//CHECKED_CALL(cudaMalloc((void **)&dev_mins, numThreads*sizeof(double)));
+	CHECKED_CALL(cudaMalloc((void **)&dev_mins, numThreads*sizeof(double)));
     CHECKED_CALL(cudaEventCreate(&start));
     CHECKED_CALL(cudaEventCreate(&stop));
-	//CHECKED_CALL(cudaMemcpy(dev_inBox, inBox, numBoxes*(2*inRank+3)*sizeof(double)*1024, cudaMemcpyHostToDevice));
+	CHECKED_CALL(cudaMemcpy(dev_inBox, inBox, numBoxes*(2*inRank+3)*sizeof(double)*1024, cudaMemcpyHostToDevice));
 	//CHECKED_CALL(cudaMemcpy(dev_workLen, workLen, numBoxes*sizeof(int), cudaMemcpyHostToDevice));
 
 	CHECKED_CALL(cudaEventRecord(start, 0));
@@ -337,7 +336,7 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 	std::cout << "free 3\n";
 	
 	std::cout <<  "\n\n\n";
-	/*
+	
 	for(int i  = 0; i < 1024; i++)
 	{
 		std::cout << mins[i] << "\t";
@@ -354,7 +353,7 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 		std::cout <<  "\n";
 	}
 	
-	*/
+	
     
 
 }
@@ -439,8 +438,8 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 	count[threadId] = 0;
 	
 	__syncthreads();
-/*	
-	while(workLen_s[threadId] > 0 && workLen_s[threadId] < 1024)// && count[threadId] < 100)
+	
+	while(workLen_s[threadId] > 0 && workLen_s[threadId] < 1024 && count[threadId] < 100)
 	{
 		
 		bInd = threadId*1024*(2*inRank+3) + (workLen_s[threadId] - 1)*(2*inRank+3);
@@ -501,7 +500,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 	}
 	workLen[threadId] = workLen_s[threadId];
 	min[threadId] = minRec;
-	*/	
+	
 }
 
 
