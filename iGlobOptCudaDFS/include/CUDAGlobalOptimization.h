@@ -368,24 +368,14 @@ void fnGetOptValueWithCUDA_deep(double *inBox, int inRank, int inNumBoxesSplitCo
 	double *boxes =  new double[numBoxes*(inRank*2+3)*1024];
 	double h;
 	int hInd;
-	int numNewBoxes = 0;
 	int *workLen;
 	double *mins;
 
-	int index = 0;
-	int i,j,k,n;
-	double temp;
-
-	int countIter = 0;
-	double curEps = inEps*10;
+	int i,n;
 	
 	double funcMin = 0;
-	int boxMinIndex = 0;
 
 	funcMin = 10;
-
-	double indexMinLimit = 0;
-
 
 	*status = 1;
 
