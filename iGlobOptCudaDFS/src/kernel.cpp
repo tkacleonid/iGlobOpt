@@ -41,7 +41,7 @@ int main()
 	
 	std::cout << "start Main\n";
 	
-	CHECKED_CALL(cudaDeviceSetLimit(cudaLimitMallocHeapSize,limitHeapSize));
+	//CHECKED_CALL(cudaDeviceSetLimit(cudaLimitMallocHeapSize,limitHeapSize));
 
 
 	std::cout << "start \n";
