@@ -453,7 +453,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 		curEps = min_s[threadId] - inBox[bInd + 2*inRank];
 		curEps = curEps > 0 ? curEps : -curEps;	
 		
-		/*
+		
 		if(curEps < inEps)
 		{
 			--workLen_s[threadId];
@@ -486,7 +486,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 			}
 			++workLen_s[threadId];
 		}
-		*/
+		
 		++count[threadId];		
 	}		
 }
