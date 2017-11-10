@@ -289,7 +289,9 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 	//CHECKED_CALL(cudaMemcpy(dev_workLen, workLen, numBoxes*sizeof(int), cudaMemcpyHostToDevice));
 
 	CHECKED_CALL(cudaEventRecord(start, 0));
+	std::cout << "call CUDA\n";
 	globOptCUDA<<<GridSize, 1024>>>(dev_inBox, inRank,dev_workLen,dev_mins,funcMin, 0.001);	
+	std::cout << "stop CUDA\n";
     CHECKED_CALL(cudaGetLastError());
 
     CHECKED_CALL(cudaEventRecord(stop, 0));
