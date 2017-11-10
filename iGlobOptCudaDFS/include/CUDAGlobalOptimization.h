@@ -383,6 +383,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 {
 	__shared__ double min_s[1024];
 	__shared__ double workLen_s[1024];
+	__shared__ int count[1024];
 	
 	double minRec = inRec;
 	int i, bInd, hInd;
@@ -393,9 +394,11 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 	workLen_s[threadId] = 1;
 	min_s[threadId] = minRec;
 	
+	count[threadId] = 0;
+	
 	__syncthreads();
 	
-	while(workLen_s[threadId] > 0)
+	while(workLen_s[threadId] > 0 && count[threadId] < 100)
 	{
 		bInd = threadId*1024*(2*inRank+3) + (workLen_s[threadId] - 1)*(2*inRank+3);
 		fnCalcFunLimitsRozenbroke_CUDA(inBox + bInd, inRank);
@@ -446,7 +449,8 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 				}
 			}
 			++workLen_s[threadId];
-		}	
+		}
+		++count[threadId];		
 	}		
 }
 
