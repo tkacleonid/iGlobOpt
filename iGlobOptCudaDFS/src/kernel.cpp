@@ -12,7 +12,7 @@
 int main()
 {
 	
-	std::cout << "start Main\n";
+	
 	
     int inRank = 5;
 
@@ -36,7 +36,11 @@ int main()
 
 	long long limitHeapSize = 1024*20000*sizeof(double)*(2*inRank + 3);
 
+	
 	CHECKED_CALL(cudaSetDevice(DEVICE));
+	
+	std::cout << "start Main\n";
+	
 	CHECKED_CALL(cudaDeviceSetLimit(cudaLimitMallocHeapSize,limitHeapSize));
 
 
