@@ -50,8 +50,8 @@ int main()
 
 	std::cout << "min = " << outMin << "\t";
 
-	delete [] inBox;
-	delete [] outBox;
+	//delete [] inBox;
+	//delete [] outBox;
 
 	return 0;
 }
