@@ -158,9 +158,6 @@ __device__ void fnCalcFunLimitsAluffiPentini2_CUDA(double *inBox, int inRank, do
 	double limits[2];
 	double limits2[2];
 
-	double a = inBox[0];
-	double b = inBox[1];
-
 	double x1 = (inBox[0]+inBox[1])/2;
 	double x2 = (inBox[2]+inBox[3])/2;
 

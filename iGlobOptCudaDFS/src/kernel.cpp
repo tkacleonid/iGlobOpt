@@ -22,9 +22,7 @@ int main()
 	double inEps = 0.1;
 	double outEps = 0.0;
 	double inMaxIter = 100;
-	int inNumBoxesSplitCoeff = 2;
 	int status = -1;
-	int numTestCycles = 10;
 
 
 	inRank = 10;
@@ -34,7 +32,7 @@ int main()
 		inBox[i*2+1] = 30.0;
 	}
 
-	long long limitHeapSize = 1024*20000*sizeof(double)*(2*inRank + 3);
+	//long long limitHeapSize = 1024*20000*sizeof(double)*(2*inRank + 3);
 
 	
 	CHECKED_CALL(cudaSetDevice(DEVICE));
