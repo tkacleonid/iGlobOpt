@@ -258,12 +258,12 @@ __device__ void fnCalcFunLimitsRozenbroke_CUDA(double *inBox, int inRank)
 	}
 	minFun = fnCalcFunRozenbroke_CUDA(x, inRank);
 
-	/*
+	
 
 	inBox[inRank*2] = sub;
 	inBox[inRank*2 + 1] = sup;
 	inBox[inRank*2 + 2] = minFun;
-	*/
+	
 }
 
 
