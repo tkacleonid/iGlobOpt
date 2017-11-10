@@ -468,10 +468,10 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 		__syncthreads();
 		min_s[threadId] = minRec;
 		curEps = min_s[threadId] - inBox[bInd + 2*inRank];
-		curEps = curEps > 0 ? curEps : -curEps;	
+		//curEps = curEps > 0 ? curEps : -curEps;	
 		
 		
-		if(curEps < inEps)
+		if(min_s[threadId] - inEps < inBox[bInd + 2*inRank])
 		{
 			--workLen_s[threadId];
 		}
