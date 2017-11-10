@@ -336,12 +336,15 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 	
 	std::cout << "free 3\n";
 	
-	/*
+	std::cout <<  "\n\n\n";
+	
 	for(int i  = 0; i < 1024; i++)
 	{
-		std::cout << workLen[i] << "\t";
+		std::cout << mins[i] << "\t";
 	}
-	*/
+	
+	std::cout <<  "\n\n\n";
+	
 	for(int i  = 0; i < 1024; i++)
 	{
 		for(int j = 0; j < inRank; j++)
@@ -447,7 +450,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 	
 	__syncthreads();
 	
-	while(workLen_s[threadId] > 0 && workLen_s[threadId] < 1024)//&& count[threadId] < 100)
+	while(workLen_s[threadId] > 0 && workLen_s[threadId] < 1024 && count[threadId] < 1000)
 	{
 		
 		bInd = threadId*1024*(2*inRank+3) + (workLen_s[threadId] - 1)*(2*inRank+3);
