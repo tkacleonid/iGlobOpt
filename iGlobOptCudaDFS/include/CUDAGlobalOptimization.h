@@ -247,9 +247,9 @@ __device__ void fnCalcFunLimitsRozenbroke_CUDA(double *inBox, int inRank)
 		val += ((1 - x1)*(1 - x1) + 100*(x2-x1*x1)*(x2-x1*x1));
 	}
 
-/*	
-	double *x;
-	x = (double *) malloc(inRank*sizeof(double));
+	
+	double x[10];
+	//x = (double *) malloc(inRank*sizeof(double));
 	double minFun;
 
 
