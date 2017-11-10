@@ -51,7 +51,7 @@ __device__ double fnCalcFunRozenbroke_CUDA(double *inBox, int inRank);
 *	@param inRank number of variables
 *	@param outlimits pointer to estimated function limits
 */
-__device__ void fnCalcFunLimitsRozenbroke_CUDA(double *inBox, int inRank, double *outLimits);
+__device__ void fnCalcFunLimitsRozenbroke_CUDA(double *inBox, int inRank);
 /**
 *	Calculus minimum value for function on GPU
 *	@param inbox pointer to Box
@@ -708,7 +708,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 		curEps = curEps > 0 ? curEps : -curEps;	
 		if(curEps < inEps)
 		{
-			--workLen_s[threadID];
+			--workLen_s[threadId];
 		}
 		else
 		{
