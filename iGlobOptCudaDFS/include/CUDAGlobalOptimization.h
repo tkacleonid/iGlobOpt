@@ -281,7 +281,7 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 
 	cudaEvent_t start, stop;
 
-	CHECKED_CALL(cudaSetDevice(DEVICE));
+	//CHECKED_CALL(cudaSetDevice(DEVICE));
 	
 	CHECKED_CALL(cudaDeviceReset());
 	
