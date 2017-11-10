@@ -23,21 +23,21 @@ void sendDataToCuda(double *outLimits, const double *inBox, int inRank, int inFu
 *	@param inRank number of variables
 *	@param outlimits pointer to estimated function limits
 */
-__device__ void fnCalcFunLimitsMultiple2_CUDA(const double *inBox, int inRank, double *outLimits);
+__device__ void fnCalcFunLimitsMultiple2_CUDA(double *inBox, int inRank, double *outLimits);
 /**
 *	Calculus Interval for Hyperbolic function on GPU
 *	@param inbox pointer to Box
 *	@param inRank number of variables
 *	@param outlimits pointer to estimated function limits
 */
-__device__ void fnCalcFunLimitsHypebolic2_CUDA(const double *inBox, int inRank, double *outLimits);
+__device__ void fnCalcFunLimitsHypebolic2_CUDA(double *inBox, int inRank, double *outLimits);
 /**
 *	Calculus Interval for AluffiPentini function
 *	@param inbox pointer to Box
 *	@param inRank number of variables
 *	@param outlimits pointer to estimated function limits
 */
-__device__ void fnCalcFunLimitsAluffiPentini2_CUDA(const double *inBox, int inRank, double *outLimits);
+__device__ void fnCalcFunLimitsAluffiPentini2_CUDA(double *inBox, int inRank, double *outLimits);
 /**
 *	Calculus Valuefor Multiple function on GPU
 *	@param inbox pointer to point
@@ -51,7 +51,7 @@ __device__ double fnCalcFunRozenbroke_CUDA(double *inBox, int inRank);
 *	@param inRank number of variables
 *	@param outlimits pointer to estimated function limits
 */
-__device__ void fnCalcFunLimitsRozenbroke_CUDA(const double *inBox, int inRank, double *outLimits);
+__device__ void fnCalcFunLimitsRozenbroke_CUDA(double *inBox, int inRank, double *outLimits);
 /**
 *	Calculus minimum value for function on GPU
 *	@param inbox pointer to Box
@@ -84,7 +84,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 
 __global__ void calculateLimitsOnCUDA(double *outLimits, const double *inBox,int inRank,int inFunc, int numBoxes);
 
-__device__ double fnCalcFunMultiple2_CUDA(const double *inBox, int inRank)
+__device__ double fnCalcFunMultiple2_CUDA(double *inBox, int inRank)
 {
 	return inBox[0]*inBox[1];
 }
@@ -95,7 +95,7 @@ __device__ double fnCalcFunMultiple2_CUDA(const double *inBox, int inRank)
 *	@param inRank number of variables
 *	@param outlimits pointer to estimated function limits
 */
-__device__ void fnCalcFunLimitsMultiple2_CUDA(const double *inBox, int inRank, double *outLimits)
+__device__ void fnCalcFunLimitsMultiple2_CUDA(double *inBox, int inRank, double *outLimits)
 {
 	
 	double x1 = (inBox[0]+inBox[1])/2;
@@ -118,7 +118,7 @@ __device__ void fnCalcFunLimitsMultiple2_CUDA(const double *inBox, int inRank, d
 *	@param inRank number of variables
 *	@param outlimits pointer to estimated function limits
 */
-__device__ void fnCalcFunLimitsHypebolic2_CUDA(const double *inBox, int inRank, double *outLimits)
+__device__ void fnCalcFunLimitsHypebolic2_CUDA(double *inBox, int inRank, double *outLimits)
 {
 	double limits[2];
 	double limits2[2];
@@ -152,7 +152,7 @@ __device__ void fnCalcFunLimitsHypebolic2_CUDA(const double *inBox, int inRank, 
 *	@param outlimits pointer to estimated function limits
 */
 
-__device__ void fnCalcFunLimitsAluffiPentini2_CUDA(const double *inBox, int inRank, double *outLimits)
+__device__ void fnCalcFunLimitsAluffiPentini2_CUDA(double *inBox, int inRank, double *outLimits)
 {
 
 	double limits[2];
@@ -203,7 +203,7 @@ __device__ double fnCalcFunRozenbroke_CUDA(double *inBox, int inRank)
 *	@param inRank number of variables
 *	@param outlimits pointer to estimated function limits
 */
-__device__ void fnCalcFunLimitsRozenbroke_CUDA(const double *inBox, int inRank)
+__device__ void fnCalcFunLimitsRozenbroke_CUDA(double *inBox, int inRank)
 {
 	double sup = 0;
 	double sub = 0;
@@ -641,7 +641,6 @@ void fnGetOptValueWithCUDA_deep(double *inBox, int inRank, int inNumBoxesSplitCo
 			h = inBox[i*inRank + 1] - inBox[i*inRank];
 			hInd = i;
 		}
-		h[i] = (restBoxes[k*(2*inRank + 3)+i*2 + 1] - restBoxes[k*(2*inRank + 3)+i*2])/curNumBoxesSplitCoeff;
 	}
 
 	for(n = 0; n < numBoxes; n++)
@@ -656,13 +655,13 @@ void fnGetOptValueWithCUDA_deep(double *inBox, int inRank, int inNumBoxesSplitCo
 			else
 			{
 				boxes[n*(2*inRank + 3)*1024 + i*2] = inBox[i*2];
-				boxes[n*(2*inRank + 3)*1024 + i*2 + 1] = inBox[i*2 + 1]
+				boxes[n*(2*inRank + 3)*1024 + i*2 + 1] = inBox[i*2 + 1];
 			}
 		}
 
 	}
 	
-	sendDataToCuda_deep(boxes, inRank, inFunc, numRestBoxes*numBoxes, workLen,mins,funcMin);
+	sendDataToCuda_deep(boxes, inRank, inFunc, numBoxes, workLen,mins,funcMin);
 
 }
 
@@ -687,7 +686,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 	__syncthreads();
 	
 	
-	while(workLen_s[threadID] > 0)
+	while(workLen_s[threadId] > 0)
 	{
 		bInd = threadId*1024*(2*inRank+3) + (workLen_s[threadID] - 1)*(2*inRank+3);
 		fnCalcFunLimitsRozenbroke_CUDA(inBox[threadId*1024*(2*inRank+3) + (workLen_s[threadID] - 1)*(2*inRank+3)], inRank);
@@ -700,7 +699,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 		{
 			if(minRec > min_s[blockIdx.x * 1024 + i])
 			{
-				minRec = min_s[blockIdx.x * 1024 + i]
+				minRec = min_s[blockIdx.x * 1024 + i];
 			}
 		}
 		__syncthreads();
