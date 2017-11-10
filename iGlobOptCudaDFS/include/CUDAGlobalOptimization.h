@@ -280,8 +280,17 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 	cudaEvent_t start, stop;
 
 	CHECKED_CALL(cudaSetDevice(DEVICE));
+	
+	std::cout << "start CUDA malloc 1\n";
+	
     CHECKED_CALL(cudaMalloc((void **)&dev_inBox, sizeInBox));
+	
+	std::cout << "start CUDA malloc 2\n";
+	
 	CHECKED_CALL(cudaMalloc((void **)&dev_workLen, numThreads*sizeof(int)));
+	
+	std::cout << "start CUDA malloc 3\n";
+	
 	CHECKED_CALL(cudaMalloc((void **)&dev_mins, numThreads*sizeof(double)));
     CHECKED_CALL(cudaEventCreate(&start));
     CHECKED_CALL(cudaEventCreate(&stop));
