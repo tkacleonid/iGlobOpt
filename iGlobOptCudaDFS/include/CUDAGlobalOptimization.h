@@ -320,19 +320,19 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
     CHECKED_CALL(cudaEventDestroy(start));
     CHECKED_CALL(cudaEventDestroy(stop));
 	
-	std::cout << "free start\n"
+	std::cout << "free start\n";
 	
 	CHECKED_CALL(cudaFree(dev_inBox));
 	
-	std::cout << "free 1\n"
+	std::cout << "free 1\n";
 	
     CHECKED_CALL(cudaFree(dev_workLen));
 	
-	std::cout << "free 2\n"
+	std::cout << "free 2\n";
 	
 	CHECKED_CALL(cudaFree(dev_mins));
 	
-	std::cout << "free 3\n"
+	std::cout << "free 3\n";
     
 
 }
