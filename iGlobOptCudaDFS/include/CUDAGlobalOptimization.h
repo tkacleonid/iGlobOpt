@@ -289,6 +289,7 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 	
 	std::cout << "size CUDA malloc 1" << sizeInBox << "\n";
 	
+	sizeInBox = 4000;
     CHECKED_CALL(cudaMalloc((void **)&dev_inBox, sizeInBox));
 	
 	std::cout << "start CUDA malloc 2\n";
