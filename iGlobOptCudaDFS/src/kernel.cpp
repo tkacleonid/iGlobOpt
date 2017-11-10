@@ -11,6 +11,9 @@
 
 int main()
 {
+	
+	std::cout << "start Main\n";
+	
     int inRank = 5;
 
 	double *inBox = new double[inRank*2];
