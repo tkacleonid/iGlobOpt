@@ -335,6 +335,11 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 	CHECKED_CALL(cudaFree(dev_mins));
 	
 	std::cout << "free 3\n";
+	
+	for(int i  = 0; i < 1024; i++)
+	{
+		std::cout << workLen[i] << "\t";
+	}
     
 
 }
