@@ -434,7 +434,6 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 	{
 		
 		bInd = threadId*1024*(2*inRank+3) + (workLen_s[threadId] - 1)*(2*inRank+3);
-		if(bInd < 1024*(2*inRank+3)*1023)
 		fnCalcFunLimitsRozenbroke_CUDA(inBox + bInd, inRank);
 		/*
 		if(min_s[threadId] > inBox[bInd + 2*inRank + 2])
