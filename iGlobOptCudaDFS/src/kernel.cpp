@@ -37,6 +37,7 @@ int main()
 	CHECKED_CALL(cudaDeviceSetLimit(cudaLimitMallocHeapSize,limitHeapSize));
 
 
+	std::cout << "start \n";
 	//fnGetOptValueOnCPU(inBox, inRank, 2, inEps, inMaxIter, fnCalcFunLimitsAluffiPentini2, outBox,&outMin, &outEps, &status);
 	fnGetOptValueWithCUDA_deep(inBox, inRank, 16, inEps, inMaxIter, 4, outBox,&outMin, &outEps, &status);
 
