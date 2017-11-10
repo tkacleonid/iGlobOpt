@@ -24,7 +24,7 @@ int main()
 	int numTestCycles = 10;
 
 
-	inRank = 2;
+	inRank = 10;
 	for(int i = 0; i < inRank; i++)
 	{
 		inBox[i*2] = -30.0;
