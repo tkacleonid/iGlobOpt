@@ -267,46 +267,6 @@ __device__ void fnCalcFunLimitsRozenbroke_CUDA(double *inBox, int inRank)
 
 
 // Send Data to GPU to calculate limits
-void sendDataToCuda(double *outLimits, const double *inBox, int inRank, int inFunc, int numBoxes)
-{
-    double *dev_outLimits = 0;
-    double *dev_inBox = 0;
-
-	int GridSize = ((numBoxes%BLOCK_SIZE == 0) ? numBoxes/BLOCK_SIZE : numBoxes/BLOCK_SIZE + 1);
-	int numThreads = GridSize*BLOCK_SIZE;
-	int sizeOutLimits = numThreads*3*sizeof(double);
-	int sizeInBox = numThreads*inRank*2*sizeof(double);
-
-	cudaEvent_t start, stop;
-
-	CHECKED_CALL(cudaSetDevice(DEVICE));
-    CHECKED_CALL(cudaMalloc((void **)&dev_outLimits, sizeOutLimits));
-    CHECKED_CALL(cudaMalloc((void **)&dev_inBox, sizeInBox));
-    CHECKED_CALL(cudaEventCreate(&start));
-    CHECKED_CALL(cudaEventCreate(&stop));
-	CHECKED_CALL(cudaMemcpy(dev_inBox, inBox, numBoxes*2*inRank*sizeof(double), cudaMemcpyHostToDevice));
-
-	CHECKED_CALL(cudaEventRecord(start, 0));
-	calculateLimitsOnCUDA<<<GridSize, BLOCK_SIZE>>>(dev_outLimits, dev_inBox, inRank, inFunc,numBoxes);
-    CHECKED_CALL(cudaGetLastError());
-
-    CHECKED_CALL(cudaEventRecord(stop, 0));
-    CHECKED_CALL(cudaDeviceSynchronize());
-
-    CHECKED_CALL(cudaMemcpy(outLimits, dev_outLimits, numBoxes*3*sizeof(double), cudaMemcpyDeviceToHost));
-
-	float time;
-    CHECKED_CALL(cudaEventElapsedTime(&time, start, stop));
-
-    CHECKED_CALL(cudaEventDestroy(start));
-    CHECKED_CALL(cudaEventDestroy(stop));
-    CHECKED_CALL(cudaFree(dev_outLimits));
-    CHECKED_CALL(cudaFree(dev_inBox));
-
-}
-
-
-// Send Data to GPU to calculate limits
 void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, int * workLen,double* mins, double funcMin)
 {
     double *dev_inBox = 0;
