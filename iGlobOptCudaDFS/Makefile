@@ -7,8 +7,8 @@ INC = include
 CC     = nvcc
 CLINK  = $(CC)
 C_LIB  = -lm
-CFLAGS = -std=c++14 -lineinfo  -O3 -I${INC} -x cu
-CLINKFLAGS= -O3 
+CFLAGS = -std=c++14 -lineinfo -arch=sm_20 -O3 -I${INC} -x cu
+CLINKFLAGS= -O3 -arch=sm_20
 
 OBJS = ${OBJ}/kernel.o ${OBJ}/CPUGlobalOptimization.o 
 
