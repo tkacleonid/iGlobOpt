@@ -376,6 +376,7 @@ void fnGetOptValueWithCUDA_deep(double *inBox, int inRank, int inNumBoxesSplitCo
 
 	}
 	
+	std::cout << "send data\n";
 	sendDataToCuda_deep(boxes, inRank, inFunc, numBoxes, workLen,mins,funcMin);
 
 }
