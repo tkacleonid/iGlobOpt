@@ -346,6 +346,8 @@ void fnGetOptValueWithCUDA_deep(double *inBox, int inRank, int inNumBoxesSplitCo
 
 	h = inBox[1] - inBox[0];
 	hInd = 0;
+	
+	std::cout << "start finding max width rank\n";
 	for(i = 0; i < inRank; i++)
 	{
 		if(h < inBox[i*inRank + 1] - inBox[i*inRank])
@@ -354,6 +356,7 @@ void fnGetOptValueWithCUDA_deep(double *inBox, int inRank, int inNumBoxesSplitCo
 			hInd = i;
 		}
 	}
+	std::cout << "stop finding max width rank\n";
 
 	for(n = 0; n < numBoxes; n++)
 	{
