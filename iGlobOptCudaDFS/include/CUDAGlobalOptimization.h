@@ -290,18 +290,18 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 	std::cout << "size CUDA malloc 1" << sizeInBox << "\n";
 	
 	sizeInBox = 4000;
-    CHECKED_CALL(cudaMalloc((void **)&dev_inBox, sizeInBox));
+    //CHECKED_CALL(cudaMalloc((void **)&dev_inBox, sizeInBox));
 	
 	std::cout << "start CUDA malloc 2\n";
 	
-	CHECKED_CALL(cudaMalloc((void **)&dev_workLen, numThreads*sizeof(int)));
+	//CHECKED_CALL(cudaMalloc((void **)&dev_workLen, numThreads*sizeof(int)));
 	
 	std::cout << "start CUDA malloc 3\n";
 	
-	CHECKED_CALL(cudaMalloc((void **)&dev_mins, numThreads*sizeof(double)));
+	//CHECKED_CALL(cudaMalloc((void **)&dev_mins, numThreads*sizeof(double)));
     CHECKED_CALL(cudaEventCreate(&start));
     CHECKED_CALL(cudaEventCreate(&stop));
-	CHECKED_CALL(cudaMemcpy(dev_inBox, inBox, numBoxes*(2*inRank+3)*sizeof(double)*1024, cudaMemcpyHostToDevice));
+	//CHECKED_CALL(cudaMemcpy(dev_inBox, inBox, numBoxes*(2*inRank+3)*sizeof(double)*1024, cudaMemcpyHostToDevice));
 	//CHECKED_CALL(cudaMemcpy(dev_workLen, workLen, numBoxes*sizeof(int), cudaMemcpyHostToDevice));
 
 	CHECKED_CALL(cudaEventRecord(start, 0));
