@@ -257,9 +257,9 @@ __device__ void fnCalcFunLimitsRozenbroke_CUDA(double *inBox, int inRank)
 
 	
 
-	inBox[inRank*2] = sub;
-	inBox[inRank*2 + 1] = sup;
-	inBox[inRank*2 + 2] = minFun;
+	inBox[inRank*2] = 10;//sub;
+	inBox[inRank*2 + 1] = 20;// sup;
+	inBox[inRank*2 + 2] = 30;//minFun;
 	
 }
 
