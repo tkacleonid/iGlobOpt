@@ -446,7 +446,8 @@ __const__ double rank = 10;
 __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min, double inRec, double inEps)
 {
 	__shared__ double min_s[1024];
-	__shared__ double workLen_s[1024];
+	__shared__ int workLen_s[1024];
+	__shared__ int workLen_s_temp[1024];
 	__shared__ int count[1024];
 	
 	double minRec = inRec;
@@ -460,9 +461,11 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 	
 	count[threadId] = 0;
 	
+	
+	
 	__syncthreads();
 	
-	while(workLen_s[threadId] > 0 && workLen_s[threadId] < 1024 && count[threadId] < 5)
+	while(workLen_s[threadId] > 0 && workLen_s[threadId] < 1024 && count[threadId] < 100)
 	{
 		
 		bInd = threadId*1024*(2*inRank+3) + (workLen_s[threadId] - 1)*(2*inRank+3);
@@ -518,6 +521,28 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 			}
 			++workLen_s[threadId];
 		}
+		
+		__syncthreads();
+		
+		workLen_s_temp[threadId] = 0;
+		
+		if(workLen_s[threadId] == 0)
+		{
+			for(i = 0; i < 1024; i++)
+			{
+				if(workLen_s[i] > 6 && workLen_s_temp[threadId] == 0)
+				{
+					atomicAdd(workLen_s + i, -3);
+					memcpy(inBox[bInd], inBox[bInd + i**1024*(2*inRank+3) + (workLen_s[i] - 1)*(2*inRank+3)], sizeof(double)*(2*inRank+3)*3);
+					workLen_s_temp[threadId] += 3;
+					break;
+				}
+			}
+		}
+		
+		workLen[threadId] = workLen_s_temp[threadId];
+		__syncthreads();
+		
 		
 		++count[threadId];		
 	}
