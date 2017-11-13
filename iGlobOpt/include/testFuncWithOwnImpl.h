@@ -190,7 +190,7 @@ void fnCalcFunLimitsRozenbroke(const double *inBox, int inRank, double *outLimit
 
 
 
-void fnCalcFunLimitsStyblinski(double *inBox, int inRank)
+void fnCalcFunLimitsStyblinski(const double *inBox, int inRank)
 {
 	double sup = 0;
 	double sub = 0;
@@ -221,8 +221,8 @@ void fnCalcFunLimitsStyblinski(double *inBox, int inRank)
 		val += (x1*x1*x1*x1 - 16*x1*x1 + 5*x1)/2.0;
 	}
 
-	inBox[inRank*2] = sub;
-	inBox[inRank*2 + 1] = sup;
-	inBox[inRank*2 + 2] = val;
+	outLimits[0] = sub;
+	outLimits[1] = sup;
+	outLimits[2] = val;
 	
 }
