@@ -555,7 +555,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 			}
 			else
 			{
-				
+				/*
 				while(workLen_s[threadId] > 1 && workLen_s[threadId] < 200)
 				{
 					for(k = 0; k < workLen_s[threadId]; k++)
@@ -651,7 +651,9 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 					*/
 					
 					
-				}
+				//}
+				
+				
 				//else
 				//{
 					hInd = 0;
@@ -755,7 +757,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 		__syncthreads();
 		
 
-	/*	
+		
 		wl = workLen_s[0];
 		for(i = 0; i < 1024; i++)
 		{
@@ -763,7 +765,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 		}
 		if(wl == 0) break;
 		
-		*/
+		
 		
 		++count[threadId];
 
