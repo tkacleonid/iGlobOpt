@@ -380,9 +380,9 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 
 	cudaEvent_t start, stop;
 
-	CHECKED_CALL(cudaSetDevice(DEVICE));
-	
 	CHECKED_CALL(cudaDeviceReset());
+	
+	CHECKED_CALL(cudaSetDevice(DEVICE));
 	
 	std::cout << "start CUDA malloc 1\n";
 	
@@ -626,7 +626,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 						}
 					}
 					
-					for(i = 0; i < workLen_s[threadId]*2; k++)
+					for(i = 0; i < workLen_s[threadId]*2; i++)
 					{
 						if(min_s[threadId] - inEps > temp[i*(2*inRank+3) + 2*inRank])
 						{
