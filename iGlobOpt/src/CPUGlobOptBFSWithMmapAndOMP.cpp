@@ -67,7 +67,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 	double funLB;
 
 
-	funRecord = -156.66464;
+	funRecord = -156.16616*inRank;
 	
 	
 	int numWorkBoxes = _numBoxes;
