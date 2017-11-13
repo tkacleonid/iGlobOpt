@@ -311,7 +311,7 @@ __device__ void fnCalcFunLimitsStyblinski_CUDA(double *inBox, int inRank)
 		sup1 = fmax(absSup,absSub);
 		sup1 = sup1*sup1*sup1*sup1;
 		
-		if(inBox[i*2 + 1]*inBox[i*2] < 0)
+		if(inBox[i*2 + 1]*inBox[i*2] <= 0)
 		{			
 			sub1 =  5*fmin(inBox[i*2 + 1],inBox[i*2])/2.0;
 			sup1 = (sup1 - 16*fmin(absSup,absSub)*fmin(absSup,absSub) + 5*fmax(inBox[i*2 + 1],inBox[i*2]))/2.0;
