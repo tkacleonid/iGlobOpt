@@ -468,7 +468,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 	
 	__syncthreads();
 	
-	while(workLen_s[threadId] < 1024 && count[threadId] < 100)
+	while(workLen_s[threadId] < 1024 && count[threadId] < 1000)
 	{
 		if(workLen_s[threadId] > 0)
 		{
