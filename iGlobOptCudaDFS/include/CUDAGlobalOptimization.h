@@ -335,8 +335,8 @@ __device__ void fnCalcFunLimitsStyblinski_CUDA(double *inBox, int inRank)
 	}
 	
 
-	inBox[2*inRank + 0] = sub;
-	inBox[2*inRank + 1] = sup;
+	inBox[2*inRank + 0] = inBox[0*2];
+	inBox[2*inRank + 1] = inBox[0*2 + 1];
 	inBox[2*inRank+2] = val;
 	
 }
