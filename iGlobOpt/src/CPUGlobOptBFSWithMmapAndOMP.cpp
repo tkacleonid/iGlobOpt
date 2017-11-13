@@ -67,7 +67,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 	double funLB;
 
 
-	funRecord = -150;
+	funRecord = -195;
 	
 	
 	int numWorkBoxes = _numBoxes;
@@ -141,8 +141,6 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 		{
 			s = MAX_BOXES_IN_BUFFER/PART_BUFFER_FROM_FILE;
 			if(numBoxesInFile <= s)  s = numBoxesInFile;
-
-			printf("\nssssssssssssssssss = %d\n",s);
 
 			offset = numBoxesInFile-s > 0? numBoxesInFile-s : 0;
 
