@@ -560,12 +560,12 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 	int half;
 	
 	
-	double temp[1000*(2*rank+3)];
+	double temp[500*(2*rank+3)];
 	
 	
 	__syncthreads();
 	
-	while(workLen_s[threadId] < 1024 && count[threadId] < 1000000)
+	while(workLen_s[threadId] < 1024 && count[threadId] < 10000)
 	{
 		if(workLen_s[threadId] > 0)
 		{
@@ -590,7 +590,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 			{
 				
 				
-				while(workLen_s[threadId] > 0 && workLen_s[threadId] < 500)
+				if(workLen_s[threadId] > 0 && 10*workLen_s[threadId] < 500)
 				{
 					for(k = 0; k < workLen_s[threadId]; k++)
 					{
@@ -605,8 +605,8 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 								hInd = i;
 							}
 						}
-						h = h/2.0;
-						for(i = 0; i < 2; i++)
+						h = h/10.0;
+						for(i = 0; i < 10; i++)
 						{
 							for(j = 0; j < inRank; j++)
 							{
@@ -630,7 +630,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 					}
 					
 					n = 0;
-					for(i = 0; i < 2*workLen_s[threadId]; i++)
+					for(i = 0; i < 10*workLen_s[threadId]; i++)
 					{
 						if(min_s[threadId] - temp[i*(2*inRank+3) + 2*inRank] > inEps)
 						{
