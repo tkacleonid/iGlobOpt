@@ -544,7 +544,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 	__shared__ int count[1024];
 	
 	double minRec = inRec;
-	int i, j, bInd, hInd;
+	int i, j, k, bInd, hInd, bInd2;
 	double curEps, h;
 	
 	int threadId = blockIdx.x * 1024 + threadIdx.x;
@@ -559,7 +559,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 	inEps = 0.000001;
 	
 	
-	double temp[100*(2*rank+3)];
+	double temp[200*(2*rank+3)];
 	
 	
 	__syncthreads();
@@ -589,6 +589,52 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 			{
 				if(workLen_s[threadId] < 100)
 				{
+					for(k = 0; k < workLen_s[threadId]; k++)
+					{
+						bInd2 = threadId*1024*(2*inRank+3) + k*(2*inRank+3);
+						hInd = 0;
+						h = inBox[bInd2 + 1] - inBox[bInd2];
+						for(i = 0; i < inRank; i++)
+						{
+							if( h < inBox[bInd2 + i*2 + 1] - inBox[bInd2 + i*2]) 
+							{
+								h = inBox[bInd2 + i*2 + 1] - inBox[bInd2 + i*2];
+								hInd = i;
+							}
+						}
+						h = h/2.0;
+						for(i = 0; i < 2; i++)
+						{
+							for(j = 0; j < inRank; j++)
+							{
+								if(j == hInd) 
+								{
+									temp[k*(2*inRank+3)*2 + j*2] = inBox[bInd2 + j*2] + h*i;
+									temp[k*(2*inRank+3)*2 + j*2 + 1] = inBox[bInd2 + j*2] + h*(i+1);
+								}
+								else
+								{
+									temp[k*(2*inRank+3)*2 + j*2] = inBox[bInd2 + j*2];
+									temp[k*(2*inRank+3)*2 + j*2 + 1] = inBox[bInd2 + j*2 + 1];
+								}
+							}
+							fnCalcFunLimitsRozenbroke_CUDA(temp + k*(2*inRank+3)*2, inRank);
+							if(min_s[threadId] > temp[k*(2*inRank+3)*2 + 2*inRank + 2])
+							{
+								min_s[threadId] = temp[k*(2*inRank+3)*2 + 2*inRank + 2];
+							}
+						}
+					}
+					
+					for(i = 0; i < workLen_s[threadId]*2; k++)
+					{
+						if(min_s[threadId] - inEps > temp[i*(2*inRank+3) + 2*inRank])
+						{
+							memcpy(inBox + bInd + i*(2*inRank+3),temp + i*(2*inRank+3),sizeof(double)*(2*inRank+3));
+							++workLen_s[threadId];
+						}
+					}
+	/*				
 					hInd = 0;
 					h = inBox[bInd + 1] - inBox[bInd];
 					for(i = 0; i < inRank; i++)
@@ -621,6 +667,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 							min_s[threadId] = temp[i*(2*inRank+3) + 2*inRank + 2];
 						}
 					}
+					
 					for(i = 0; i < 100; i++)
 					{
 						if(min_s[threadId] - inEps > temp[i*(2*inRank+3) + 2*inRank])
@@ -629,6 +676,9 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 							++workLen_s[threadId];
 						}
 					}
+					*/
+					
+					
 				}
 				else
 				{
