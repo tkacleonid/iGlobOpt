@@ -524,6 +524,8 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 	
 	inEps = 0.1;
 	
+	int half;
+	
 	
 	double temp[200*(2*rank+3)];
 	
@@ -730,11 +732,11 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 				{
 					for(j = 0; j < 1024; j++)
 					{
-						if(workLen_s[j] > 1)
+						if(workLen_s[j] > 4)
 						{
-							atomicAdd(workLen_s + j, -1);
-							memcpy(inBox + i*1024*(2*inRank+3), inBox + j*1024*(2*inRank+3) + (workLen_s[j] - 1)*(2*inRank+3), sizeof(double)*(2*inRank+3)*1);
-							workLen_s[i] += 1;
+							atomicAdd(workLen_s + j, -(workLen_s[j]/2));
+							memcpy(inBox + i*1024*(2*inRank+3), inBox + j*1024*(2*inRank+3) + (workLen_s[j] - 1)*(2*inRank+3), sizeof(double)*(2*inRank+3)*(workLen_s[j]/2));
+							workLen_s[i] += (workLen_s[j]/2);
 							break;
 						}
 					}
