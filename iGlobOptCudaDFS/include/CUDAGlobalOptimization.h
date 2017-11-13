@@ -535,11 +535,14 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 				++workLen_s[threadId];
 			}
 			
-			workLen_s_temp[threadId] = workLen[threadId];
-			
 		}	
 		
+		/*
+		workLen_s_temp[threadId] = workLen[threadId];
+		
 		__syncthreads();
+		
+			
 		
 			
 		if(workLen_s[threadId] == 0)
@@ -561,6 +564,9 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 			
 		workLen_s[threadId] = workLen_s_temp[threadId];
 			
+			*/
+		
+		__syncthreads();
 		
 		wl = workLen_s[0];
 		for(i = 0; i < 1024; i++)
