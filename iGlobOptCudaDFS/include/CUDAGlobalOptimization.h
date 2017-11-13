@@ -486,7 +486,7 @@ void fnGetOptValueWithCUDA_deep(double *inBox, int inRank, int inNumBoxesSplitCo
 	
 	double funcMin = 0;
 
-	funcMin = 39.16616*inRank;
+	funcMin = -39.16616*inRank;
 
 	*status = 1;
 
