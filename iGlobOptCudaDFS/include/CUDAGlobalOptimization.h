@@ -549,7 +549,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 	
 	int wl;
 	
-	inEps = 1;
+	inEps = 0.1;
 	
 	int half;
 	
