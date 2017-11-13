@@ -245,6 +245,8 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 			}
 		}
 		numWorkBoxes = cnt;
+		
+		std::cout << "min = " << funRecord << "\n";
 
 		if(numWorkBoxes == 0 && numBoxesInFile == 0)
 		{
