@@ -190,7 +190,7 @@ void fnCalcFunLimitsRozenbroke(const double *inBox, int inRank, double *outLimit
 
 
 
-void fnCalcFunLimitsStyblinski(const double *inBox, int inRank)
+void fnCalcFunLimitsStyblinski(const double *inBox, int inRank, double *outLimits)
 {
 	double sup = 0;
 	double sub = 0;
