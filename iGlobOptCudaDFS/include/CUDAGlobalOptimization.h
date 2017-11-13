@@ -763,7 +763,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 			{
 				if(workLen_s[i] == 0)
 				{
-					for(j = ш; j < 1024; j++)
+					for(j = i; j < 1024; j++)
 					{
 						if(workLen_s[j] > 4)
 						{
