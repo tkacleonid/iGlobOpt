@@ -67,7 +67,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 	double funLB;
 
 
-	funRecord = 39.16616*_rank;
+	funRecord = -39.16616*_rank;
 	
 	
 	int numWorkBoxes = _numBoxes;
@@ -101,6 +101,41 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 	int s;
 	double *map;
 	off_t pa_offset,offset;
+	
+	
+	double h1 = _boxes[1] - _boxes[0];
+	double hInd1 = 0;
+	
+	for(int i = 0; i < _rank; i++)
+	{
+		if(h1 < _boxes[i*_rank + 1] - _boxes[i*_rank])
+		{
+			h1 = _boxes[i*_rank + 1] - _boxes[i*_rank];
+			hInd1 = i;
+		}
+	}
+	
+	for(int n = 0; n < numWorkBoxes*1024; n++)
+	{
+		for(int i = 0; i < _rank; i++)
+		{
+			if(i == hInd1)
+			{
+				restBoxesToSplit[n*2*_rank + i*2] = _boxes[i*2] + h1/1024.0*n;
+				restBoxesToSplit[n*2*_rank + i*2 + 1] = _boxes[i*2] + h1/1024.0*(n+1);
+			}
+			else
+			{
+				restBoxesToSplit[n*2*_rank + i*2] = _boxes[i*2];
+				restBoxesToSplit[n*2*_rank + i*2 + 1] = _boxes[i*2 + 1];
+			}
+		}
+
+	}
+	
+	numWorkBoxes = 1024;
+	
+	
 
 	//While global optimum not found
 	while(true)
