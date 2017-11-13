@@ -403,7 +403,7 @@ void fnGetOptValueWithCUDA_deep(double *inBox, int inRank, int inNumBoxesSplitCo
 	
 	double funcMin = 0;
 
-	funcMin = 0;
+	funcMin = 1;
 
 	*status = 1;
 
@@ -569,7 +569,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 			*/
 			
 			
-		if(threadId == 0 && (count[threadId]+1) % 100 == 0)
+		if(threadId == 0 && (count[threadId]+1) % 500 == 0)
 		{
 			for(i = 1; i < 1024; i++)
 			{
