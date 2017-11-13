@@ -301,18 +301,27 @@ __device__ void fnCalcFunLimitsStyblinski_CUDA(double *inBox, int inRank)
 
 	for(i = 0; i < inRank; i++)
 	{
+		
 		absSup = inBox[i*2 + 1] < 0 ? -inBox[i*2 + 1]: inBox[i*2 + 1];
 		absSub = inBox[i*2] < 0 ? -inBox[i*2]: inBox[i*2];
 		
 		sub1 = fmin(absSup,absSub);
 		sub1 = sub1*sub1*sub1*sub1;
 		
-		sup1 = fmax(absSup,absSup);
+		sup1 = fmax(absSup,absSub);
 		sup1 = sup1*sup1*sup1*sup1;
 		
+		if(inBox[i*2 + 1]*inBox[i*2] < 0)
+		{			
+			sub1 =  5*fmin(inBox[i*2 + 1],inBox[i*2])/2.0;
+			sup1 = (sup1 - 16*fmin(absSup,absSub)*fmin(absSup,absSub) + 5*fmax(inBox[i*2 + 1],inBox[i*2]))/2.0;
+		}
+		else
+		{
+			sub1 = (sub1 - 16*fmax(absSup,absSub)*fmax(absSup,absSub) + 5*fmin(inBox[i*2 + 1],inBox[i*2]))/2.0;
+			sup1 = (sup1 - 16*fmin(absSup,absSub)*fmin(absSup,absSub) + 5*fmax(inBox[i*2 + 1],inBox[i*2]))/2.0;
+		}
 		
-		sub1 = (sub1 - 16*fmax(absSup,absSup)*fmax(absSup,absSup) + 5*fmin(inBox[i*2 + 1],inBox[i*2]))/2.0;
-		sup1 = (sup1 - 16*fmin(absSup,absSup)*fmin(absSup,absSup) + 5*fmax(inBox[i*2 + 1],inBox[i*2]))/2.0;
 		
 		
 
@@ -321,11 +330,18 @@ __device__ void fnCalcFunLimitsStyblinski_CUDA(double *inBox, int inRank)
 
 		x1 = (inBox[i*2 + 1] + inBox[i*2])/2;
 		val += (x1*x1*x1*x1 - 16*x1*x1 + 5*x1)/2.0;
+		
+		
+		//std::cout << "[" << inBox[i*2] << "; " << inBox[i*2 + 1] << "]\t";
+		
+		
 	}
+	
+	//std::cout << "sub = " << sub << "\t sup =  " << sup << "\tval = " << val << "\n\n";
 
-	inBox[inRank*2] = sub;
-	inBox[inRank*2 + 1] = sup;
-	inBox[inRank*2 + 2] = val;
+	outLimits[2*inRank + 0] = sub;
+	outLimits[2*inRank + 1] = sup;
+	outLimits[2*inRank+2] = val;
 	
 }
 
@@ -508,7 +524,7 @@ void fnGetOptValueWithCUDA_deep(double *inBox, int inRank, int inNumBoxesSplitCo
 }
 
 
-__const__ int rank = 10;
+__const__ int rank = 4;
 
 
 __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min, double inRec, double inEps)
@@ -531,7 +547,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 	
 	int wl;
 	
-	inEps = 0.01;
+	inEps = 0.1;
 	
 	int half;
 	
@@ -547,7 +563,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 		{
 			
 			bInd = threadId*1024*(2*inRank+3) + (workLen_s[threadId] - 1)*(2*inRank+3);
-			fnCalcFunLimitsRozenbroke_CUDA(inBox + bInd, inRank);
+			fnCalcFunLimitsStyblinski_CUDA(inBox + bInd, inRank);
 			
 			if(min_s[threadId] > inBox[bInd + 2*inRank + 2])
 			{

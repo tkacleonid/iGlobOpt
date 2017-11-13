@@ -25,7 +25,7 @@ int main()
 	int status = -1;
 
 
-	inRank = 10;
+	inRank = 4;
 	for(int i = 0; i < inRank; i++)
 	{
 		inBox[i*2] = -30.0;
