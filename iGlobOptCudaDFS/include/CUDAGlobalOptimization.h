@@ -297,7 +297,7 @@ __device__ void fnCalcFunLimitsStyblinski_CUDA(double *inBox, int inRank)
 	double sup = 0;
 	double sub = 0;
 	double sup1,sub1,sup2,sub2,val = 0,var1,var2,var3,x;
-	int i,j;
+	int i;
 
 	for(i = 0; i < inRank; i++)
 	{
