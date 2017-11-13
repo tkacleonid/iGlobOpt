@@ -714,11 +714,14 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 
 		__syncthreads();
 		
-		for(i = 0; i < 1024; i++)
+		if(threadId == 0 && (count[threadId]+1) % 100 == 0)
 		{
-			if(minRec > min_s[blockIdx.x * 1024 + i])
+			for(i = 0; i < 1024; i++)
 			{
-				minRec = min_s[blockIdx.x * 1024 + i];
+				if(minRec > min_s[blockIdx.x * 1024 + i])
+				{
+					minRec = min_s[blockIdx.x * 1024 + i];
+				}
 			}
 		}
 		
