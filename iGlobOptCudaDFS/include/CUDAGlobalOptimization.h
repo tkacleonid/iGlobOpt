@@ -514,8 +514,8 @@ void fnGetOptValueWithCUDA_deep(double *inBox, int inRank, int inNumBoxesSplitCo
 		{
 			if(i == hInd)
 			{
-				boxes[n*(2*inRank + 3)*1024 + i*2] = inBox[i*2] + h/1024.0*n;
-				boxes[n*(2*inRank + 3)*1024 + i*2 + 1] = inBox[i*2] + h/1024.0*(n+1);
+				boxes[n*(2*inRank + 3)*1024 + i*2] = inBox[i*2]; //+ h/1024.0*n;
+				boxes[n*(2*inRank + 3)*1024 + i*2 + 1] = inBox[i*2+ 1];// + h/1024.0*(n+1);
 			}
 			else
 			{
@@ -589,7 +589,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 			else
 			{
 				
-				while(workLen_s[threadId] > 0 && workLen_s[threadId] < 3)
+				while(workLen_s[threadId] > 0 && workLen_s[threadId] < 2)
 				{
 					for(k = 0; k < workLen_s[threadId]; k++)
 					{
