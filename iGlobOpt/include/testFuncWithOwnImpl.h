@@ -187,3 +187,42 @@ void fnCalcFunLimitsRozenbroke(const double *inBox, int inRank, double *outLimit
 	outLimits[2] = val;
 
 }
+
+
+
+void fnCalcFunLimitsStyblinski(double *inBox, int inRank)
+{
+	double sup = 0;
+	double sub = 0;
+	double sup1,sub1,sup2,sub2,a,b,val = 0,var1,var2,var3,x1,x2,absSub, absSup;
+	int i,j;
+
+	for(i = 0; i < inRank; i++)
+	{
+		absSup = inBox[i*2 + 1] < 0 ? -inBox[i*2 + 1]: inBox[i*2 + 1];
+		absSub = inBox[i*2] < 0 ? -inBox[i*2]: inBox[i*2];
+		
+		sub1 = fmin(absSup,absSub);
+		sub1 = sub1*sub1*sub1*sub1;
+		
+		sup1 = fmax(absSup,absSup);
+		sup1 = sup1*sup1*sup1*sup1;
+		
+		
+		sub1 = (sub1 - 16*fmax(absSup,absSup)*fmax(absSup,absSup) + 5*fmin(inBox[i*2 + 1],inBox[i*2])))/2.0;
+		sup1 = (sup1 - 16*fmin(absSup,absSup)*fmin(absSup,absSup) + 5*fmax(inBox[i*2 + 1],inBox[i*2])))/2.0;
+		
+		
+
+		sub += sub1;
+		sup += sup1;
+
+		x1 = (inBox[i*2 + 1] + inBox[i*2])/2;
+		val += (x1*x1*x1*x1 - 16*x1*x1 + 5*x1)/2.0;
+	}
+
+	inBox[inRank*2] = sub;
+	inBox[inRank*2 + 1] = sup;
+	inBox[inRank*2 + 2] = val;
+	
+}
