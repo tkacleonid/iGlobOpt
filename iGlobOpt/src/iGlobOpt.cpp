@@ -554,7 +554,7 @@ int main() {
             	 inBox[i*2+1] = 30.0;
              }
              break;
-		case 54:
+		case 55:
              inFun = fnCalcFunLimitsStyblinski;
              inRank = 10;
              inBox = new double[inRank * 2];
