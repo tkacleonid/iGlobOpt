@@ -530,29 +530,30 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 			
 			workLen_s_temp[threadId] = workLen[threadId];
 			
-			__syncthreads();
-			
-			if(workLen_s[threadId] == 0)
-			{
-				for(i = 0; i < 1024; i++)
-				{
-					if(workLen_s_temp[i] > 6 && workLen_s_temp[threadId] == 0)
-					{
-						atomicAdd(workLen_s_temp + i, -3);
-						memcpy(inBox + bInd, inBox + i*1024*(2*inRank+3) + (workLen_s_temp[i] - 1)*(2*inRank+3), sizeof(double)*(2*inRank+3)*3);
-						workLen_s_temp[threadId] += 3;
-						break;
-					}
-				}
-			}
-			
-			//workLen[threadId] = workLen_s_temp[threadId];
-			__syncthreads();
-			
-			workLen_s[threadId] = workLen_s_temp[threadId];
 		}	
 		
 		__syncthreads();
+		
+			
+		if(workLen_s[threadId] == 0)
+		{
+			for(i = 0; i < 1024; i++)
+			{
+				if(workLen_s_temp[i] > 6 && workLen_s_temp[threadId] == 0)
+				{
+					atomicAdd(workLen_s_temp + i, -3);
+					memcpy(inBox + bInd, inBox + i*1024*(2*inRank+3) + (workLen_s_temp[i] - 1)*(2*inRank+3), sizeof(double)*(2*inRank+3)*3);
+					workLen_s_temp[threadId] += 3;
+					break;
+				}
+			}
+		}
+			
+			//workLen[threadId] = workLen_s_temp[threadId];
+		__syncthreads();
+			
+		workLen_s[threadId] = workLen_s_temp[threadId];
+			
 		
 		wl = workLen_s[0];
 		for(i = 0; i < 1024; i++)
