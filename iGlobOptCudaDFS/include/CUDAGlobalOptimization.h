@@ -618,7 +618,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 						fnCalcFunLimitsRozenbroke_CUDA(temp + i*(2*inRank+3), inRank);
 						if(min_s[threadId] > temp[i*(2*inRank+3) + 2*inRank + 2])
 						{
-							min_s[threadId] = inBox[i*(2*inRank+3) + 2*inRank + 2];
+							min_s[threadId] = temp[i*(2*inRank+3) + 2*inRank + 2];
 						}
 					}
 					for(i = 0; i < 100; i++)
