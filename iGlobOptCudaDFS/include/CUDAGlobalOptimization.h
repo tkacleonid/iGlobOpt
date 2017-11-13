@@ -281,7 +281,7 @@ __device__ void fnCalcFunLimitsRozenbroke_CUDA(double *inBox, int inRank)
 
 	inBox[inRank*2] = sub;
 	inBox[inRank*2 + 1] = sup;
-	inBox[inRank*2 + 2] = 2;
+	inBox[inRank*2 + 2] = 0.5;
 	
 }
 
@@ -556,7 +556,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 	
 	__syncthreads();
 	
-	while(workLen_s[threadId] < 1024 && count[threadId] < 10000)
+	while(workLen_s[threadId] < 1024 && count[threadId] < 1000)
 	{
 		if(workLen_s[threadId] > 0)
 		{
@@ -649,7 +649,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 			*/
 			
 			
-		if(threadId == 0 && (count[threadId]+1) % 500 == 0)
+		if(threadId == 0 && (count[threadId]+1) % 00 == 0)
 		{
 			for(i = 1; i < 1024; i++)
 			{
