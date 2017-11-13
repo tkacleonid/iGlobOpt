@@ -556,7 +556,7 @@ int main() {
              break;
 		case 55:
              inFun = fnCalcFunLimitsStyblinski;
-             inRank = 2;
+             inRank = 5;
              inBox = new double[inRank * 2];
              for(int i = 0; i < inRank; i++)
              {
