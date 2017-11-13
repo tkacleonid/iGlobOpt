@@ -423,6 +423,14 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 	for(int i  = 0; i < 1024; i++)
 	{
 		std::cout << workLen[i] << "\t";
+		for(int j = 0; j < workLen[i]; j++)
+		{
+			if(inBox[(i*1024 + j)*(2*inRank + 3) + inRank*2] < 200) 
+			{
+				std::cout << "\n\n\n@@@@@@@@@@@@@@@@@@@@@@@@@@@WHOA@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n\n\n";
+				printf("%.7f", inBox[(i*1024 + j)*(2*inRank + 3) + inRank*2]);
+				std::cout << "\n\n\n@@@@@@@@@@@@@@@@@@@@@@@@@@@WHOA@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n\n\n";
+		}
 		if(workLen[i] > 2) ind = i;
 	}
 	
