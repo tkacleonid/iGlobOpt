@@ -67,6 +67,9 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 	double funLB;
 
 
+	funRecord = -150;
+	
+	
 	int numWorkBoxes = _numBoxes;
 
 	int fd = open(FILEPATH,O_RDWR | O_CREAT | O_TRUNC, (mode_t)0600);
