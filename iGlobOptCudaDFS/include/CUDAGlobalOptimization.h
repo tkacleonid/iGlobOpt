@@ -424,6 +424,19 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 	
 	std::cout <<  "\n\n\n";
 	
+	for(int i  = 0; i < 1024; i++)
+	{
+		for(int j = 0; j < inRank; j++)
+		{
+			std::cout << "[" << inBox[i*1024*2*inRank + 3) + j*2] << "; " << inBox[i*1024*(2*inRank + 3) + j*2 + 1] << "]\t";
+		}
+		std::cout << "\t\t" << inBox[i*1024*(2*inRank + 3) + inRank*2] << "\t\t" << inBox[i*1024*(2*inRank + 3) + inRank*2 + 1] << "\t\t" << inBox[i*1024*(2*inRank + 3) + inRank*2 + 2];
+		std::cout <<  "\n";
+	}
+	
+	
+	std::cout <<  "\n\n\n";
+	
 	std::cout << "MIN = " << mins[0] << "\n\n\n";
 	
 	for(int i  = 0; i < 1024; i++)
