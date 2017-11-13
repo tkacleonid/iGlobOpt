@@ -625,11 +625,11 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 					n = 0;
 					for(i = 0; i < 2*workLen_s[threadId]; i++)
 					{
-						if(min_s[threadId] - temp[i*(2*inRank+3) + 2*inRank] > inEps)
-						{
+						//if(min_s[threadId] - temp[i*(2*inRank+3) + 2*inRank] > inEps)
+						//{
 							memcpy(inBox + threadId*1024*(2*inRank+3) + n*(2*inRank+3),temp + i*(2*inRank+3),sizeof(double)*(2*inRank+3));
 							++n;
-						}
+						//}
 					}
 					workLen_s[threadId] = n;
 					
