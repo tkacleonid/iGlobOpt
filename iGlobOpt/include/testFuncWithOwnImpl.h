@@ -199,6 +199,7 @@ void fnCalcFunLimitsStyblinski(const double *inBox, int inRank, double *outLimit
 
 	for(i = 0; i < inRank; i++)
 	{
+		
 		absSup = inBox[i*2 + 1] < 0 ? -inBox[i*2 + 1]: inBox[i*2 + 1];
 		absSub = inBox[i*2] < 0 ? -inBox[i*2]: inBox[i*2];
 		
@@ -208,9 +209,17 @@ void fnCalcFunLimitsStyblinski(const double *inBox, int inRank, double *outLimit
 		sup1 = std::max(absSup,absSub);
 		sup1 = sup1*sup1*sup1*sup1;
 		
+		if(inBox[i*2 + 1]*inBox[i*2] < 0)
+		{			
+			sub1 =  5*std::min(inBox[i*2 + 1],inBox[i*2])/2.0;
+			sup1 = (sup1 - 16*std::min(absSup,absSub)*std::min(absSup,absSub) + 5*std::max(inBox[i*2 + 1],inBox[i*2]))/2.0;
+		}
+		else
+		{
+			sub1 = (sub1 - 16*std::max(absSup,absSub)*std::max(absSup,absSub) + 5*std::min(inBox[i*2 + 1],inBox[i*2]))/2.0;
+			sup1 = (sup1 - 16*std::min(absSup,absSub)*std::min(absSup,absSub) + 5*std::max(inBox[i*2 + 1],inBox[i*2]))/2.0;
+		}
 		
-		sub1 = (sub1 - 16*std::max(absSup,absSub)*std::max(absSup,absSub) + 5*std::min(inBox[i*2 + 1],inBox[i*2]))/2.0;
-		sup1 = (sup1 - 16*std::min(absSup,absSub)*std::min(absSup,absSub) + 5*std::max(inBox[i*2 + 1],inBox[i*2]))/2.0;
 		
 		
 
