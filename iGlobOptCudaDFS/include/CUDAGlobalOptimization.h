@@ -472,7 +472,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 	
 	int wl;
 	
-	inEps = 0.000001;
+	inEps = 0.0001;
 	
 	__syncthreads();
 	
