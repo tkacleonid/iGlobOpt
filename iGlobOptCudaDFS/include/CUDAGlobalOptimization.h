@@ -461,91 +461,105 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 	
 	count[threadId] = 0;
 	
+	int wl;
 	
 	
 	__syncthreads();
 	
-	while(workLen_s[threadId] > 0 && workLen_s[threadId] < 1024 && count[threadId] < 100)
+	while(workLen_s[threadId] < 1024 && count[threadId] < 100)
 	{
-		
-		bInd = threadId*1024*(2*inRank+3) + (workLen_s[threadId] - 1)*(2*inRank+3);
-		fnCalcFunLimitsRozenbroke_CUDA(inBox + bInd, inRank);
-		
-		if(min_s[threadId] > inBox[bInd + 2*inRank + 2])
+		if(workLen_s[threadId] > 0)
 		{
-			min_s[threadId] = inBox[bInd + 2*inRank + 2];
-		}
-		__syncthreads();
-		for(i = 0; i < 1024; i++)
-		{
-			if(minRec > min_s[blockIdx.x * 1024 + i])
+			
+			bInd = threadId*1024*(2*inRank+3) + (workLen_s[threadId] - 1)*(2*inRank+3);
+			fnCalcFunLimitsRozenbroke_CUDA(inBox + bInd, inRank);
+			
+			if(min_s[threadId] > inBox[bInd + 2*inRank + 2])
 			{
-				minRec = min_s[blockIdx.x * 1024 + i];
+				min_s[threadId] = inBox[bInd + 2*inRank + 2];
 			}
-		}
-		__syncthreads();
-		min_s[threadId] = minRec;
-		curEps = min_s[threadId] - inBox[bInd + 2*inRank];
-		//curEps = curEps > 0 ? curEps : -curEps;	
-		
-		
-		if(min_s[threadId] - inEps < inBox[bInd + 2*inRank])
-		{
-			--workLen_s[threadId];
-		}
-		else
-		{
-			hInd = 0;
-			h = inBox[bInd + 1] - inBox[bInd];
-			for(i = 0; i < inRank; i++)
-			{
-				if( h < inBox[bInd + i*2 + 1] - inBox[bInd + i*2]) 
-				{
-					h = inBox[bInd + i*2 + 1] - inBox[bInd + i*2];
-					hInd = i;
-				}
-			}
-			for(i = 0; i < inRank; i++)
-			{
-				if(i == hInd) 
-				{
-					inBox[bInd + i*2 + 1] = inBox[bInd + i*2] + h/2.0;
-					inBox[bInd + 2*inRank + 3 + i*2] = inBox[bInd + i*2] + h/2.0;
-					inBox[bInd + 2*inRank + 3 + i*2 + 1] = inBox[bInd + i*2] + h;
-				}
-				else
-				{
-					inBox[bInd + 2*inRank + 3 + i*2] = inBox[bInd + i*2];
-					inBox[bInd + 2*inRank + 3 + i*2 + 1] = inBox[bInd + i*2 + 1];
-				}
-			}
-			++workLen_s[threadId];
-		}
-		
-		workLen_s_temp[threadId] = workLen[threadId];
-		
-		__syncthreads();
-		
-		if(workLen_s[threadId] == 0)
-		{
+			__syncthreads();
 			for(i = 0; i < 1024; i++)
 			{
-				if(workLen_s_temp[i] > 6 && workLen_s_temp[threadId] == 0)
+				if(minRec > min_s[blockIdx.x * 1024 + i])
 				{
-					atomicAdd(workLen_s_temp + i, -3);
-					memcpy(inBox + bInd, inBox + i*1024*(2*inRank+3) + (workLen_s_temp[i] - 1)*(2*inRank+3), sizeof(double)*(2*inRank+3)*3);
-					workLen_s_temp[threadId] += 3;
-					break;
+					minRec = min_s[blockIdx.x * 1024 + i];
 				}
 			}
-		}
+			__syncthreads();
+			min_s[threadId] = minRec;
+			curEps = min_s[threadId] - inBox[bInd + 2*inRank];
+			//curEps = curEps > 0 ? curEps : -curEps;	
+			
+			
+			if(min_s[threadId] - inEps < inBox[bInd + 2*inRank])
+			{
+				--workLen_s[threadId];
+			}
+			else
+			{
+				hInd = 0;
+				h = inBox[bInd + 1] - inBox[bInd];
+				for(i = 0; i < inRank; i++)
+				{
+					if( h < inBox[bInd + i*2 + 1] - inBox[bInd + i*2]) 
+					{
+						h = inBox[bInd + i*2 + 1] - inBox[bInd + i*2];
+						hInd = i;
+					}
+				}
+				for(i = 0; i < inRank; i++)
+				{
+					if(i == hInd) 
+					{
+						inBox[bInd + i*2 + 1] = inBox[bInd + i*2] + h/2.0;
+						inBox[bInd + 2*inRank + 3 + i*2] = inBox[bInd + i*2] + h/2.0;
+						inBox[bInd + 2*inRank + 3 + i*2 + 1] = inBox[bInd + i*2] + h;
+					}
+					else
+					{
+						inBox[bInd + 2*inRank + 3 + i*2] = inBox[bInd + i*2];
+						inBox[bInd + 2*inRank + 3 + i*2 + 1] = inBox[bInd + i*2 + 1];
+					}
+				}
+				++workLen_s[threadId];
+			}
+			
+			workLen_s_temp[threadId] = workLen[threadId];
+			
+			__syncthreads();
+			
+			if(workLen_s[threadId] == 0)
+			{
+				for(i = 0; i < 1024; i++)
+				{
+					if(workLen_s_temp[i] > 6 && workLen_s_temp[threadId] == 0)
+					{
+						atomicAdd(workLen_s_temp + i, -3);
+						memcpy(inBox + bInd, inBox + i*1024*(2*inRank+3) + (workLen_s_temp[i] - 1)*(2*inRank+3), sizeof(double)*(2*inRank+3)*3);
+						workLen_s_temp[threadId] += 3;
+						break;
+					}
+				}
+			}
+			
+			//workLen[threadId] = workLen_s_temp[threadId];
+			__syncthreads();
+			
+			workLen_s[threadId] = workLen_s_temp[threadId];
+		}	
 		
-		//workLen[threadId] = workLen_s_temp[threadId];
 		__syncthreads();
 		
-		workLen[threadId] = workLen_s_temp[threadId];
+		wl = workLen_s[0];
+		for(i = 0; i < 1024; i++)
+		{
+			if(wl < workLen_s[i]) wl = workLen_s[i];
+		}
+		if(wl == 0) break;
+		++count[threadId];
+
 		
-		++count[threadId];		
 	}
 	workLen[threadId] = workLen_s[threadId];
 	min[threadId] = minRec;
