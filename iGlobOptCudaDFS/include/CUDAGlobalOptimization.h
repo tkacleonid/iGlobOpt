@@ -621,7 +621,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 							}
 						}
 					}
-					/*
+					
 					n = 0;
 					for(i = 0; i < 2*workLen_s[threadId]; i++)
 					{
@@ -632,9 +632,9 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 						}
 					}
 					workLen_s[threadId] = n;
-					*/
 					
-					workLen_s[threadId] *= 2;
+					
+					//workLen_s[threadId] *= 2;
 					
 					//if(n>3) break;;
 	/*				
