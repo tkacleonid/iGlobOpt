@@ -578,7 +578,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 					if(workLen_s[j] > 4 && workLen_s[i] == 0)
 					{
 						atomicAdd(workLen_s + j, -2);
-						memcpy(inBox + j*1024*(2*inRank+3), inBox + j*1024*(2*inRank+3) + (workLen_s_temp[i] - 1)*(2*inRank+3), sizeof(double)*(2*inRank+3)*2);
+						memcpy(inBox + i*1024*(2*inRank+3), inBox + j*1024*(2*inRank+3) + (workLen_s[j] - 1)*(2*inRank+3), sizeof(double)*(2*inRank+3)*2);
 						workLen_s[i] += 2;
 						break;
 					}
