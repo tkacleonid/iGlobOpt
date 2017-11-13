@@ -205,12 +205,12 @@ void fnCalcFunLimitsStyblinski(const double *inBox, int inRank, double *outLimit
 		sub1 = fmin(absSup,absSub);
 		sub1 = sub1*sub1*sub1*sub1;
 		
-		sup1 = fmax(absSup,absSup);
+		sup1 = fmax(absSup,absSub);
 		sup1 = sup1*sup1*sup1*sup1;
 		
 		
-		sub1 = (sub1 - 16*fmax(absSup,absSup)*fmax(absSup,absSup) + 5*fmin(inBox[i*2 + 1],inBox[i*2]))/2.0;
-		sup1 = (sup1 - 16*fmin(absSup,absSup)*fmin(absSup,absSup) + 5*fmax(inBox[i*2 + 1],inBox[i*2]))/2.0;
+		sub1 = (sub1 - 16*fmax(absSup,absSub)*fmax(absSup,absSub) + 5*fmin(inBox[i*2 + 1],inBox[i*2]))/2.0;
+		sup1 = (sup1 - 16*fmin(absSup,absSub)*fmin(absSup,absSub) + 5*fmax(inBox[i*2 + 1],inBox[i*2]))/2.0;
 		
 		
 
