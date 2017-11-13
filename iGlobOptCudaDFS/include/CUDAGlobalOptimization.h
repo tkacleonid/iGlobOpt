@@ -555,7 +555,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 			}
 			else
 			{
-				/*
+				
 				if(workLen_s[threadId] < 100)
 				{
 					for(k = 0; k < workLen_s[threadId]; k++)
@@ -578,19 +578,19 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 							{
 								if(j == hInd) 
 								{
-									temp[k*(2*inRank+3)*2 + j*2] = inBox[bInd2 + j*2] + h*i;
-									temp[k*(2*inRank+3)*2 + j*2 + 1] = inBox[bInd2 + j*2] + h*(i+1);
+									temp[(k*2 + i)*(2*inRank+3) + j*2] = inBox[bInd2 + j*2] + h*i;
+									temp[(k*2 + i)*(2*inRank+3) + j*2 + 1] = inBox[bInd2 + j*2] + h*(i+1);
 								}
 								else
 								{
-									temp[k*(2*inRank+3)*2 + j*2] = inBox[bInd2 + j*2];
-									temp[k*(2*inRank+3)*2 + j*2 + 1] = inBox[bInd2 + j*2 + 1];
+									temp[(k*2 + i)*(2*inRank+3) + j*2] = inBox[bInd2 + j*2];
+									temp[(k*2 + i)*(2*inRank+3) + j*2 + 1] = inBox[bInd2 + j*2 + 1];
 								}
 							}
-							fnCalcFunLimitsRozenbroke_CUDA(temp + k*(2*inRank+3)*2, inRank);
-							if(min_s[threadId] > temp[k*(2*inRank+3)*2 + 2*inRank + 2])
+							fnCalcFunLimitsRozenbroke_CUDA(temp + (k*2 + i)*(2*inRank+3), inRank);
+							if(min_s[threadId] > temp[(k*2 + i)*(2*inRank+3) + 2*inRank + 2])
 							{
-								min_s[threadId] = temp[k*(2*inRank+3)*2 + 2*inRank + 2];
+								min_s[threadId] = temp[(k*2 + i)*(2*inRank+3) + 2*inRank + 2];
 							}
 						}
 					}
@@ -649,9 +649,9 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 					*/
 					
 					
-				//}
-				//else
-				//{
+				}
+				else
+				{
 					hInd = 0;
 					h = inBox[bInd + 1] - inBox[bInd];
 					for(i = 0; i < inRank; i++)
@@ -677,7 +677,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 						}
 					}
 					++workLen_s[threadId];
-				//}
+				}
 			}
 			
 		}
