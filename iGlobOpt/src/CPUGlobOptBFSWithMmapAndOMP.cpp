@@ -247,7 +247,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 		numWorkBoxes = cnt;
 		
 		std::cout << "min = ";
-		printf("%f.7",funRecord);
+		printf("%.7f",funRecord);
 		std::cout << "\tfunLb = " << funLB << "\n";
 
 		if(numWorkBoxes == 0 && numBoxesInFile == 0)
