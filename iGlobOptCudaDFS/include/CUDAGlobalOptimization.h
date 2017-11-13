@@ -427,9 +427,9 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 		{
 			if(inBox[(i*1024 + j)*(2*inRank + 3) + inRank*2] < 200) 
 			{
-				std::cout << "\n\n\n@@@@@@@@@@@@@@@@@@@@@@@@@@@WHOA@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n\n\n";
+				std::cout << "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@WHOA@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n";
 				printf("%.7f", inBox[(i*1024 + j)*(2*inRank + 3) + inRank*2]);
-				std::cout << "\n\n\n@@@@@@@@@@@@@@@@@@@@@@@@@@@WHOA@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n\n\n";
+				std::cout << "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@WHOA@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n";
 				break;
 			}
 		}
@@ -593,7 +593,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 			else
 			{
 				
-				while(workLen_s[threadId] > 0 && workLen_s[threadId] < 10)
+				while(workLen_s[threadId] > 0 && workLen_s[threadId] < 2)
 				{
 					for(k = 0; k < workLen_s[threadId]; k++)
 					{
