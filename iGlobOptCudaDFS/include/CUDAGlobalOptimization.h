@@ -207,7 +207,7 @@ __device__ void fnCalcFunLimitsRozenbroke_CUDA(double *inBox, int inRank)
 	double sup1,sub1,sup2,sub2,a,b,val = 0,var1,var2,var3,x1,x2;
 	int i,j;
 
-	for(i = 0; i < inRank; i++)
+	for(i = 0; i < inRank - 1; i++)
 	{
 		sub1 = 1 - inBox[i*2 + 1];
 		sup1 = 1 - inBox[i*2];
@@ -267,15 +267,15 @@ __device__ void fnCalcFunLimitsRozenbroke_CUDA(double *inBox, int inRank)
 	}
 
 	
-	double x[10];
+	//double x[10];
 	//x = (double *) malloc(inRank*sizeof(double));
-	double minFun;
+	//double minFun;
 
 
-	for(j = 0; j < inRank; j++){
-			x[j] = (inBox[j*2]+inBox[j*2+1])/2.0;
-	}
-	minFun = fnCalcFunRozenbroke_CUDA(x, inRank);
+	//for(j = 0; j < inRank; j++){
+			//x[j] = (inBox[j*2]+inBox[j*2+1])/2.0;
+	//}
+	//minFun = fnCalcFunRozenbroke_CUDA(x, inRank);
 
 	
 
@@ -296,38 +296,26 @@ __device__ void fnCalcFunLimitsStyblinski_CUDA(double *inBox, int inRank)
 {
 	double sup = 0;
 	double sub = 0;
-	double sup1,sub1,sup2,sub2,a,b,val = 0,var1,var2,var3,x1,x2;
+	double sup1,sub1,sup2,sub2,a,b,val = 0,var1,var2,var3,x1,x2,absSub, absSup;
 	int i,j;
 
-	for(i = 0; i < 1; i++)
+	for(i = 0; i < inRank; i++)
 	{
-		sub1 = 1 - inBox[i*2 + 1];
-		sup1 = 1 - inBox[i*2];
+		absSup = inBox[i*2 + 1] < 0 ? -inBox[i*2 + 1]: inBox[i*2 + 1];
+		absSub = inBox[i*2] < 0 ? -inBox[i*2]: inBox[i*2];
 		
-
-		var1 = sup1*sup1;
-		var2 = sup1*sub1;
-		var3 = sub1*sub1;
+		sub1 = fmin(absSup,absSub);
+		sub1 = sub1*sub1*sub1*sub1;
 		
-		sub1 = (sub1*sup1 < 0) ? 0 : fmin(fmin(var1,var2),var3);
-		sup1 = fmax(fmax(var1,var2),var3);
+		sup1 = fmax(absSup,absSup);
+		sup1 = sup1*sup1*sup1*sup1;
 		
-
-		var1 = inBox[i*2 + 1]*inBox[i*2 + 1];
-		var2 = inBox[i*2 + 1]*inBox[i*2];
-		var3 = inBox[i*2]*inBox[i*2];
 		
-		inBox[inRank*2] = var1;
-		inBox[inRank*2 + 1] = var2;
-		inBox[inRank*2 + 2] = var3;
-
-		a = (inBox[i*2 + 1]*inBox[i*2] < 0) ? 0 : fmin(fmin(var1,var2),var3);
-		b = fmax(fmax(var1,var2),var3);
+		sub1 = sub1 - 16*fmax(absSup,absSup)*fmax(absSup,absSup);
+		sup1 = sup1 - 16*fmin(absSup,absSup)*fmin(absSup,absSup);
 		
-		inBox[inRank*2] = a;
-		inBox[inRank*2 + 1] = b;
-		inBox[inRank*2 + 2] = var3;
-
+		
+		
 		sub2 = inBox[(i+1)*2] - b;
 		sup2 = inBox[(i+1)*2 + 1] - a;
 		
@@ -568,7 +556,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 	
 	__syncthreads();
 	
-	while(workLen_s[threadId] < 1024 && count[threadId] < 1000000)
+	while(workLen_s[threadId] < 1024 && count[threadId] < 10000)
 	{
 		if(workLen_s[threadId] > 0)
 		{
