@@ -460,7 +460,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 	__shared__ int count[1024];
 	
 	double minRec = inRec;
-	int i, bInd, hInd;
+	int i, j, bInd, hInd;
 	double curEps, h;
 	
 	int threadId = blockIdx.x * 1024 + threadIdx.x;
@@ -567,6 +567,29 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 		workLen_s[threadId] = workLen_s_temp[threadId];
 			
 			*/
+			
+			
+		if(threadId == 0)
+		{
+			for(i = 0; i < 1024; i++)
+			{
+				for(j = 0; j < 1024; j++)
+				{
+					if(workLen_s[j] > 4 && workLen_s[i] == 0)
+					{
+						atomicAdd(workLen_s + j, -2);
+						memcpy(inBox + j*1024*(2*inRank+3), inBox + j*1024*(2*inRank+3) + (workLen_s_temp[i] - 1)*(2*inRank+3), sizeof(double)*(2*inRank+3)*2);
+						workLen_s[i] += 2;
+						break;
+					}
+				}
+			}
+		}	
+			
+			
+			
+			
+			
 		
 		__syncthreads();
 		
@@ -576,6 +599,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 			if(wl < workLen_s[i]) wl = workLen_s[i];
 		}
 		if(wl == 0) break;
+		
 		++count[threadId];
 
 		
