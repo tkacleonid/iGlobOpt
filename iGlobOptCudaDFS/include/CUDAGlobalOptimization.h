@@ -466,6 +466,10 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 	}
 	
 	std::cout <<  "\n\n\n";
+	
+	std::cout <<  "time = " << time;
+	
+	std::cout <<  "\n\n\n";
     
 
 }
@@ -681,6 +685,8 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 			
 		
 		__syncthreads();
+		
+		min_s[threadId] = minRec;
 		
 		wl = workLen_s[0];
 		for(i = 0; i < 1024; i++)
