@@ -605,7 +605,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 					}
 					workLen_s[threadId] = n;
 					
-					if(n>3) break;;
+					//if(n>3) break;;
 	/*				
 					hInd = 0;
 					h = inBox[bInd + 1] - inBox[bInd];
