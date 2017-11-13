@@ -219,7 +219,14 @@ void fnCalcFunLimitsStyblinski(const double *inBox, int inRank, double *outLimit
 
 		x1 = (inBox[i*2 + 1] + inBox[i*2])/2;
 		val += (x1*x1*x1*x1 - 16*x1*x1 + 5*x1)/2.0;
+		
+		
+		std::cout << "[" << inBox[i*2] << "; " << inBox[i*2 + 1] << "]\t";
+		
+		
 	}
+	
+	std::cout << "sub = " << sub << "\t sup =  " << sup << "\tval = " << val << "\n\n";
 
 	outLimits[0] = sub;
 	outLimits[1] = sup;
