@@ -296,31 +296,32 @@ __device__ void fnCalcFunLimitsStyblinski_CUDA(double *inBox, int inRank)
 {
 	double sup = 0;
 	double sub = 0;
-	double sup1,sub1,sup2,sub2,a,b,val = 0,var1,var2,var3,x1,x2,absSub, absSup;
+	double sup1,sub1,sup2,sub2,val = 0,var1,var2,var3,x;
 	int i,j;
 
 	for(i = 0; i < inRank; i++)
 	{
+			
+		var1 = inBox[i*2 + 1]*inBox[i*2 + 1];
+		var2 = inBox[i*2 + 1]*inBox[i*2];
+		var3 = inBox[i*2]*inBox[i*2];
 		
-		absSup = inBox[i*2 + 1] < 0 ? -inBox[i*2 + 1]: inBox[i*2 + 1];
-		absSub = inBox[i*2] < 0 ? -inBox[i*2]: inBox[i*2];
 		
-		sub1 = fmin(absSup,absSub);
-		sub1 = sub1*sub1*sub1*sub1;
 		
-		sup1 = fmax(absSup,absSub);
-		sup1 = sup1*sup1*sup1*sup1;
 		
-		if(inBox[i*2 + 1]*inBox[i*2] <= 0)
-		{			
-			sub1 =  (-16* fmax(absSup,absSub)*fmax(absSup,absSub) + 5*fmin(inBox[i*2 + 1],inBox[i*2]))/2.0;
-			sup1 = (sup1 - 16*fmin(absSup,absSub)*fmin(absSup,absSub) + 5*fmax(inBox[i*2 + 1],inBox[i*2]))/2.0;
-		}
-		else
-		{
-			sub1 = (sub1 - 16*fmax(absSup,absSub)*fmax(absSup,absSub) + 5*fmin(inBox[i*2 + 1],inBox[i*2]))/2.0;
-			sup1 = (sup1 - 16*fmin(absSup,absSub)*fmin(absSup,absSub) + 5*fmax(inBox[i*2 + 1],inBox[i*2]))/2.0;
-		}
+		sub1 = fmin(fmin(var1,var2),var3);
+		sup1 = fmax(fmax(var1,var2),var3);
+		
+		var1 = sub1*sub1;
+		var2 = sub1*sup1;
+		var3 = sup1*sup1;
+		
+		sub2 = fmin(fmin(var1,var2),var3);
+		sup2 = fmax(fmin(var1,var2),var3);
+
+		sub = (sub2 - 16*sup1 + 5*fmin(inBox[i*2 + 1],inBox[i*2]))/2.0;
+		sup1 = (sup2 - 16*sub1 + 5*fmax(inBox[i*2 + 1],inBox[i*2]))/2.0;
+		
 		
 		
 		
@@ -328,16 +329,11 @@ __device__ void fnCalcFunLimitsStyblinski_CUDA(double *inBox, int inRank)
 		sub += sub1;
 		sup += sup1;
 
-		x1 = (inBox[i*2 + 1] + inBox[i*2])/2;
-		val += (x1*x1*x1*x1 - 16*x1*x1 + 5*x1)/2.0;
-		
-		
-		//std::cout << "[" << inBox[i*2] << "; " << inBox[i*2 + 1] << "]\t";
-		
-		
+		x = (inBox[i*2 + 1] + inBox[i*2])/2;
+		val += (x*x*x*x - 16*x*x + 5*x)/2.0;
+			
 	}
 	
-	//std::cout << "sub = " << sub << "\t sup =  " << sup << "\tval = " << val << "\n\n";
 
 	inBox[2*inRank + 0] = sub;
 	inBox[2*inRank + 1] = sup;
