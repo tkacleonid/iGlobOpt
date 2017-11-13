@@ -207,6 +207,98 @@ __device__ void fnCalcFunLimitsRozenbroke_CUDA(double *inBox, int inRank)
 	double sup1,sub1,sup2,sub2,a,b,val = 0,var1,var2,var3,x1,x2;
 	int i,j;
 
+	for(i = 0; i < inRank; i++)
+	{
+		sub1 = 1 - inBox[i*2 + 1];
+		sup1 = 1 - inBox[i*2];
+		
+
+		var1 = sup1*sup1;
+		var2 = sup1*sub1;
+		var3 = sub1*sub1;
+		
+		sub1 = (sub1*sup1 < 0) ? 0 : fmin(fmin(var1,var2),var3);
+		sup1 = fmax(fmax(var1,var2),var3);
+		
+
+		var1 = inBox[i*2 + 1]*inBox[i*2 + 1];
+		var2 = inBox[i*2 + 1]*inBox[i*2];
+		var3 = inBox[i*2]*inBox[i*2];
+		
+		inBox[inRank*2] = var1;
+		inBox[inRank*2 + 1] = var2;
+		inBox[inRank*2 + 2] = var3;
+
+		a = (inBox[i*2 + 1]*inBox[i*2] < 0) ? 0 : fmin(fmin(var1,var2),var3);
+		b = fmax(fmax(var1,var2),var3);
+		
+		inBox[inRank*2] = a;
+		inBox[inRank*2 + 1] = b;
+		inBox[inRank*2 + 2] = var3;
+
+		sub2 = inBox[(i+1)*2] - b;
+		sup2 = inBox[(i+1)*2 + 1] - a;
+		
+		inBox[inRank*2] = sub2;
+		inBox[inRank*2 + 1] = sup2;
+		inBox[inRank*2 + 2] = var3;
+
+		var1 = sup2*sup2;
+		var2 = sup2*sub2;
+		var3 = sub2*sub2;
+		
+		inBox[inRank*2] = var1;
+		inBox[inRank*2 + 1] = var2;
+		inBox[inRank*2 + 2] = var3;
+
+		sub2 = (sub2*sup2 < 0) ? 0 : 100*fmin(fmin(var1,var2),var3);
+		sup2 = 100*fmax(fmax(var1,var2),var3);
+		
+		//inBox[inRank*2] = sub2;
+		//inBox[inRank*2 + 1] = sup2;
+		//inBox[inRank*2 + 2] = var3;
+
+		sub += sub1 + sub2;
+		sup += sup1 + sup2;
+
+		x1 = (inBox[i*2 + 1] + inBox[i*2])/2;
+		x2 = (inBox[(i+1)*2 + 1] + inBox[(i+1)*2])/2;
+		val += ((1 - x1)*(1 - x1) + 100*(x2-x1*x1)*(x2-x1*x1));
+	}
+
+	
+	double x[10];
+	//x = (double *) malloc(inRank*sizeof(double));
+	double minFun;
+
+
+	for(j = 0; j < inRank; j++){
+			x[j] = (inBox[j*2]+inBox[j*2+1])/2.0;
+	}
+	minFun = fnCalcFunRozenbroke_CUDA(x, inRank);
+
+	
+
+	inBox[inRank*2] = sub;
+	inBox[inRank*2 + 1] = sup;
+	inBox[inRank*2 + 2] = val;
+	
+}
+
+
+/**
+*	Calculus Interval for Rozenbroke function
+*	@param inbox pointer to Box
+*	@param inRank number of variables
+*	@param outlimits pointer to estimated function limits
+*/
+__device__ void fnCalcFunLimitsStyblinski_CUDA(double *inBox, int inRank)
+{
+	double sup = 0;
+	double sub = 0;
+	double sup1,sub1,sup2,sub2,a,b,val = 0,var1,var2,var3,x1,x2;
+	int i,j;
+
 	for(i = 0; i < 1; i++)
 	{
 		sub1 = 1 - inBox[i*2 + 1];
