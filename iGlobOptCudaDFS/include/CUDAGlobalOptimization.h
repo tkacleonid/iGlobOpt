@@ -335,8 +335,8 @@ __device__ void fnCalcFunLimitsStyblinski_CUDA(double *inBox, int inRank)
 	}
 	
 
-	inBox[2*inRank + 0] = inBox[0*2];
-	inBox[2*inRank + 1] = inBox[0*2 + 1];
+	inBox[2*inRank + 0] = sub;
+	inBox[2*inRank + 1] = sup;
 	inBox[2*inRank+2] = val;
 	
 }
@@ -620,7 +620,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 									temp[(k*2 + i)*(2*inRank+3) + j*2 + 1] = inBox[bInd2 + j*2 + 1];
 								}
 							}
-							fnCalcFunLimitsRozenbroke_CUDA(temp + (k*2 + i)*(2*inRank+3), inRank);
+							fnCalcFunLimitsStyblinski_CUDA(temp + (k*2 + i)*(2*inRank+3), inRank);
 							if(min_s[threadId] > temp[(k*2 + i)*(2*inRank+3) + 2*inRank + 2])
 							{
 								min_s[threadId] = temp[(k*2 + i)*(2*inRank+3) + 2*inRank + 2];
