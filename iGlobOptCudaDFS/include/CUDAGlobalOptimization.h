@@ -427,9 +427,9 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 		{
 			if(inBox[(i*1024 + j)*(2*inRank + 3) + inRank*2] < 200) 
 			{
-				std::cout << "\n\n\n@@@@@@@@@@@@@@@@@@@@@@@@@@@WHOA@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n\n\n";
-				printf("%.7f", inBox[(i*1024 + j)*(2*inRank + 3) + inRank*2]);
-				std::cout << "\n\n\n@@@@@@@@@@@@@@@@@@@@@@@@@@@WHOA@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n\n\n";
+				//std::cout << "\n\n\n@@@@@@@@@@@@@@@@@@@@@@@@@@@WHOA@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n\n\n";
+				//printf("%.7f", inBox[(i*1024 + j)*(2*inRank + 3) + inRank*2]);
+				//std::cout << "\n\n\n@@@@@@@@@@@@@@@@@@@@@@@@@@@WHOA@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n\n\n";
 			}
 		}
 		if(workLen[i] > 2) ind = i;
@@ -634,11 +634,11 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 					n = 0;
 					for(i = 0; i < 2*workLen_s[threadId]; i++)
 					{
-						//if(min_s[threadId] - temp[i*(2*inRank+3) + 2*inRank] > inEps)
-						//{
+						if(min_s[threadId] - temp[i*(2*inRank+3) + 2*inRank] > inEps)
+						{
 							memcpy(inBox + threadId*1024*(2*inRank+3) + n*(2*inRank+3),temp + i*(2*inRank+3),sizeof(double)*(2*inRank+3));
 							++n;
-						//}
+						}
 					}
 					workLen_s[threadId] = n;
 					
