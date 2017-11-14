@@ -448,7 +448,7 @@ void fnGetOptValueWithCUDA(double *inBox, int inRank, double inEps, double *outB
 		CHECKED_CALL(cudaMemcpy(dev_workCounts, workCounts, numThreads*sizeof(int), cudaMemcpyHostToDevice));
 		CHECKED_CALL(cudaEventRecord(start, 0));
 		std::cout << "call CUDA\n";
-		globOptCUDA<<<GridSize, 1024>>>(dev_inBox, inRank,dev_workLen,dev_mins,inEps,dev_workCounts);
+		globOptCUDA<<<GridSize, 1024>>>(dev_inBox, inRank,dev_workLen,dev_mins,funcMin,inEps,dev_workCounts);
 		std::cout << "stop CUDA\n";
 		CHECKED_CALL(cudaGetLastError());
 
