@@ -441,57 +441,54 @@ __global__ void globOptCUDA_1(double *inBox, const int inRank, int *workLen, dou
 
 	__syncthreads();
 	
-	while(workLen_s[threadId] < SIZE_BUFFER_PER_THREAD && count[threadId] < MAX_GPU_ITER)
+	while(workLen_s[threadId] > 0 && workLen_s[threadId] < SIZE_BUFFER_PER_THREAD && count[threadId] < MAX_GPU_ITER)
 	{
-		if(workLen_s[threadId] > 0)
+		
+		bInd = threadId*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[threadId] - 1)*(2*inRank+3);
+		fnCalcFunLimitsStyblinski_CUDA(inBox + bInd, inRank);
+			
+		if(min_s[threadId] > inBox[bInd + 2*inRank + 2])
 		{
-			
-			bInd = threadId*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[threadId] - 1)*(2*inRank+3);
-			fnCalcFunLimitsStyblinski_CUDA(inBox + bInd, inRank);
-			
-			if(min_s[threadId] > inBox[bInd + 2*inRank + 2])
-			{
-				min_s[threadId] = inBox[bInd + 2*inRank + 2];
-			}
-			
-			if(min_s[threadId] - inBox[bInd + 2*inRank] < inEps)
-			{
-				--workLen_s[threadId];
-				n++;
-			}
-			else
-			{
-
-				bInd = threadId*1024*(2*inRank+3) + (workLen_s[threadId] - 1)*(2*inRank+3);
-					
-				hInd = 0;
-				h = inBox[bInd + 1] - inBox[bInd];
-				for(i = 0; i < inRank; i++)
-				{
-					if( h < inBox[bInd + i*2 + 1] - inBox[bInd + i*2]) 
-					{
-						h = inBox[bInd + i*2 + 1] - inBox[bInd + i*2];
-						hInd = i;
-					}
-				}
-				for(i = 0; i < inRank; i++)
-				{
-					if(i == hInd) 
-					{
-						inBox[bInd + i*2 + 1] = inBox[bInd + i*2] + h/2.0;
-						inBox[bInd + 2*inRank + 3 + i*2] = inBox[bInd + i*2] + h/2.0;
-						inBox[bInd + 2*inRank + 3 + i*2 + 1] = inBox[bInd + i*2] + h;
-					}
-					else
-					{
-						inBox[bInd + 2*inRank + 3 + i*2] = inBox[bInd + i*2];
-						inBox[bInd + 2*inRank + 3 + i*2 + 1] = inBox[bInd + i*2 + 1];
-					}
-				}
-				++workLen_s[threadId];
-			}
-			
+			min_s[threadId] = inBox[bInd + 2*inRank + 2];
 		}
+			
+		if(min_s[threadId] - inBox[bInd + 2*inRank] < inEps)
+		{
+			--workLen_s[threadId];
+			n++;
+		}
+		else
+		{
+
+			bInd = threadId*1024*(2*inRank+3) + (workLen_s[threadId] - 1)*(2*inRank+3);
+					
+			hInd = 0;
+			h = inBox[bInd + 1] - inBox[bInd];
+			for(i = 0; i < inRank; i++)
+			{
+				if( h < inBox[bInd + i*2 + 1] - inBox[bInd + i*2]) 
+				{
+					h = inBox[bInd + i*2 + 1] - inBox[bInd + i*2];
+					hInd = i;
+				}
+			}
+			for(i = 0; i < inRank; i++)
+			{
+				if(i == hInd) 
+				{
+					inBox[bInd + i*2 + 1] = inBox[bInd + i*2] + h/2.0;
+					inBox[bInd + 2*inRank + 3 + i*2] = inBox[bInd + i*2] + h/2.0;
+					inBox[bInd + 2*inRank + 3 + i*2 + 1] = inBox[bInd + i*2] + h;
+				}
+				else
+				{
+					inBox[bInd + 2*inRank + 3 + i*2] = inBox[bInd + i*2];
+					inBox[bInd + 2*inRank + 3 + i*2 + 1] = inBox[bInd + i*2 + 1];
+				}
+			}
+			++workLen_s[threadId];
+		}
+			
 		++count[threadId];	
 	}
 	
