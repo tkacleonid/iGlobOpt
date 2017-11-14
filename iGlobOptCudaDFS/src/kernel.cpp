@@ -12,8 +12,6 @@
 int main()
 {
 	
-	
-	
     int inRank = 4;
 
 	double *inBox = new double[inRank*2];

@@ -7,7 +7,6 @@
 #include <cuda_runtime_api.h>
 #include <cuda_fp16.h>
 #include <cuda_device_runtime_api.h>
-#include "CPUGlobalOptimization.h"
 
 #include <math_functions_dbl_ptx3.h>
 #include "interval.h"
