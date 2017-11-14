@@ -612,19 +612,19 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 							{
 								if(j == hInd) 
 								{
-									inBox[(k*2 + i)*(2*inRank+3) + j*2] = inBox[bInd2 + j*2] + h*i;
-									inBox[(k*2 + i)*(2*inRank+3) + j*2 + 1] = inBox[bInd2 + j*2] + h*(i+1);
+									inBox[bInd2 + (k*2 + i)*(2*inRank+3) + j*2] = inBox[bInd2 + j*2] + h*i;
+									inBox[ bInd2 + (k*2 + i)*(2*inRank+3) + j*2 + 1] = inBox[bInd2 + j*2] + h*(i+1);
 								}
 								else
 								{
-									inBox[(k*2 + i)*(2*inRank+3) + j*2] = inBox[bInd2 + j*2];
-									inBox[(k*2 + i)*(2*inRank+3) + j*2 + 1] = inBox[bInd2 + j*2 + 1];
+									inBox[bInd2 + (k*2 + i)*(2*inRank+3) + j*2] = inBox[bInd2 + j*2];
+									inBox[bInd2 + (k*2 + i)*(2*inRank+3) + j*2 + 1] = inBox[bInd2 + j*2 + 1];
 								}
 							}
-							fnCalcFunLimitsStyblinski_CUDA(inBox + (k*2 + i)*(2*inRank+3), inRank);
-							if(min_s[threadId] > inBox[(k*2 + i)*(2*inRank+3) + 2*inRank + 2])
+							fnCalcFunLimitsStyblinski_CUDA(inBox + bInd2 +  (k*2 + i)*(2*inRank+3), inRank);
+							if(min_s[threadId] > inBox[bInd2 + (k*2 + i)*(2*inRank+3) + 2*inRank + 2])
 							{
-								min_s[threadId] = inBox[(k*2 + i)*(2*inRank+3) + 2*inRank + 2];
+								min_s[threadId] = inBox[bInd2 + (k*2 + i)*(2*inRank+3) + 2*inRank + 2];
 							}
 						}
 					}
