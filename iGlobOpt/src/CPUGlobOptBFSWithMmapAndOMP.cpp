@@ -41,7 +41,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 	double *funBounds = new double[ARRAY_BOUNDS_LENGTH*MAX_BOXES_IN_BUFFER];
 
 
-	long long wc 0;
+	long long wc = 0;
 	
 	//copy Input Boxes in work set #1
 	try
