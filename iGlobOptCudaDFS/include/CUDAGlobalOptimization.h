@@ -260,8 +260,8 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 		{
 			if(i == hInd)
 			{
-				boxes[n*(2*inRank + 3)*SIZE_BUFFER_PER_THREAD + i*2] = inBox[i*2] + h/SIZE_BUFFER_PER_THREAD*n;
-				boxes[n*(2*inRank + 3)*SIZE_BUFFER_PER_THREAD + i*2 + 1] = inBox[i*2] + h/SIZE_BUFFER_PER_THREAD*(n+1);
+				boxes[n*(2*inRank + 3)*SIZE_BUFFER_PER_THREAD + i*2] = inBox[i*2] + h/numBoxes*n;
+				boxes[n*(2*inRank + 3)*SIZE_BUFFER_PER_THREAD + i*2 + 1] = inBox[i*2] + h/numBoxes*(n+1);
 			}
 			else
 			{
