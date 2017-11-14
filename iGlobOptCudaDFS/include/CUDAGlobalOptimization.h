@@ -552,7 +552,7 @@ void fnGetOptValueWithCUDA_deep(double *inBox, int inRank, int inNumBoxesSplitCo
 }
 
 
-__const__ int rank = 10;
+__const__ int rank = 4;
 
 
 __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min, double inRec, double inEps)

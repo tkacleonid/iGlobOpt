@@ -14,7 +14,7 @@ int main()
 	
 	
 	
-    int inRank = 10;
+    int inRank = 4;
 
 	double *inBox = new double[inRank*2];
 	double *outBox = new double[inRank*2];
@@ -25,7 +25,6 @@ int main()
 	int status = -1;
 
 
-	inRank = 10;
 	for(int i = 0; i < inRank; i++)
 	{
 		inBox[i*2] = -30.0;
