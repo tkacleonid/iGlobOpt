@@ -381,7 +381,7 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 	
 	float time;
 	
-	for(int i = 0; i < 1000; i++)
+	for(int i = 0; i < 1000000; i++)
 	{
 		std::cout << "\n\nNUMBER #" << (i+1) << "\n\n";
 		
