@@ -343,6 +343,7 @@ __device__ void fnCalcFunLimitsStyblinski_CUDA(double *inBox, int inRank)
 }
 
 
+
 void fnGetOptValueWithCUDA(double *inBox, int inRank, double inEps, double *outBox, double*outMin, int *status)
 {
 	int numBoxes = BLOCK_SIZE*NUM_BLOCKS;
@@ -437,6 +438,7 @@ void fnGetOptValueWithCUDA(double *inBox, int inRank, double inEps, double *outB
 	std::ofstream myfile;
 	myfile.open ("test1.txt");
 	timeAll = 0;
+	_rank = inRank;
 	for(i = 0; i < MAX_NUM_RUNS ; i++)
 	{
 		std::cout << "\nNUMBER #" << (i+1) << "\n";
@@ -513,7 +515,7 @@ void fnGetOptValueWithCUDA(double *inBox, int inRank, double inEps, double *outB
 }
 
 
-__global__ void globOptCUDA(double *inBox,__constant__ const int inRank, int *workLen, double *min, const double inRec, const double inEps, int *workCounts)
+__global__ void globOptCUDA(double *inBox, const int inRank, int *workLen, double *min, const double inRec, const double inEps, int *workCounts)
 {
 	__shared__ double min_s[1024];
 	__shared__ int workLen_s[1024];
@@ -535,9 +537,8 @@ __global__ void globOptCUDA(double *inBox,__constant__ const int inRank, int *wo
 	
 	int half;
 	
-	//__const__ int rank = inRank;
 	
-	double temp[500*(2*inRank+3)];
+	double temp[500*(2*_rank+3)];
 	
 	
 	__syncthreads();	
