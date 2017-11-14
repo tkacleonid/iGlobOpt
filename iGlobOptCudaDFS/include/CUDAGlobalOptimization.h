@@ -583,6 +583,43 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 	double temp[500*(2*rank+3)];
 	
 	
+	__syncthreads();	
+			
+		
+	if(threadId == 0)
+	{
+		for(i = 0; i < 1024; i++)
+		{
+			if(workLen_s[i] == 0)
+			{
+				for(j = 0; j < 1024; j++)
+				{
+					if(workLen_s[j] > 2)
+					{
+						half = workLen_s[j]/2;
+						workLen_s[j] -= half;
+							memcpy(inBox + i*1024*(2*inRank+3), inBox + j*1024*(2*inRank+3) + (workLen_s[j])*(2*inRank+3), sizeof(double)*(2*inRank+3)*half);
+							workLen_s[i] += half;
+							break;
+					}
+				}
+			}
+		}
+			
+		wl = workLen_s[0];
+		for(i = 0; i < 1024; i++)
+		{
+			if(wl < workLen_s[i]) wl = workLen_s[i];
+		}
+		if(wl == 0) return;
+			
+	}	
+			
+		
+			
+		
+	
+	
 	__syncthreads();
 	
 	while(workLen_s[threadId] < 1024 && count[threadId] < 100000)
