@@ -344,7 +344,7 @@ __device__ void fnCalcFunLimitsStyblinski_CUDA(double *inBox, int inRank)
 
 
 
-void fnGetOptValueWithCUDA(double *inBox, int inRank, double inEps, double *outBox, double*outMin, int *status)
+void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, double *outBox, double*outMin, int *status)
 {
 	int numBoxes = BLOCK_SIZE*NUM_BLOCKS;
 	double *boxes =  new double[numBoxes*(inRank*2+3)*SIZE_BUFFER_PER_THREAD];
