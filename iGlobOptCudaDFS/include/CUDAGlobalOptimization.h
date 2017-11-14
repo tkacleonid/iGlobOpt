@@ -356,7 +356,7 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 	
 	for(int i = 0; i < 1024; i++)
 	{
-		worklen[i] = 1;
+		workLen[i] = 1;
 	}
 
 	cudaEvent_t start, stop;
