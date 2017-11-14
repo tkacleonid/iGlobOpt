@@ -513,7 +513,7 @@ void fnGetOptValueWithCUDA(double *inBox, int inRank, double inEps, double *outB
 }
 
 
-__global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min, double inRec, double inEps, int *workCounts)
+__global__ void globOptCUDA(double *inBox, const int inRank, int *workLen, double *min, const double inRec, const double inEps, int *workCounts)
 {
 	__shared__ double min_s[1024];
 	__shared__ int workLen_s[1024];
@@ -532,8 +532,6 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 	count[threadId] = 0;
 	
 	int wl;
-	
-	inEps = 0.1;
 	
 	int half;
 	
