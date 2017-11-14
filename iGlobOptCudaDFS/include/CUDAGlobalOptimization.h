@@ -389,6 +389,9 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 	
 	float time;
 	
+	ofstream myfile;
+	myfile.open ("test1.txt");
+  
 	for(int i = 0; i < 1000000; i++)
 	{
 		std::cout << "\n\nNUMBER #" << (i+1) << "\n\n";
@@ -437,12 +440,17 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 		}
 		
 		printf("##################\n\nmins: %.10f\n\n#############################\n",funcMin);
+		
+		 myfile << (i+1) << ";" << wc << ";" << ls << ";" << funcMin << ";\n";
+
 
 		CHECKED_CALL(cudaEventDestroy(start));
 		CHECKED_CALL(cudaEventDestroy(stop));
 		
 		if(ls ==0) break;
 	}	
+	
+	 myfile.close();
 	
 	std::cout << "free start\n";
 	
