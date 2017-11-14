@@ -41,6 +41,8 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 	double *funBounds = new double[ARRAY_BOUNDS_LENGTH*MAX_BOXES_IN_BUFFER];
 
 
+	long long wc 0;
+	
 	//copy Input Boxes in work set #1
 	try
 	{
@@ -235,7 +237,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 						workBoxes[((k*_splitCoeff + n)*_rank+i)*2 + 1] = restBoxesToSplit[(k*_rank+i)*2 + 1];
 					}
 				}
-
+				wc++;
 				_fun(&workBoxes[((k*_splitCoeff + n)*_rank)*2],_rank,&funBounds[(k*_splitCoeff + n)*ARRAY_BOUNDS_LENGTH]);
 			}
 		}
@@ -284,6 +286,8 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 		//std::cout << "min = ";
 		//printf("%.7f",funRecord);
 		//std::cout << "\tfunLb = " << funLB << "\n";
+		
+		std::cout << "\twc = " << wc << "\n";
 
 		if(numWorkBoxes == 0 && numBoxesInFile == 0)
 		{
