@@ -353,6 +353,11 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 	int GridSize = 1;
 	int numThreads = 1024;
 	int sizeInBox = numThreads*(inRank*2+3)*sizeof(double)*1024;
+	
+	for(int i = 0; i < 1024; i++)
+	{
+		worklen[i] = 1;
+	}
 
 	cudaEvent_t start, stop;
 
@@ -382,7 +387,7 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 		CHECKED_CALL(cudaEventCreate(&start));
 		CHECKED_CALL(cudaEventCreate(&stop));
 		CHECKED_CALL(cudaMemcpy(dev_inBox, inBox, numBoxes*(2*inRank+3)*sizeof(double)*1024, cudaMemcpyHostToDevice));
-		//CHECKED_CALL(cudaMemcpy(dev_workLen, workLen, numBoxes*sizeof(int), cudaMemcpyHostToDevice));
+		CHECKED_CALL(cudaMemcpy(dev_workLen, workLen, numBoxes*sizeof(int), cudaMemcpyHostToDevice));
 
 		CHECKED_CALL(cudaEventRecord(start, 0));
 		std::cout << "call CUDA\n";
@@ -401,6 +406,8 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 
 		std::cout << "time = " << time << "\t"  << "numBoxes = " << numBoxes << "\n";
 	
+		funcMin = mins[0];
+		
 		for(int i  = 0; i < 1; i++)
 		{
 			std::cout << mins[i] << "\t";
@@ -544,7 +551,7 @@ void fnGetOptValueWithCUDA_deep(double *inBox, int inRank, int inNumBoxesSplitCo
 }
 
 
-__const__ int rank = 4;
+__const__ int rank = 10;
 
 
 __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min, double inRec, double inEps)
@@ -560,14 +567,14 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 	
 	int threadId = blockIdx.x * 1024 + threadIdx.x;
 	
-	workLen_s[threadId] = 1;
+	workLen_s[threadId] = workLen[threadId];
 	min_s[threadId] = minRec;
 	
 	count[threadId] = 0;
 	
 	int wl;
 	
-	inEps = 0.01;
+	inEps = 0.001;
 	
 	int half;
 	

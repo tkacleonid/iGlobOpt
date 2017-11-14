@@ -14,18 +14,18 @@ int main()
 	
 	
 	
-    int inRank = 4;
+    int inRank = 10;
 
 	double *inBox = new double[inRank*2];
 	double *outBox = new double[inRank*2];
 	double outMin = 0.0;
-	double inEps = 0.1;
+	double inEps = 0.001;
 	double outEps = 0.0;
 	double inMaxIter = 100;
 	int status = -1;
 
 
-	inRank = 4;
+	inRank = 10;
 	for(int i = 0; i < inRank; i++)
 	{
 		inBox[i*2] = -30.0;
