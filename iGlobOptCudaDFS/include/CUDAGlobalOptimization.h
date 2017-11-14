@@ -535,8 +535,9 @@ __global__ void globOptCUDA(double *inBox, __const__ const int inRank, int *work
 	
 	int half;
 	
+	__const__ int rank = inRank;
 	
-	double temp[500*(2*inRank+3)];
+	double temp[500*(2*rank+3)];
 	
 	
 	__syncthreads();	

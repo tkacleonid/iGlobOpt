@@ -11,7 +11,6 @@
 const int BLOCK_SIZE = 1024;
 const int NUM_BLOCKS = 1;
 const int SIZE_BUFFER_PER_THREAD = 1024; 
-external __const__ int rank = 4;
 
  
 
