@@ -417,14 +417,16 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 
 		std::cout << "time = " << time << "\n";
 		
-		long long wc = 0;
+		long long wc = 0, ls = 0;
 		
 		for(int j = 0; j < 1024; j++)
 		{
 			wc+=workCounts[j];
+			ls += workLen[j];
 		}
 		
 		std::cout << "wc = " << wc << "\n";
+		std::cout << "ls = " << ls << "\n";
 		
 	
 		funcMin = mins[0];
@@ -437,6 +439,8 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 
 		CHECKED_CALL(cudaEventDestroy(start));
 		CHECKED_CALL(cudaEventDestroy(stop));
+		
+		if(ls ==0) break;
 	}	
 	
 	std::cout << "free start\n";
