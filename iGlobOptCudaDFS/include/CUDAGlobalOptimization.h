@@ -341,7 +341,7 @@ __device__ void fnCalcFunLimitsStyblinski_CUDA(double *inBox, int inRank)
 	
 }
 
-
+#include <fstream>
 
 // Send Data to GPU to calculate limits
 void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, int * workLen,double* mins, double funcMin)
@@ -431,7 +431,7 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 	
 		funcMin = mins[0];
 		
-		for(int j  = 0; j < 1; j++)
+		for(int j  = 0; j < 1024; j++)
 		{
 			if(funcMin > mins[j]) funcMin = mins[j];
 		}
