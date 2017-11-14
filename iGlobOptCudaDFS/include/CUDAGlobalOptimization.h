@@ -640,7 +640,6 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 			}
 		}
 		
-		min_s[threadId] = minRec;
 			
 		wl = workLen_s[0];
 		for(i = 0; i < 1024; i++)
@@ -651,7 +650,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 			
 	}	
 			
-		
+	min_s[threadId] = minRec;	
 			
 		
 	
