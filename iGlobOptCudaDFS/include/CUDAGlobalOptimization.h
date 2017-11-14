@@ -591,8 +591,8 @@ __global__ void globOptCUDA(double *inBox, const int inRank, int *workLen, doubl
 		if(workLen_s[threadId] > 0)
 		{
 			
-			bInd = threadId*1024*(2*inRank+3) + (workLen_s[threadId] - 1)*(2*inRank+3);
-			fnCalcFunLimitsStyblinski_CUDA(inBox + bInd, inRank);
+			bInd = threadId*1024*(2*inRank+3 + (workLen_s[threadId] - 1)*(2*inRank+3);
+			fnCalcFunLimitsRozenbroke_CUDA(inBox + bInd, inRank);
 			
 			if(min_s[threadId] > inBox[bInd + 2*inRank + 2])
 			{
