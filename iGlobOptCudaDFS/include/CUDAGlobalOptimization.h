@@ -592,7 +592,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 				
 				if(workLen_s[threadId] > 0 && workLen_s[threadId] < 250)
 				{
-					for(k = workLen_s[threadId] -1; k >= 0; k++)
+					for(k = workLen_s[threadId] -1; k >= 0; k--)
 					{
 						bInd2 = threadId*1024*(2*inRank+3) + k*(2*inRank+3);
 						hInd = 0;
