@@ -389,7 +389,7 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 	
 	float time;
 	
-	ofstream myfile;
+	std::ofstream myfile;
 	myfile.open ("test1.txt");
   
 	for(int i = 0; i < 1000000; i++)
