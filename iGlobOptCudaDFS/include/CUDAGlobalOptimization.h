@@ -12,6 +12,8 @@
 #include "interval.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <fstream>
+
 
 // Send Data to GPU to calculate limits
 void sendDataToCuda(double *outLimits, const double *inBox, int inRank, int inFunc, int numBoxes);
@@ -64,7 +66,7 @@ __device__ void fnCalcFunLimitsRozenbroke_CUDA(double *inBox, int inRank);
 *	@param outEps pointer to reached accuracy
 *	@param outEps pointer to status of solving optimization problem
 */
-void fnGetOptValueWithCUDA(double *inBox, int inRank, int inNumBoxesSplitCoeff, double inEps, int inMaxIter, int inFunc, double *outBox, double*outMin, double *outEps,int *status);
+void fnGetOptValueWithCUDA(double *inBox, int inRank, double inEps, double *outBox, double*outMin, int *status);
 
 /**
 *	Send data into GPU
@@ -340,38 +342,88 @@ __device__ void fnCalcFunLimitsStyblinski_CUDA(double *inBox, int inRank)
 	
 }
 
-#include <fstream>
 
-// Send Data to GPU to calculate limits
-void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, int * workLen,double* mins, double funcMin)
+void fnGetOptValueWithCUDA(double *inBox, int inRank, double inEps, double *outBox, double*outMin, int *status)
 {
-    double *dev_inBox = 0;
+	int numBoxes = BLOCK_SIZE*NUM_BLOCKS;
+	double *boxes =  new double[numBoxes*(inRank*2+3)*SIZE_BUFFER_PER_THREAD];
+	double h;
+	int hInd;
+	int *workLen;
+	double *mins;
+
+	int i,n;
+	
+	double funcMin = 0;
+
+	funcMin = -39.16616*inRank;
+
+	*status = 1;
+
+	workLen = new int[numBoxes];
+	mins = new double[numBoxes];
+
+	h = inBox[1] - inBox[0];
+	hInd = 0;
+	
+	for(i = 0; i < inRank; i++)
+	{
+		if(h < inBox[i*inRank + 1] - inBox[i*inRank])
+		{
+			h = inBox[i*inRank + 1] - inBox[i*inRank];
+			hInd = i;
+		}
+	}
+
+	for(n = 0; n < numBoxes; n++)
+	{
+		for(i = 0; i < inRank; i++)
+		{
+			if(i == hInd)
+			{
+				boxes[n*(2*inRank + 3)*SIZE_BUFFER_PER_THREAD + i*2] = inBox[i*2] + h/SIZE_BUFFER_PER_THREAD*n;
+				boxes[n*(2*inRank + 3)*SIZE_BUFFER_PER_THREAD + i*2 + 1] = inBox[i*2] + h/SIZE_BUFFER_PER_THREAD*(n+1);
+			}
+			else
+			{
+				boxes[n*(2*inRank + 3)*SIZE_BUFFER_PER_THREAD + i*2] = inBox[i*2];
+				boxes[n*(2*inRank + 3)*SIZE_BUFFER_PER_THREAD + i*2 + 1] = inBox[i*2 + 1];
+			}
+		}
+
+	}
+	
+	
+	sendDataToCuda_deep(boxes, inRank, inFunc, numBoxes, workLen,mins,funcMin);
+	
+	
+	
+	double *dev_inBox = 0;
 	int *dev_workLen = 0;
 	int *dev_workCounts = 0;
 	double *dev_mins = 0;
 
-	int GridSize = 1;
-	int numThreads = 1024;
-	int sizeInBox = numThreads*(inRank*2+3)*sizeof(double)*1024;
+	int GridSize = NUM_BLOCKS;
+	int numThreads = numBoxes;
+	int sizeInBox = numThreads*(inRank*2+3)*sizeof(double)*SIZE_BUFFER_PER_THREAD;
+	
+	float time, timeAll;
 	
 	int *workCounts = new int[numThreads*sizeof(int)];
 	
-	for(int i = 0; i < 1024; i++)
+	for(i = 0; i < SIZE_BUFFER_PER_THREAD; i++)
 	{
 		workLen[i] = 1;
 		workCounts[i] = 0;
 	}
 
 	cudaEvent_t start, stop;
-
-	CHECKED_CALL(cudaDeviceReset());
 	
 	CHECKED_CALL(cudaSetDevice(DEVICE));
+	CHECKED_CALL(cudaDeviceReset());
 	
 	std::cout << "start CUDA malloc 1\n";
-	
-	std::cout << "size CUDA malloc 1" << sizeInBox << "\n";
-	
+		
     CHECKED_CALL(cudaMalloc((void **)&dev_inBox, sizeInBox));
 	
 	std::cout << "start CUDA malloc 2\n";
@@ -386,34 +438,32 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 	
 	CHECKED_CALL(cudaMalloc((void **)&dev_workCounts, numThreads*sizeof(int)));
 	
-	float time;
 	
 	std::ofstream myfile;
 	myfile.open ("test1.txt");
-  
-	for(int i = 0; i < 1000000; i++)
+	timeAll = 0;
+	for(i = 0; i < MAX_NUM_RUNS ; i++)
 	{
-		std::cout << "\n\nNUMBER #" << (i+1) << "\n\n";
+		std::cout << "\nNUMBER #" << (i+1) << "\n";
 		
 		CHECKED_CALL(cudaEventCreate(&start));
 		CHECKED_CALL(cudaEventCreate(&stop));
-		CHECKED_CALL(cudaMemcpy(dev_inBox, inBox, numBoxes*(2*inRank+3)*sizeof(double)*1024, cudaMemcpyHostToDevice));
-		CHECKED_CALL(cudaMemcpy(dev_workLen, workLen, numBoxes*sizeof(int), cudaMemcpyHostToDevice));
-		CHECKED_CALL(cudaMemcpy(dev_workCounts, workCounts, numBoxes*sizeof(int), cudaMemcpyHostToDevice));
-
+		CHECKED_CALL(cudaMemcpy(dev_inBox, inBox, numBoxes*(2*inRank+3)*sizeof(double)*SIZE_BUFFER_PER_THREAD, cudaMemcpyHostToDevice));
+		CHECKED_CALL(cudaMemcpy(dev_workLen, workLen, numThreads*sizeof(int), cudaMemcpyHostToDevice));
+		CHECKED_CALL(cudaMemcpy(dev_workCounts, workCounts, numThreads*sizeof(int), cudaMemcpyHostToDevice));
 		CHECKED_CALL(cudaEventRecord(start, 0));
 		std::cout << "call CUDA\n";
-		globOptCUDA<<<GridSize, 1024>>>(dev_inBox, inRank,dev_workLen,dev_mins,funcMin, 0.001,dev_workCounts);
+		globOptCUDA<<<GridSize, 1024>>>(dev_inBox, inRank,dev_workLen,dev_mins,inEps,dev_workCounts);
 		std::cout << "stop CUDA\n";
 		CHECKED_CALL(cudaGetLastError());
 
 		CHECKED_CALL(cudaEventRecord(stop, 0));
 		CHECKED_CALL(cudaDeviceSynchronize());
 
-		CHECKED_CALL(cudaMemcpy(inBox, dev_inBox, numBoxes*(2*inRank+3)*sizeof(double)*1024, cudaMemcpyDeviceToHost));
-		CHECKED_CALL(cudaMemcpy(workLen, dev_workLen, numBoxes*sizeof(int), cudaMemcpyDeviceToHost));
-		CHECKED_CALL(cudaMemcpy(mins, dev_mins, numBoxes*sizeof(double), cudaMemcpyDeviceToHost));
-		CHECKED_CALL(cudaMemcpy(workCounts, dev_workCounts, numBoxes*sizeof(int), cudaMemcpyDeviceToHost));
+		CHECKED_CALL(cudaMemcpy(inBox, dev_inBox, numBoxes*(2*inRank+3)*sizeof(double)*SIZE_BUFFER_PER_THREAD, cudaMemcpyDeviceToHost));
+		CHECKED_CALL(cudaMemcpy(workLen, dev_workLen, numThreads*sizeof(int), cudaMemcpyDeviceToHost));
+		CHECKED_CALL(cudaMemcpy(mins, dev_mins, numThreads*sizeof(double), cudaMemcpyDeviceToHost));
+		CHECKED_CALL(cudaMemcpy(workCounts, dev_workCounts, numThreads*sizeof(int), cudaMemcpyDeviceToHost));
 
 		CHECKED_CALL(cudaEventElapsedTime(&time, start, stop));
 
@@ -430,15 +480,13 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 		std::cout << "wc = " << wc << "\n";
 		std::cout << "ls = " << ls << "\n";
 		
-	
-		funcMin = mins[0];
-		
-		for(int j  = 0; j < 1024; j++)
+		funcMin = mins[0];		
+		for(int j  = 1; j < 1024; j++)
 		{
 			if(funcMin > mins[j]) funcMin = mins[j];
 		}
 		
-		printf("##################\n\nmins: %.10f\n\n#############################\n",funcMin);
+		printf("mins: %.10f\n",funcMin);
 		
 		 myfile << (i+1) << ";" << wc << ";" << ls << ";" << funcMin << ";\n";
 
@@ -446,149 +494,28 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 		CHECKED_CALL(cudaEventDestroy(start));
 		CHECKED_CALL(cudaEventDestroy(stop));
 		
+		timeAll += time;
 		if(ls ==0) break;
 	}	
 	
-	 myfile.close();
+	myfile.close();
 	
 	std::cout << "free start\n";
 	
 	CHECKED_CALL(cudaFree(dev_inBox));
-	
-	std::cout << "free 1\n";
-	
     CHECKED_CALL(cudaFree(dev_workLen));
-	
-	std::cout << "free 2\n";
-	
 	CHECKED_CALL(cudaFree(dev_mins));
-	
-	std::cout << "free 3\n";
-	
 	CHECKED_CALL(cudaFree(dev_workCounts));
 	
-	std::cout << "free 4\n";
+	std::cout << "free stop\n";
+	std::cout <<  "\n\n";
+
 	
-	std::cout <<  "\n\n\n";
-	
-	int ind = 0;
-	for(int i  = 0; i < 1024; i++)
-	{
-		std::cout << workLen[i] << "\t";
-		for(int j = 0; j < workLen[i]; j++)
-		{
-			if(inBox[(i*1024 + j)*(2*inRank + 3) + inRank*2] < 0) 
-			{
-				//std::cout << "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@WHOA@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n";
-				//printf("lb = %.7f\tmin = %.7f", inBox[(i*1024 + j)*(2*inRank + 3) + inRank*2],inBox[(i*1024 + j)*(2*inRank + 3) + inRank*2 + 2]);
-				//std::cout << "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@WHOA@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n";
-				break;
-			}
-		}
-		if(workLen[i] > 2) ind = i;
-	}
-	
-	std::cout <<  "\n\n\n";
-	
-	for(int i  = 1024*ind; i < 1024*ind + 10; i++)
-	{
-		for(int j = 0; j < inRank; j++)
-		{
-			std::cout << "[" << inBox[i*(2*inRank + 3) + j*2] << "; " << inBox[i*(2*inRank + 3) + j*2 + 1] << "]\t";
-		}
-		std::cout << "\t\t" << inBox[i*(2*inRank + 3) + inRank*2] << "\t\t" << inBox[i*(2*inRank + 3) + inRank*2 + 1] << "\t\t" << inBox[i*(2*inRank + 3) + inRank*2 + 2];
-		std::cout <<  "\n";
-	}
-	
-	std::cout <<  "\n\n\n";
-	
-	/*
-	for(int i  = 0; i < 1024; i++)
-	{
-		std::cout << "\t\t" << inBox[i*1024*(2*inRank + 3) + inRank*2] << "\t\t" << inBox[i*1024*(2*inRank + 3) + inRank*2 + 1] << "\t\t" << inBox[i*1024*(2*inRank + 3) + inRank*2 + 2];
-		std::cout <<  "\n";
-	}
-	*/
-	
-	std::cout <<  "\n\n\n";
-	
-	std::cout << "MIN = " << mins[0] << "\n\n\n";
-	
-	for(int i  = 0; i < 1; i++)
-	{
-		std::cout << mins[i] << "\t";
-		printf("##################\n\nmins: %.10f\n\n#############################\n",mins[i]);
-	}
-	
-	std::cout <<  "\n\n\n";
-	
-	std::cout <<  "time = " << time;
-	
-	std::cout <<  "\n\n\n";
-    
+	std::cout << "MIN = " << funcMin << "\n";
+	std::cout <<  "timeAll = " << timeAll;
+	std::cout <<  "\n";
 
 }
-
-void fnGetOptValueWithCUDA_deep(double *inBox, int inRank, int inNumBoxesSplitCoeff, double inEps, int inMaxIter, int inFunc, double *outBox, double*outMin, double *outEps,int *status)
-{
-	int numBoxes = 1024;
-	double *boxes =  new double[numBoxes*(inRank*2+3)*1024];
-	double h;
-	int hInd;
-	int *workLen;
-	double *mins;
-
-	int i,n;
-	
-	double funcMin = 0;
-
-	funcMin = -39.16616*inRank;
-
-	*status = 1;
-
-
-	workLen = new int[numBoxes];
-	mins = new double[numBoxes];
-
-	h = inBox[1] - inBox[0];
-	hInd = 0;
-	
-	std::cout << "start finding max width rank\n";
-	for(i = 0; i < inRank; i++)
-	{
-		if(h < inBox[i*inRank + 1] - inBox[i*inRank])
-		{
-			h = inBox[i*inRank + 1] - inBox[i*inRank];
-			hInd = i;
-		}
-	}
-	std::cout << "stop finding max width rank\n";
-
-	for(n = 0; n < numBoxes; n++)
-	{
-		for(i = 0; i < inRank; i++)
-		{
-			if(i == hInd)
-			{
-				boxes[n*(2*inRank + 3)*1024 + i*2] = inBox[i*2] + h/1024.0*n;
-				boxes[n*(2*inRank + 3)*1024 + i*2 + 1] = inBox[i*2] + h/1024.0*(n+1);
-			}
-			else
-			{
-				boxes[n*(2*inRank + 3)*1024 + i*2] = inBox[i*2];
-				boxes[n*(2*inRank + 3)*1024 + i*2 + 1] = inBox[i*2 + 1];
-			}
-		}
-
-	}
-	
-	std::cout << "send data\n";
-	sendDataToCuda_deep(boxes, inRank, inFunc, numBoxes, workLen,mins,funcMin);
-
-}
-
-
-__const__ int rank = 4;
 
 
 __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min, double inRec, double inEps, int *workCounts)

@@ -5,11 +5,12 @@
 #include <stdio.h>
 
 #define DEVICE 3
-#define MAX_NUM_RUNS (100)
+#define MAX_NUM_RUNS (1000000)
 
 
- int const BLOCK_SIZE = 1024;
- int const	NUM_BLOCKS = 1;
+const int BLOCK_SIZE = 1024;
+const int NUM_BLOCKS = 1;
+const int SIZE_BUFFER_PER_THREAD = 1024; 
 
  
 
