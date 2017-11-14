@@ -482,6 +482,9 @@ __global__ void globOptCUDA_1(double *inBox, const int inRank, int *workLen, dou
 		}
 		else
 		{	
+			for(int k = 0; k < 5; k++)
+			{
+				
 			hInd = 0;
 			h = inBox[bInd + 1] - inBox[bInd];
 			for(i = 0; i < inRank; i++)
@@ -507,6 +510,7 @@ __global__ void globOptCUDA_1(double *inBox, const int inRank, int *workLen, dou
 				}
 			}
 			++workLen_s[threadIdx.x];
+			}
 		}
 			
 		++count[threadIdx.x];	
