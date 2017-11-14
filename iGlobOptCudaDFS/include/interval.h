@@ -8,9 +8,9 @@
 #define MAX_NUM_RUNS (1000000)
 
 
-const int BLOCK_SIZE = 256;
+const int BLOCK_SIZE = 1024;
 const int NUM_BLOCKS = 16;
-const int SIZE_BUFFER_PER_THREAD = 1024; 
+const int SIZE_BUFFER_PER_THREAD = 256; 
 const int TYPE_CUDA_OPTIMIZATION = 1;
 const int MAX_GPU_ITER = 100000;
 const int BORDER_BALANCE = 2;
