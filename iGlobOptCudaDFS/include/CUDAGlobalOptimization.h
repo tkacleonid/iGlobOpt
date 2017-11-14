@@ -376,7 +376,7 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 	
 	float time;
 	
-	for(int i = 0; i < 10; i++)
+	for(int i = 0; i < 100; i++)
 	{
 		
 		CHECKED_CALL(cudaEventCreate(&start));
