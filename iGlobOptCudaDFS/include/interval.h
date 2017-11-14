@@ -8,7 +8,10 @@
 #define MAX_NUM_RUNS (100)
 
 
-int const BLOCK_SIZE = 1024;
+ int const BLOCK_SIZE = 1024;
+ int const	NUM_BLOCKS = 1;
+
+ 
 
 
 
