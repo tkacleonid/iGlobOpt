@@ -285,7 +285,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 	
 	int *workCounts = new int[numThreads*sizeof(int)];
 	
-	for(i = 0; i < SIZE_BUFFER_PER_THREAD; i++)
+	for(i = 0; i < numThreads; i++)
 	{
 		workLen[i] = 1;
 		workCounts[i] = 0;
