@@ -415,7 +415,7 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 
 		CHECKED_CALL(cudaEventElapsedTime(&time, start, stop));
 
-		std::cout << "time = " << time << "\t"  << "numBoxes = " << numBoxes << "\n";
+		std::cout << "time = " << time << "\n";
 		
 		long long wc = 0;
 		
@@ -423,6 +423,8 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 		{
 			wc+=workCounts[j];
 		}
+		
+		std::cout << "wc = " << wc << "\n";
 		
 	
 		funcMin = mins[0];
