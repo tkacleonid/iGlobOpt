@@ -638,7 +638,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 			//if(minRec > min_s[blockIdx.x * 1024 + i])
 			//{
 				//minRec = min_s[blockIdx.x * 1024 + i];
-			/}
+			//}
 		}
 		
 			
