@@ -429,7 +429,7 @@ __global__ void globOptCUDA_1(double *inBox, const int inRank, int *workLen, dou
 					{
 						half = workLen_s[j]/2;
 						workLen_s[j] -= half;
-							memcpy(inBox + i*SIZE_BUFFER_PER_THREAD*(2*inRank+3), inBox + j*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[j])*(2*inRank+3), sizeof(double)*(2*inRank+3)*half);
+							memcpy(inBox + (i+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3), inBox + (j+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[j])*(2*inRank+3), sizeof(double)*(2*inRank+3)*half);
 							workLen_s[i] += half;
 							break;
 					}
@@ -458,10 +458,7 @@ __global__ void globOptCUDA_1(double *inBox, const int inRank, int *workLen, dou
 			n++;
 		}
 		else
-		{
-
-			bInd = threadId*1024*(2*inRank+3) + (workLen_s[threadIdx.x] - 1)*(2*inRank+3);
-					
+		{	
 			hInd = 0;
 			h = inBox[bInd + 1] - inBox[bInd];
 			for(i = 0; i < inRank; i++)
