@@ -419,9 +419,9 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 
 __global__ void globOptCUDA_1(double *inBox, const int inRank, int *workLen, double *min, const double inRec, const double inEps, int *workCounts)
 {
-	__shared__ double min_s[BLOCK_SIZE];
-	__shared__ int workLen_s[BLOCK_SIZE];
-	__shared__ int count[BLOCK_SIZE];
+	double min_s[BLOCK_SIZE];
+	int workLen_s[BLOCK_SIZE];
+	int count[BLOCK_SIZE];
 	
 	double minRec = inRec;
 	int i, j,bInd, hInd, n;
