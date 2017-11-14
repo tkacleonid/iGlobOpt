@@ -444,12 +444,12 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 		
 		CHECKED_CALL(cudaEventCreate(&start));
 		CHECKED_CALL(cudaEventCreate(&stop));
-		CHECKED_CALL(cudaMemcpy(dev_inBox, inBox, numBoxes*(2*inRank+3)*sizeof(double)*SIZE_BUFFER_PER_THREAD, cudaMemcpyHostToDevice));
+		CHECKED_CALL(cudaMemcpy(dev_inBox, boxes, numBoxes*(2*inRank+3)*sizeof(double)*SIZE_BUFFER_PER_THREAD, cudaMemcpyHostToDevice));
 		CHECKED_CALL(cudaMemcpy(dev_workLen, workLen, numThreads*sizeof(int), cudaMemcpyHostToDevice));
 		CHECKED_CALL(cudaMemcpy(dev_workCounts, workCounts, numThreads*sizeof(int), cudaMemcpyHostToDevice));
 		CHECKED_CALL(cudaEventRecord(start, 0));
 		std::cout << "call CUDA\n";
-		globOptCUDA<<<GridSize, 1024>>>(dev_inBox, inRank,dev_workLen,dev_mins,funcMin,inEps,dev_workCounts);
+		globOptCUDA<<<GridSize, BLOCK_SIZE>>>(dev_inBox, inRank,dev_workLen,dev_mins,funcMin,inEps,dev_workCounts);
 		std::cout << "stop CUDA\n";
 		CHECKED_CALL(cudaGetLastError());
 
@@ -516,16 +516,16 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 
 __global__ void globOptCUDA(double *inBox, const int inRank, int *workLen, double *min, const double inRec, const double inEps, int *workCounts)
 {
-	__shared__ double min_s[1024];
-	__shared__ int workLen_s[1024];
-	__shared__ int workLen_s_temp[1024];
-	__shared__ int count[1024];
+	__shared__ double min_s[BLOCK_SIZE];
+	__shared__ int workLen_s[BLOCK_SIZE];
+	__shared__ int workLen_s_temp[BLOCK_SIZE];
+	__shared__ int count[BLOCK_SIZE];
 	
 	double minRec = inRec;
 	int i, j, k, bInd, hInd, bInd2, n;
 	double curEps, h;
 	
-	int threadId = blockIdx.x * 1024 + threadIdx.x;
+	int threadId = blockIdx.x * BLOCK_SIZE + threadIdx.x;
 	
 	workLen_s[threadId] = workLen[threadId];
 	min_s[threadId] = minRec;
@@ -537,7 +537,7 @@ __global__ void globOptCUDA(double *inBox, const int inRank, int *workLen, doubl
 	int half;
 	
 	
-	//double *temp = (double *) malloc(500*(2*inRank+3)*sizeof(double));
+	double *temp = (double *) malloc(500*(2*inRank+3)*sizeof(double));
 	
 	
 	__syncthreads();	
