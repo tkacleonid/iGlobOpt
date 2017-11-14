@@ -406,10 +406,10 @@ __global__ void globOptCUDA_1(double *inBox, const int inRank, int *workLen, dou
 	
 	int threadId = blockIdx.x * BLOCK_SIZE + threadIdx.x;
 	
-	workLen_s[threadId] = workLen[threadId];
-	min_s[threadId] = minRec;
+	workLen_s[threadIdx.x] = workLen[threadId];
+	min_s[threadIdx.x] = minRec;
 	
-	count[threadId] = 0;
+	count[threadIdx.x] = 0;
 	
 	int half;
 	
@@ -419,11 +419,11 @@ __global__ void globOptCUDA_1(double *inBox, const int inRank, int *workLen, dou
 	n = 0;
 	if(threadId == 0)
 	{
-		for(i = 0; i < SIZE_BUFFER_PER_THREAD; i++)
+		for(i = 0; i < BLOCK_SIZE; i++)
 		{
 			if(workLen_s[i] == 0)
 			{
-				for(j = 0; j < SIZE_BUFFER_PER_THREAD; j++)
+				for(j = 0; j < BLOCK_SIZE; j++)
 				{
 					if(workLen_s[j] > BORDER_BALANCE)
 					{
@@ -441,26 +441,26 @@ __global__ void globOptCUDA_1(double *inBox, const int inRank, int *workLen, dou
 
 	__syncthreads();
 	
-	while(workLen_s[threadId] > 0 && workLen_s[threadId] < SIZE_BUFFER_PER_THREAD && count[threadId] < MAX_GPU_ITER)
+	while(workLen_s[threadIdx.x] > 0 && workLen_s[threadIdx.x] < SIZE_BUFFER_PER_THREAD && count[threadIdx.x] < MAX_GPU_ITER)
 	{
 		
-		bInd = threadId*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[threadId] - 1)*(2*inRank+3);
+		bInd = threadId*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[threadIdx.x] - 1)*(2*inRank+3);
 		fnCalcFunLimitsStyblinski_CUDA(inBox + bInd, inRank);
 			
-		if(min_s[threadId] > inBox[bInd + 2*inRank + 2])
+		if(min_s[threadIdx.x] > inBox[bInd + 2*inRank + 2])
 		{
-			min_s[threadId] = inBox[bInd + 2*inRank + 2];
+			min_s[threadIdx.x] = inBox[bInd + 2*inRank + 2];
 		}
 			
-		if(min_s[threadId] - inBox[bInd + 2*inRank] < inEps)
+		if(min_s[threadIdx.x] - inBox[bInd + 2*inRank] < inEps)
 		{
-			--workLen_s[threadId];
+			--workLen_s[threadIdx.x];
 			n++;
 		}
 		else
 		{
 
-			bInd = threadId*1024*(2*inRank+3) + (workLen_s[threadId] - 1)*(2*inRank+3);
+			bInd = threadId*1024*(2*inRank+3) + (workLen_s[threadIdx.x] - 1)*(2*inRank+3);
 					
 			hInd = 0;
 			h = inBox[bInd + 1] - inBox[bInd];
@@ -486,14 +486,14 @@ __global__ void globOptCUDA_1(double *inBox, const int inRank, int *workLen, dou
 					inBox[bInd + 2*inRank + 3 + i*2 + 1] = inBox[bInd + i*2 + 1];
 				}
 			}
-			++workLen_s[threadId];
+			++workLen_s[threadIdx.x];
 		}
 			
-		++count[threadId];	
+		++count[threadIdx.x];	
 	}
 	
-	workLen[threadId] = workLen_s[threadId];
-	min[threadId] = min_s[threadId];
+	workLen[threadId] = workLen_s[threadIdx.x];
+	min[threadId] = min_s[threadIdx.x];
 	workCounts[threadId]+=n;
 	
 }
