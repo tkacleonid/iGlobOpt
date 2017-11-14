@@ -373,31 +373,43 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 	std::cout << "start CUDA malloc 3\n";
 	
 	CHECKED_CALL(cudaMalloc((void **)&dev_mins, numThreads*sizeof(double)));
-    CHECKED_CALL(cudaEventCreate(&start));
-    CHECKED_CALL(cudaEventCreate(&stop));
-	CHECKED_CALL(cudaMemcpy(dev_inBox, inBox, numBoxes*(2*inRank+3)*sizeof(double)*1024, cudaMemcpyHostToDevice));
-	//CHECKED_CALL(cudaMemcpy(dev_workLen, workLen, numBoxes*sizeof(int), cudaMemcpyHostToDevice));
-
-	CHECKED_CALL(cudaEventRecord(start, 0));
-	std::cout << "call CUDA\n";
-	globOptCUDA<<<GridSize, 1024>>>(dev_inBox, inRank,dev_workLen,dev_mins,funcMin, 0.001);
-	std::cout << "stop CUDA\n";
-    CHECKED_CALL(cudaGetLastError());
-
-    CHECKED_CALL(cudaEventRecord(stop, 0));
-    CHECKED_CALL(cudaDeviceSynchronize());
-
-    CHECKED_CALL(cudaMemcpy(inBox, dev_inBox, numBoxes*(2*inRank+3)*sizeof(double)*1024, cudaMemcpyDeviceToHost));
-	CHECKED_CALL(cudaMemcpy(workLen, dev_workLen, numBoxes*sizeof(int), cudaMemcpyDeviceToHost));
-	CHECKED_CALL(cudaMemcpy(mins, dev_mins, numBoxes*sizeof(double), cudaMemcpyDeviceToHost));
-
+	
 	float time;
-    CHECKED_CALL(cudaEventElapsedTime(&time, start, stop));
+	
+	for(int i = 0; i < 10; i++)
+	{
+		
+		CHECKED_CALL(cudaEventCreate(&start));
+		CHECKED_CALL(cudaEventCreate(&stop));
+		CHECKED_CALL(cudaMemcpy(dev_inBox, inBox, numBoxes*(2*inRank+3)*sizeof(double)*1024, cudaMemcpyHostToDevice));
+		//CHECKED_CALL(cudaMemcpy(dev_workLen, workLen, numBoxes*sizeof(int), cudaMemcpyHostToDevice));
 
-	std::cout << "time = " << time << "\t"  << "numBoxes = " << numBoxes << "\n";
+		CHECKED_CALL(cudaEventRecord(start, 0));
+		std::cout << "call CUDA\n";
+		globOptCUDA<<<GridSize, 1024>>>(dev_inBox, inRank,dev_workLen,dev_mins,funcMin, 0.001);
+		std::cout << "stop CUDA\n";
+		CHECKED_CALL(cudaGetLastError());
 
-    CHECKED_CALL(cudaEventDestroy(start));
-    CHECKED_CALL(cudaEventDestroy(stop));
+		CHECKED_CALL(cudaEventRecord(stop, 0));
+		CHECKED_CALL(cudaDeviceSynchronize());
+
+		CHECKED_CALL(cudaMemcpy(inBox, dev_inBox, numBoxes*(2*inRank+3)*sizeof(double)*1024, cudaMemcpyDeviceToHost));
+		CHECKED_CALL(cudaMemcpy(workLen, dev_workLen, numBoxes*sizeof(int), cudaMemcpyDeviceToHost));
+		CHECKED_CALL(cudaMemcpy(mins, dev_mins, numBoxes*sizeof(double), cudaMemcpyDeviceToHost));
+
+		CHECKED_CALL(cudaEventElapsedTime(&time, start, stop));
+
+		std::cout << "time = " << time << "\t"  << "numBoxes = " << numBoxes << "\n";
+	
+		for(int i  = 0; i < 1; i++)
+		{
+			std::cout << mins[i] << "\t";
+			printf("##################\n\nmins: %.10f\n\n#############################\n",mins[i]);
+		}
+
+		CHECKED_CALL(cudaEventDestroy(start));
+		CHECKED_CALL(cudaEventDestroy(stop));
+	}	
 	
 	std::cout << "free start\n";
 	
@@ -565,7 +577,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 	
 	__syncthreads();
 	
-	while(workLen_s[threadId] < 1024 && count[threadId] < 1000000)
+	while(workLen_s[threadId] < 1024 && count[threadId] < 100000)
 	{
 		if(workLen_s[threadId] > 0)
 		{
