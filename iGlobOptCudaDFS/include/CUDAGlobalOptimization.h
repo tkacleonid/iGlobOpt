@@ -438,7 +438,6 @@ void fnGetOptValueWithCUDA(double *inBox, int inRank, double inEps, double *outB
 	std::ofstream myfile;
 	myfile.open ("test1.txt");
 	timeAll = 0;
-	_rank = inRank;
 	for(i = 0; i < MAX_NUM_RUNS ; i++)
 	{
 		std::cout << "\nNUMBER #" << (i+1) << "\n";
@@ -538,7 +537,7 @@ __global__ void globOptCUDA(double *inBox, const int inRank, int *workLen, doubl
 	int half;
 	
 	
-	double temp[500*(2*_rank+3)];
+	double *temp = (double *) malloc(500*(2*inRank+3)*sizeof(double));
 	
 	
 	__syncthreads();	
