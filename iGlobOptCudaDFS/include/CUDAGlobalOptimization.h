@@ -392,12 +392,7 @@ void fnGetOptValueWithCUDA(double *inBox, int inRank, double inEps, double *outB
 		}
 
 	}
-	
-	
-	sendDataToCuda_deep(boxes, inRank, inFunc, numBoxes, workLen,mins,funcMin);
-	
-	
-	
+
 	double *dev_inBox = 0;
 	int *dev_workLen = 0;
 	int *dev_workCounts = 0;
