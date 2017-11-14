@@ -484,7 +484,7 @@ __global__ void globOptCUDA_1(double *inBox, const int inRank, int *workLen, dou
 		{	
 			for(int k = 0; k < 5; k++)
 			{
-				
+				bInd = threadId*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[threadIdx.x] - 1)*(2*inRank+3);
 			hInd = 0;
 			h = inBox[bInd + 1] - inBox[bInd];
 			for(i = 0; i < inRank; i++)
