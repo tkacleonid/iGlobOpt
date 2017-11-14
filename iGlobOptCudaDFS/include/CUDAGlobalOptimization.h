@@ -345,7 +345,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 		
 		long long wc = 0, ls = 0;
 		
-		for(int j = 0; j < 1024; j++)
+		for(int j = 0; j < numThreads; j++)
 		{
 			wc+=workCounts[j];
 			ls += workLen[j];
@@ -355,7 +355,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 		std::cout << "ls = " << ls << "\n";
 		
 		funcMin = mins[0];		
-		for(int j  = 1; j < 1024; j++)
+		for(int j  = 1; j < numThreads; j++)
 		{
 			if(funcMin > mins[j]) funcMin = mins[j];
 		}
