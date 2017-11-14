@@ -589,7 +589,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 			else
 			{
 				
-				
+				/*
 				if(workLen_s[threadId] > 0 && workLen_s[threadId] < 250)
 				{
 					for(k = workLen_s[threadId] -1; k >= 0; k--)
@@ -689,7 +689,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 					*/
 					
 					
-				}
+				//}
 							
 				
 				
