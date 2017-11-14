@@ -431,11 +431,12 @@ void sendDataToCuda_deep(double *inBox, int inRank, int inFunc, int numBoxes, in
 	
 		funcMin = mins[0];
 		
-		for(int i  = 0; i < 1; i++)
+		for(int j  = 0; j < 1; j++)
 		{
-			std::cout << mins[i] << "\t";
-			printf("##################\n\nmins: %.10f\n\n#############################\n",mins[i]);
+			if(funcMin > mins[j]) funcMin = mins[j];
 		}
+		
+		printf("##################\n\nmins: %.10f\n\n#############################\n",funcMin);
 
 		CHECKED_CALL(cudaEventDestroy(start));
 		CHECKED_CALL(cudaEventDestroy(stop));
@@ -634,10 +635,10 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 				}
 			}
 			
-			if(minRec > min_s[blockIdx.x * 1024 + i])
-			{
-				minRec = min_s[blockIdx.x * 1024 + i];
-			}
+			//if(minRec > min_s[blockIdx.x * 1024 + i])
+			//{
+				//minRec = min_s[blockIdx.x * 1024 + i];
+			/}
 		}
 		
 			
@@ -650,7 +651,7 @@ __global__ void globOptCUDA(double *inBox, int inRank, int *workLen, double *min
 			
 	}	
 			
-	min_s[threadId] = minRec;	
+	//min_s[threadId] = minRec;	
 			
 		
 	
