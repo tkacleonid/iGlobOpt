@@ -364,6 +364,29 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 		
 		 myfile << (i+1) << ";" << wc << ";" << ls << ";" << funcMin << ";\n";
 
+		 
+		 for(int i = 0; i < numThreads; i++)
+		{
+			if(workLen[i] == 0)
+			{
+				for(int j = 0; j < numThreads; j++)
+				{
+					if(workLen[j] > BORDER_BALANCE)
+					{
+						int half = workLen[j]/2;
+						workLen[j] -= half;
+							memcpy(boxes + i*SIZE_BUFFER_PER_THREAD*(2*inRank+3), boxes + j*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen[j])*(2*inRank+3), sizeof(double)*(2*inRank+3)*half);
+							workLen[i] += half;
+							break;
+					}
+				}
+			}		
+		}	
+
+		
+		 
+		 
+		 
 
 		CHECKED_CALL(cudaEventDestroy(start));
 		CHECKED_CALL(cudaEventDestroy(stop));
