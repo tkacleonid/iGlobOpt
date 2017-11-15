@@ -558,29 +558,35 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 	int half;
 	
 	
-	while(workLen_s[threadIdx.x] > 0 && workLen_s[threadIdx.x] < SIZE_BUFFER_PER_THREAD && count[threadIdx.x] < MAX_GPU_ITER)
+	
+	__syncthreads();	
+			
+
+	
+	while(workLen_s[threadId] > 0 && workLen_s[threadId] < BLOCK_SIZE && count[threadId] < MAX_GPU_ITER)
 	{
-		while(workLen_s[threadIdx.x] > 0 && (count[threadIdx.x] + 1) % MAX_ITER_BEFORE_BALANCE  != 0)
+		if(workLen_s[threadId] > 0)
 		{
 			
-			bInd = threadId*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[threadIdx.x] - 1)*(2*inRank+3);
+			bInd = threadId*1024*(2*inRank+3) + (workLen_s[threadId] - 1)*(2*inRank+3);
 			fnCalcFunLimitsStyblinski_CUDA(inBox + bInd, inRank);
-				
-			if(min_s[threadIdx.x] > inBox[bInd + 2*inRank + 2])
+			
+			if(min_s[threadId] > inBox[bInd + 2*inRank + 2])
 			{
-				min_s[threadIdx.x] = inBox[bInd + 2*inRank + 2];
+				min_s[threadId] = inBox[bInd + 2*inRank + 2];
 			}
-				
-			if(min_s[threadIdx.x] - inBox[bInd + 2*inRank] < inEps)
+	
+			if(min_s[threadId] - inBox[bInd + 2*inRank] < inEps)
 			{
-				--workLen_s[threadIdx.x];
+				--workLen_s[threadId];
 				n++;
 			}
 			else
-			{	
-				for(int k = 0; k < 1; k++)
-				{
-					bInd = threadId*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[threadIdx.x] - 1)*(2*inRank+3);
+			{
+				
+
+				bInd = threadId*1024*(2*inRank+3) + (workLen_s[threadId] - 1)*(2*inRank+3);
+					
 				hInd = 0;
 				h = inBox[bInd + 1] - inBox[bInd];
 				for(i = 0; i < inRank; i++)
@@ -605,38 +611,94 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 						inBox[bInd + 2*inRank + 3 + i*2 + 1] = inBox[bInd + i*2 + 1];
 					}
 				}
-				++workLen_s[threadIdx.x];
+				++workLen_s[threadId];
+			}
+		}
+			
+		
+
+		/*
+		__syncthreads();
+		
+		if(threadId == 0)// && (count[threadId]+1) % 10 == 0)
+		{
+			for(i = 0; i < 1024; i++)
+			{
+				if(minRec > min_s[blockIdx.x * 1024 + i])
+				{
+					minRec = min_s[blockIdx.x * 1024 + i];
 				}
 			}
-				
-			++count[threadIdx.x];	
 		}
 		
 		__syncthreads();
 		
-		if(threadId == 0)
-		{		
-			for(i = 0; i < BLOCK_SIZE; i++)
+		min_s[threadId] = minRec;	
+		
+		*/
+	
+		
+		/*
+		workLen_s_temp[threadId] = workLen[threadId];
+		
+		__syncthreads();
+		
+			
+		
+			
+		if(workLen_s[threadId] == 0)
+		{
+			for(i = 0; i < 1024; i++)
+			{
+				if(workLen_s_temp[i] > 6 && workLen_s_temp[threadId] == 0)
+				{
+					atomicAdd(workLen_s_temp + i, -3);
+					memcpy(inBox + bInd, inBox + i*1024*(2*inRank+3) + (workLen_s_temp[i] - 1)*(2*inRank+3), sizeof(double)*(2*inRank+3)*3);
+					workLen_s_temp[threadId] += 3;
+					break;
+				}
+			}
+		}
+			
+			//workLen[threadId] = workLen_s_temp[threadId];
+		__syncthreads();
+			
+		workLen_s[threadId] = workLen_s_temp[threadId];
+			
+			*/		
+			
+		__syncthreads();	
+			
+		
+		if(threadId == 0 && (count[threadId]+1) % MAX_ITER_BEFORE_BALANCE == 0)
+		{
+			for(i = 0; i < 1024; i++)
 			{
 				if(workLen_s[i] == 0)
 				{
-					for(j = 0; j < BLOCK_SIZE; j++)
+					for(j = 0; j < 1024; j++)
 					{
-						if(workLen_s[j] > BORDER_BALANCE)
+						if(workLen_s[j] > 2)
 						{
 							half = workLen_s[j]/2;
 							workLen_s[j] -= half;
-								memcpy(inBox + (i+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3), inBox + (j+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[j])*(2*inRank+3), sizeof(double)*(2*inRank+3)*half);
-								workLen_s[i] += half;
-								break;
+							memcpy(inBox + i*1024*(2*inRank+3), inBox + j*1024*(2*inRank+3) + (workLen_s[j])*(2*inRank+3), sizeof(double)*(2*inRank+3)*half);
+							workLen_s[i] += half;
+							break;
 						}
 					}
-				}		
-			}		
-			
+				}
+			}	
 		}	
+					
 		
 		__syncthreads();
+		
+		
+
+		++count[threadId];
+
+		
 	}
 	
 	workLen[threadId] = workLen_s[threadIdx.x];
