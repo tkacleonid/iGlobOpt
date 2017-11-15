@@ -523,6 +523,123 @@ __global__ void globOptCUDA_1(double *inBox, const int inRank, int *workLen, dou
 }
 
 
+__global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, double *min, const double inRec, const double inEps, int *workCounts)
+{
+	__shared__ double min_s[BLOCK_SIZE];
+	__shared__ int workLen_s[BLOCK_SIZE];
+	__shared__ int count[BLOCK_SIZE];
+	
+	double minRec = inRec;
+	int i, j,bInd, hInd, n;
+	double  h;
+	
+	int threadId = blockIdx.x * BLOCK_SIZE + threadIdx.x;
+	
+	workLen_s[threadIdx.x] = workLen[threadId];
+	min_s[threadIdx.x] = minRec;
+	
+	count[threadIdx.x] = 0;
+	
+	int half;
+	
+	
+	while(workLen_s[threadIdx.x] > 0 && workLen_s[threadIdx.x] < SIZE_BUFFER_PER_THREAD && count[threadIdx.x] < MAX_GPU_ITER)
+	{
+		while(true)
+		{
+			
+			bInd = threadId*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[threadIdx.x] - 1)*(2*inRank+3);
+			fnCalcFunLimitsStyblinski_CUDA(inBox + bInd, inRank);
+				
+			if(min_s[threadIdx.x] > inBox[bInd + 2*inRank + 2])
+			{
+				min_s[threadIdx.x] = inBox[bInd + 2*inRank + 2];
+			}
+				
+			if(min_s[threadIdx.x] - inBox[bInd + 2*inRank] < inEps)
+			{
+				--workLen_s[threadIdx.x];
+				n++;
+			}
+			else
+			{	
+				for(int k = 0; k < 2; k++)
+				{
+					bInd = threadId*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[threadIdx.x] - 1)*(2*inRank+3);
+				hInd = 0;
+				h = inBox[bInd + 1] - inBox[bInd];
+				for(i = 0; i < inRank; i++)
+				{
+					if( h < inBox[bInd + i*2 + 1] - inBox[bInd + i*2]) 
+					{
+						h = inBox[bInd + i*2 + 1] - inBox[bInd + i*2];
+						hInd = i;
+					}
+				}
+				for(i = 0; i < inRank; i++)
+				{
+					if(i == hInd) 
+					{
+						inBox[bInd + i*2 + 1] = inBox[bInd + i*2] + h/2.0;
+						inBox[bInd + 2*inRank + 3 + i*2] = inBox[bInd + i*2] + h/2.0;
+						inBox[bInd + 2*inRank + 3 + i*2 + 1] = inBox[bInd + i*2] + h;
+					}
+					else
+					{
+						inBox[bInd + 2*inRank + 3 + i*2] = inBox[bInd + i*2];
+						inBox[bInd + 2*inRank + 3 + i*2 + 1] = inBox[bInd + i*2 + 1];
+					}
+				}
+				++workLen_s[threadIdx.x];
+				}
+			}
+				
+			++count[threadIdx.x];	
+			
+			if((count[threadId]) % MAX_ITER_BEFORE_BALANCE  == 0) break;
+		}
+		
+		__syncthreads();
+		
+		if(threadId == 0 && (count[threadId]) % MAX_ITER_BEFORE_BALANCE == 0)
+		{
+			for(i = 0; i < BLOCK_SIZE; i++)
+			{
+				if(workLen_s[i] == 0)
+				{
+					for(j = 0; j < BLOCK_SIZE; j++)
+					{
+						if(workLen_s[j] > BORDER_BALANCE)
+						{
+							half = workLen_s[j]/2;
+							workLen_s[j] -= half;
+								memcpy(inBox + (i+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3), inBox + (j+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[j])*(2*inRank+3), sizeof(double)*(2*inRank+3)*half);
+								workLen_s[i] += half;
+								break;
+						}
+					}
+				}		
+			}		
+			
+			wl = workLen_s[0];
+			for(i = 0; i < 1024; i++)
+			{
+				if(wl < workLen_s[i]) wl = workLen_s[i];
+			}
+			if(wl == 0) break;
+			
+		}	
+		
+		__syncthreads();
+	}
+	
+	workLen[threadId] = workLen_s[threadIdx.x];
+	min[threadId] = min_s[threadIdx.x];
+	workCounts[threadId]+=n;
+	
+}
+
+
 
 
 
