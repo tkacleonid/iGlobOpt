@@ -390,9 +390,9 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 					{
 						int half = workLen[j]/2;
 						workLen[j] -= half;
-							memcpy(boxes + i*SIZE_BUFFER_PER_THREAD*(2*inRank+3), boxes + j*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen[j])*(2*inRank+3), sizeof(double)*(2*inRank+3)*half);
-							workLen[i] += half;
-							break;
+						memcpy(boxes + i*SIZE_BUFFER_PER_THREAD*(2*inRank+3), boxes + j*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen[j])*(2*inRank+3), sizeof(double)*(2*inRank+3)*half);
+						workLen[i] += half;
+						break;
 					}
 				}
 			}		
@@ -611,13 +611,20 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 				
 			++count[threadIdx.x];	
 			
-			if((count[threadId]) % MAX_ITER_BEFORE_BALANCE  == 0) break;
+			if((count[threadIdx.x]) % MAX_ITER_BEFORE_BALANCE  == 0) break;
 		}
 		
 		__syncthreads();
 		
-		if(threadId == 0 && (count[threadId]) % MAX_ITER_BEFORE_BALANCE == 0)
+		if(threadId == 0 && (count[threadIdx.x]) % MAX_ITER_BEFORE_BALANCE == 0)
 		{
+			wl = workLen_s[0];
+			for(i = 0; i < BLOCK_SIZE; i++)
+			{
+				if(wl < workLen_s[i]) wl = workLen_s[i];
+			}
+			if(wl == 0) break;
+			
 			for(i = 0; i < BLOCK_SIZE; i++)
 			{
 				if(workLen_s[i] == 0)
@@ -635,13 +642,6 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 					}
 				}		
 			}		
-			
-			wl = workLen_s[0];
-			for(i = 0; i < 1024; i++)
-			{
-				if(wl < workLen_s[i]) wl = workLen_s[i];
-			}
-			if(wl == 0) break;
 			
 		}	
 		
