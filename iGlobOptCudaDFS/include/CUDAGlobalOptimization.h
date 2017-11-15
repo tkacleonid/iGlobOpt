@@ -15,8 +15,8 @@
 #include <fstream>
 
 
-__global__ void globOptCUDA_1(double *inBox, int inRank, int *workLen, double *min, double inRec, double inEps, int *workCounts);
-__global__ void globOptCUDA_2(double *inBox, int inRank, int *workLen, double *min, double inRec, double inEps, int *workCounts);
+__global__ void globOptCUDA_1(double *inBox, int inRank, int *workLen, double *min, double inRec, double inEps, long long *workCounts);
+__global__ void globOptCUDA_2(double *inBox, int inRank, int *workLen, double *min, double inRec, double inEps, long long *workCounts);
 
 /**
 *	Calculus Interval for Multiple function on GPU
@@ -538,7 +538,7 @@ __global__ void globOptCUDA_1(double *inBox, const int inRank, int *workLen, dou
 }
 
 
-__global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, double *min, const double inRec, const double inEps, int *workCounts)
+__global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, double *min, const double inRec, const double inEps, long long *workCounts)
 {
 	__shared__ double min_s[BLOCK_SIZE];
 	__shared__ int workLen_s[BLOCK_SIZE];
