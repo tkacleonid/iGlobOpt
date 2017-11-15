@@ -560,7 +560,7 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 	
 	while(workLen_s[threadIdx.x] > 0 && workLen_s[threadIdx.x] < SIZE_BUFFER_PER_THREAD && count[threadIdx.x] < MAX_GPU_ITER)
 	{
-		while(true)
+		while((count[threadIdx.x] + 1) % MAX_ITER_BEFORE_BALANCE  != 0)
 		{
 			
 			bInd = threadId*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[threadIdx.x] - 1)*(2*inRank+3);
@@ -610,13 +610,11 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 			}
 				
 			++count[threadIdx.x];	
-			
-			if((count[threadIdx.x]) % MAX_ITER_BEFORE_BALANCE  == 0) break;
 		}
 		
 		__syncthreads();
 		
-		if(threadId == 0 && (count[threadIdx.x]) % MAX_ITER_BEFORE_BALANCE == 0)
+		if(threadId == 0)
 		{
 			wl = workLen_s[0];
 			for(i = 0; i < BLOCK_SIZE; i++)
