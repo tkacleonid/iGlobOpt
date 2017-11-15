@@ -10,7 +10,7 @@ C_LIB  = -lm
 CFLAGS = -std=c++11 -lineinfo -arch=sm_35 -O3 -I${INC} -x cu
 CLINKFLAGS= -O3 -arch=sm_35
 
-OBJS = ${OBJ}/kernel.o ${OBJ}/CPUGlobalOptimization.o 
+OBJS = ${OBJ}/kernel.o 
 
 
 ${BINDIR}/${PROGRAM}: crdir ${OBJS}
