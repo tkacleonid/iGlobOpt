@@ -556,12 +556,12 @@ int main() {
              break;
 		case 55:
              inFun = fnCalcFunLimitsStyblinski;
-             inRank = 4;
+             inRank = 5;
              inBox = new double[inRank * 2];
              for(int i = 0; i < inRank; i++)
              {
-            	 inBox[i*2] = -30.0;
-            	 inBox[i*2+1] = 30.0;
+            	 inBox[i*2] = -5.0;
+            	 inBox[i*2+1] = 5.0;
              }
              break;			 
 

@@ -23,8 +23,8 @@ int main()
 
 	for(int i = 0; i < inRank; i++)
 	{
-		inBox[i*2] = -30.0;
-		inBox[i*2+1] = 30.0;
+		inBox[i*2] = -5.0;
+		inBox[i*2+1] = 5.0;
 	}
 
 	std::cout << "start Main\n";
