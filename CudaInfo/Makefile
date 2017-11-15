@@ -7,7 +7,7 @@ INC = include
 CC     = nvcc
 CLINK  = $(CC)
 C_LIB  = -lm
-CFLAGS = -std=c++14 -lineinfo -arch=sm_35 -O3 -I${INC} -x cu
+CFLAGS = -std=c++11 -Xcompiler "-std=c++14" -lineinfo -arch=sm_35 -O3 -I${INC} -x cu
 CLINKFLAGS= -O3 -arch=sm_35
 
 OBJS = ${OBJ}/kernel.o 
