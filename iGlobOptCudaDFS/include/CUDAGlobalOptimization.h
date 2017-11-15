@@ -545,7 +545,7 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 	__shared__ int count[BLOCK_SIZE];
 	
 	double minRec = inRec;
-	int i, j,bInd, hInd, n,wl;;
+	int i, j,bInd, hInd, n;
 	double  h;
 	
 	int threadId = blockIdx.x * BLOCK_SIZE + threadIdx.x;
@@ -560,7 +560,7 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 	
 	while(workLen_s[threadIdx.x] > 0 && workLen_s[threadIdx.x] < SIZE_BUFFER_PER_THREAD && count[threadIdx.x] < MAX_GPU_ITER)
 	{
-		while((count[threadIdx.x] + 1) % MAX_ITER_BEFORE_BALANCE  != 0)
+		while(workLen_s[threadIdx.x] > 0 && (count[threadIdx.x] + 1) % MAX_ITER_BEFORE_BALANCE  != 0)
 		{
 			
 			bInd = threadId*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[threadIdx.x] - 1)*(2*inRank+3);
@@ -615,14 +615,7 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 		__syncthreads();
 		
 		if(threadId == 0)
-		{
-			wl = workLen_s[0];
-			for(i = 0; i < BLOCK_SIZE; i++)
-			{
-				if(wl < workLen_s[i]) wl = workLen_s[i];
-			}
-			if(wl == 0) break;
-			
+		{		
 			for(i = 0; i < BLOCK_SIZE; i++)
 			{
 				if(workLen_s[i] == 0)
