@@ -275,7 +275,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 
 	double *dev_inBox = 0;
 	int *dev_workLen = 0;
-	int *dev_workCounts = 0;
+	long long *dev_workCounts = 0;
 	double *dev_mins = 0;
 
 	int GridSize = NUM_BLOCKS;
@@ -284,7 +284,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 	
 	float time, timeAll;
 	
-	int *workCounts = new int[numThreads*sizeof(int)];
+	long long *workCounts = new long long[numThreads*sizeof(int)];
 	
 	for(i = 0; i < numThreads; i++)
 	{
@@ -311,7 +311,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 	
 	std::cout << "start CUDA malloc 4\n";
 	
-	CHECKED_CALL(cudaMalloc((void **)&dev_workCounts, numThreads*sizeof(int)));
+	CHECKED_CALL(cudaMalloc((void **)&dev_workCounts, numThreads*sizeof(long long)));
 	
 	
 	std::ofstream myfile;
@@ -352,7 +352,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 		CHECKED_CALL(cudaMemcpy(boxes, dev_inBox, numBoxes*(2*inRank+3)*sizeof(double)*SIZE_BUFFER_PER_THREAD, cudaMemcpyDeviceToHost));
 		CHECKED_CALL(cudaMemcpy(workLen, dev_workLen, numThreads*sizeof(int), cudaMemcpyDeviceToHost));
 		CHECKED_CALL(cudaMemcpy(mins, dev_mins, numThreads*sizeof(double), cudaMemcpyDeviceToHost));
-		CHECKED_CALL(cudaMemcpy(workCounts, dev_workCounts, numThreads*sizeof(int), cudaMemcpyDeviceToHost));
+		CHECKED_CALL(cudaMemcpy(workCounts, dev_workCounts, numThreads*sizeof(long long), cudaMemcpyDeviceToHost));
 
 		CHECKED_CALL(cudaEventElapsedTime(&time, start, stop));
 
