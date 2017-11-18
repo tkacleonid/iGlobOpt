@@ -30,7 +30,7 @@
 const std::string MMAP_FILEPATH = "mmaped.bin";
 const int MAX_BOXES_IN_BUFFER = 1000000;
 const int ARRAY_BOUNDS_LENGTH = 3;
-const long long SIZE_BUFFER_FILE = 20000000000L;
+const long long SIZE_BUFFER_FILE = 2000000000L;
 const int PART_BUFFER_TO_FILE = 2;
 const int PART_BUFFER_FROM_FILE = 4;
 
