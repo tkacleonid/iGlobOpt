@@ -560,8 +560,8 @@ int main() {
              inBox = new double[inRank * 2];
              for(int i = 0; i < inRank; i++)
              {
-            	 inBox[i*2] = -5.0;
-            	 inBox[i*2+1] = 5.0;
+            	 inBox[i*2] = -10.0;
+            	 inBox[i*2+1] = 10.0;
              }
              break;			 
 

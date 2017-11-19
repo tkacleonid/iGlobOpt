@@ -77,7 +77,7 @@ __device__ void fnCalcFunLimitsHypebolic2_CUDA(double *inBox, int inRank, double
 *	Calculus Interval for AluffiPentini function
 *	@param inbox pointer to Box
 *	@param inRank number of variables
-*	@param outlimits pointer to estimated function limits
+*	@param outlimits pointer to estimated function limit
 */
 
 __device__ void fnCalcFunLimitsAluffiPentini2_CUDA(double *inBox, int inRank, double *outLimits)
