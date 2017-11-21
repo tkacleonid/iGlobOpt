@@ -550,8 +550,8 @@ int main() {
              inBox = new double[inRank * 2];
              for(int i = 0; i < inRank; i++)
              {
-            	 inBox[i*2] = -30.0;
-            	 inBox[i*2+1] = 30.0;
+            	 inBox[i*2] = -30.0;        
+            	 inBox[i*2+1] = 30.0;    
              }
              break;
 		case 55:
@@ -581,7 +581,11 @@ int main() {
         default: calcOptValueOnCPUBFS(inBox,1, inRank, inNumBoxesSplitCoeff,  inFun, inEps, &outMin,  &st,argMin);
     }
 
+	
+	
+	
     auto end = std::chrono::high_resolution_clock::now();
+	
 
 	if(st == GO_WORKBUFFER_IS_FULL)
 	{
@@ -591,6 +595,8 @@ int main() {
 	{
 		std::cout << "Optimization is not finished: Work buffer is empty. Reached function record " << outMin << std::endl;
 	}
+	
+	
 	else if(st == GO_SUCCESS)
 	{
 	    std::cout << "Result: ";
