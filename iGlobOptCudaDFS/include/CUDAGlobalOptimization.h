@@ -236,7 +236,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 	
 	double funcMin = 0;
 
-	funcMin = 39.1661657038*inRank;
+	funcMin = -39.1661657038*inRank;
 
 	*status = 1;
 
@@ -270,7 +270,6 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 				boxes[n*(2*inRank + 3)*SIZE_BUFFER_PER_THREAD + i*2 + 1] = inBox[i*2 + 1];
 			}
 		}
-
 	}
 
 	double *dev_inBox = 0;
@@ -297,20 +296,10 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 	CHECKED_CALL(cudaSetDevice(DEVICE));
 	CHECKED_CALL(cudaDeviceReset());
 	
-	std::cout << "start CUDA malloc 1\n";
 		
     CHECKED_CALL(cudaMalloc((void **)&dev_inBox, sizeInBox));
-	
-	std::cout << "start CUDA malloc 2\n";
-	
 	CHECKED_CALL(cudaMalloc((void **)&dev_workLen, numThreads*sizeof(int)));
-	
-	std::cout << "start CUDA malloc 3\n";
-	
 	CHECKED_CALL(cudaMalloc((void **)&dev_mins, numThreads*sizeof(double)));
-	
-	std::cout << "start CUDA malloc 4\n";
-	
 	CHECKED_CALL(cudaMalloc((void **)&dev_workCounts, numThreads*sizeof(long long)));
 	
 	
@@ -319,15 +308,13 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 	timeAll = 0;
 	for(i = 0; i < MAX_NUM_RUNS ; i++)
 	{
-		std::cout << "\nNUMBER #" << (i+1) << "\n";
-		
 		CHECKED_CALL(cudaEventCreate(&start));
 		CHECKED_CALL(cudaEventCreate(&stop));
 		CHECKED_CALL(cudaMemcpy(dev_inBox, boxes, numBoxes*(2*inRank+3)*sizeof(double)*SIZE_BUFFER_PER_THREAD, cudaMemcpyHostToDevice));
 		CHECKED_CALL(cudaMemcpy(dev_workLen, workLen, numThreads*sizeof(int), cudaMemcpyHostToDevice));
 		CHECKED_CALL(cudaMemcpy(dev_workCounts, workCounts, numThreads*sizeof(int), cudaMemcpyHostToDevice));
 		CHECKED_CALL(cudaEventRecord(start, 0));
-		std::cout << "call CUDA\n";
+
 		switch(TYPE_CUDA_OPTIMIZATION)
 		{
 			case 1:
@@ -335,15 +322,12 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 				break;
 			case 2:
 				globOptCUDA_2<<<GridSize, BLOCK_SIZE>>>(dev_inBox, inRank,dev_workLen,dev_mins,funcMin,inEps,dev_workCounts);
-				break;
-				
-				
+				break;				
 			default:
 				globOptCUDA_1<<<GridSize, BLOCK_SIZE>>>(dev_inBox, inRank,dev_workLen,dev_mins,funcMin,inEps,dev_workCounts);
 				break;
 		}
 		
-		std::cout << "stop CUDA\n";
 		CHECKED_CALL(cudaGetLastError());
 
 		CHECKED_CALL(cudaEventRecord(stop, 0));
@@ -353,7 +337,6 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 		CHECKED_CALL(cudaMemcpy(workLen, dev_workLen, numThreads*sizeof(int), cudaMemcpyDeviceToHost));
 		CHECKED_CALL(cudaMemcpy(mins, dev_mins, numThreads*sizeof(double), cudaMemcpyDeviceToHost));
 		CHECKED_CALL(cudaMemcpy(workCounts, dev_workCounts, numThreads*sizeof(long long), cudaMemcpyDeviceToHost));
-
 		CHECKED_CALL(cudaEventElapsedTime(&time, start, stop));
 
 		std::cout << "time = " << time << "\n";
@@ -396,12 +379,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 					}
 				}
 			}		
-		}	
-
-		
-		 
-		 
-		 
+		}		 
 
 		CHECKED_CALL(cudaEventDestroy(start));
 		CHECKED_CALL(cudaEventDestroy(stop));
