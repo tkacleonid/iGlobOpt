@@ -641,7 +641,7 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 		*/
 	
 		
-		/*
+		///*
 		workLen_s_temp[threadId] = workLen[threadId];
 		
 		__syncthreads();
@@ -668,7 +668,7 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 			
 		workLen_s[threadId] = workLen_s_temp[threadId];
 			
-			*/		
+			//*/		
 			
 		__syncthreads();	
 			
