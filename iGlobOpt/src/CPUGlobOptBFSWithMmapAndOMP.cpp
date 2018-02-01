@@ -258,6 +258,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 
 		//checking if the global minimum is found
 		double curEps = funRecord - funLB < 0 ? -(funRecord - funLB) : funRecord - funLB;
+		/*
 		if(curEps < _eps  && numBoxesInFile == 0)
 		{
 			*_min = funRecord;
@@ -269,6 +270,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 			
 			return;
 		}
+		*/
 
 		//Saving appropriate boxes to split
 		int cnt = 0;
