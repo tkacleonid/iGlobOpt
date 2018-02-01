@@ -138,6 +138,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 	numWorkBoxes = 1024;
 	
 	
+	auto start = std::chrono::high_resolution_clock::now();
 
 	//While global optimum not found
 	while(true)
@@ -264,6 +265,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 			delete [] workBoxes;
 			delete [] funBounds;
 			close(fd);
+			
 			return;
 		}
 
@@ -296,6 +298,10 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 			delete [] workBoxes;
 			delete [] funBounds;
 			close(fd);
+			auto end = std::chrono::high_resolution_clock::now();
+			std::cout << "time in millisecs: " << ((std::chrono::duration_cast<std::chrono::milliseconds>(end - start)).count())/1 << "\t";
+			std::cout << "\twc = " << wc << "\n";
+			
 			return;
 		}
 
