@@ -566,29 +566,29 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 			
 
 	
-	while(workLen_s[threadId] > 0 && workLen_s[threadId] < BLOCK_SIZE && count[threadId] < MAX_GPU_ITER)
+	while(workLen_s[threadIdx.x] > 0 && workLen_s[threadIdx.x] < BLOCK_SIZE && count[threadIdx.x] < MAX_GPU_ITER)
 	{
-		if(workLen_s[threadId] > 0)
+		if(workLen_s[threadIdx.x] > 0)
 		{
 			
-			bInd = threadId*1024*(2*inRank+3) + (workLen_s[threadId] - 1)*(2*inRank+3);
+			bInd = threadId*1024*(2*inRank+3) + (workLen_s[threadIdx.x] - 1)*(2*inRank+3);
 			fnCalcFunLimitsStyblinski_CUDA(inBox + bInd, inRank);
 			
-			if(min_s[threadId] > inBox[bInd + 2*inRank + 2])
+			if(min_s[threadIdx.x] > inBox[bInd + 2*inRank + 2])
 			{
-				min_s[threadId] = inBox[bInd + 2*inRank + 2];
+				min_s[threadIdx.x] = inBox[bInd + 2*inRank + 2];
 			}
 	
-			if(min_s[threadId] - inBox[bInd + 2*inRank] < inEps)
+			if(min_s[threadIdx.x] - inBox[bInd + 2*inRank] < inEps)
 			{
-				--workLen_s[threadId];
+				--workLen_s[threadIdx.x];
 				n++;
 			}
 			else
 			{
 				
 
-				bInd = threadId*1024*(2*inRank+3) + (workLen_s[threadId] - 1)*(2*inRank+3);
+				bInd = threadId*1024*(2*inRank+3) + (workLen_s[threadIdx.x] - 1)*(2*inRank+3);
 					
 				hInd = 0;
 				h = inBox[bInd + 1] - inBox[bInd];
@@ -614,16 +614,16 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 						inBox[bInd + 2*inRank + 3 + i*2 + 1] = inBox[bInd + i*2 + 1];
 					}
 				}
-				++workLen_s[threadId];
+				++workLen_s[threadIdx.x];
 			}
 		}
 			
 		
 
-		/*
+		
 		__syncthreads();
 		
-		if(threadId == 0)// && (count[threadId]+1) % 10 == 0)
+		if(threadIdx.x == 0) && (count[threadIdx.x]+1) % 100 == 0)
 		{
 			for(i = 0; i < 1024; i++)
 			{
@@ -636,10 +636,9 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 		
 		__syncthreads();
 		
-		min_s[threadId] = minRec;	
+		min_s[threadIdx.x] = minRec;	
 		
-		*/
-	
+		
 		
 		/*
 		workLen_s_temp[threadId] = workLen[threadId];
@@ -673,7 +672,7 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 		__syncthreads();	
 			
 		
-		if(threadId == 0 && (count[threadId]+1) % MAX_ITER_BEFORE_BALANCE == 0)
+		if(threadIdx.x == 0 && (count[threadIdx.x]+1) % MAX_ITER_BEFORE_BALANCE == 0)
 		{
 			for(i = 0; i < 1024; i++)
 			{
@@ -699,7 +698,7 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 		
 		
 
-		++count[threadId];
+		++count[threadIdx.x];
 
 		
 	}
