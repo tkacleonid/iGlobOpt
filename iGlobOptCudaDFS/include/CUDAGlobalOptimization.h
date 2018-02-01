@@ -625,11 +625,11 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 		
 		if((threadIdx.x == 0) && (count[threadIdx.x]+1) % 100 == 0)
 		{
-			for(i = 0; i < 1024; i++)
+			for(i = 0; i < BLOCK_SIZE; i++)
 			{
-				if(minRec > min_s[blockIdx.x * 1024 + i])
+				if(minRec > min_s[i])
 				{
-					minRec = min_s[blockIdx.x * 1024 + i];
+					minRec = min_s[i];
 				}
 			}
 		}
@@ -674,22 +674,22 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 		
 		if(threadIdx.x == 0 && (count[threadIdx.x]+1) % MAX_ITER_BEFORE_BALANCE == 0)
 		{
-			for(i = 0; i < 1024; i++)
+			for(i = 0; i < BLOCK_SIZE; i++)
 			{
 				if(workLen_s[i] == 0)
 				{
-					for(j = 0; j < 1024; j++)
+					for(j = 0; j < BLOCK_SIZE; j++)
 					{
-						if(workLen_s[j] > 2)
+						if(workLen_s[j] > BORDER_BALANCE)
 						{
 							half = workLen_s[j]/2;
 							workLen_s[j] -= half;
-							memcpy(inBox + i*1024*(2*inRank+3), inBox + j*1024*(2*inRank+3) + (workLen_s[j])*(2*inRank+3), sizeof(double)*(2*inRank+3)*half);
-							workLen_s[i] += half;
-							break;
+								memcpy(inBox + (i+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3), inBox + (j+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[j])*(2*inRank+3), sizeof(double)*(2*inRank+3)*half);
+								workLen_s[i] += half;
+								break;
 						}
 					}
-				}
+				}		
 			}	
 		}	
 					
