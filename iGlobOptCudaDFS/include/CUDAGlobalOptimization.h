@@ -588,12 +588,13 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 			{
 				
 
+				for(int j = 0; j < 4; j++)
+				{
 				bInd = threadId*1024*(2*inRank+3) + (workLen_s[threadIdx.x] - 1)*(2*inRank+3);
 					
 				hInd = 0;
 				h = inBox[bInd + 1] - inBox[bInd];
-				for(int j = 0; j < 4; j++)
-				{
+				
 				for(i = 0; i < inRank; i++)
 				{
 					if( h < inBox[bInd + i*2 + 1] - inBox[bInd + i*2]) 
