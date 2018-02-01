@@ -588,7 +588,7 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 			{
 				
 
-				for(int j = 0; j < 4; j++)
+				for(int j = 0; j < 16; j++)
 				{
 				bInd = threadId*1024*(2*inRank+3) + (workLen_s[threadIdx.x] - 1)*(2*inRank+3);
 					
