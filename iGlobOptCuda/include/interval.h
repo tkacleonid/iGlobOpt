@@ -2,7 +2,7 @@
 #define INTERVAL_H
 
 #define DEVICE 0
-#define MAX_NUM_RUNS (100)
+#define MAX_NUM_RUNS (500)
 
 
 int const BLOCK_SIZE = 32;
