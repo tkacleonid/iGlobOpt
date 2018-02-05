@@ -1,7 +1,7 @@
 #ifndef INTERVAL_H
 #define INTERVAL_H
 
-#define DEVICE 0
+#define DEVICE 1
 #define MAX_NUM_RUNS (100)
 
 
