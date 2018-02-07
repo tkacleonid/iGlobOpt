@@ -5,7 +5,7 @@
 #define MAX_NUM_RUNS (100)
 
 
-int const BLOCK_SIZE = 32;
+int const BLOCK_SIZE = 16;
 int const GRID_SIZE = 16;
 int const THREADS = GRID_SIZE * BLOCK_SIZE;
 
