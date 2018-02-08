@@ -6,7 +6,7 @@
 
 
 int const BLOCK_SIZE = 32;
-int const GRID_SIZE = 16;
+int const GRID_SIZE = 4;
 int const THREADS = GRID_SIZE * BLOCK_SIZE;
 
 #define CHECKED_CALL(func)                                     \
