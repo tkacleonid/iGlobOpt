@@ -144,7 +144,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 	//While global optimum not found
 	while(true)
 	{
-		std::cin >> tp;
+		scanf("%s",tp);
 		std::cout << "\n\n-------------------------";
 		std::cout << "wc:  " << wc << "\n\n";
 		for(int i = 0; i < numWorkBoxes; i++)
