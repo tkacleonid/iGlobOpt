@@ -381,7 +381,15 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 		
 		 myfile << (i+1) << ";" << wc << ";" << ls << ";" << funcMin << ";\n";
 
-		 
+		printf("\n\n\n");
+		
+		for(int i = 0; i < numThreads; i++)
+		{
+		    printf("%d\n",workLen[i]);  
+		}
+		
+		printf("\n\n\n");
+		
 		 for(int i = 0; i < numThreads; i++)
 		{
 			if(workLen[i] == 0)
