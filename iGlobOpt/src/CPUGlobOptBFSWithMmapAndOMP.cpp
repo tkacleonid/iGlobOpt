@@ -148,6 +148,8 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 		std::cin.get();
 		std::cout << "\n\n-------------------------";
 		std::cout << "wc:  " << wc << "\n\n";
+		
+		/*
 		for(int i = 0; i < numWorkBoxes; i++)
 		{
 			for(int j = 0; j < _rank; j++)
@@ -157,6 +159,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 			std::cout << ",";
 			
 		}
+		*/
 
 		//Workin with file
 		if(numWorkBoxes*_splitCoeff >= MAX_BOXES_IN_BUFFER)
