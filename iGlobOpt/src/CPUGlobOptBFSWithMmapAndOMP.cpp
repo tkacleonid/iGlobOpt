@@ -15,6 +15,7 @@
 
 #include "iGlobOpt.h"
 #include <cstdio>
+#include <iostream>
 
 
 /**
