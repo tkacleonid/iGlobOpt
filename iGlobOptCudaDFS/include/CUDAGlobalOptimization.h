@@ -277,7 +277,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 
 	}
 	
-	std::cout << "in 1\n";
+	
 
 	double *dev_inBox = 0;
 	int *dev_workLen = 0;
@@ -291,7 +291,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 	float time, timeAll;
 	
 	long long *workCounts = new long long[numThreads*sizeof(int)];
-	
+	std::cout << "in 1\n";
 	for(i = 0; i < numThreads; i++)
 	{
 		workLen[i] = 1;
