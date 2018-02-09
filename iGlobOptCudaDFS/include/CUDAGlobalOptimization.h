@@ -651,6 +651,7 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 	__syncthreads();	
 			
 
+	n = 0;
 	
 	while(workLen_s[threadIdx.x] < BLOCK_SIZE && count[threadIdx.x] < MAX_GPU_ITER)
 	{
@@ -875,7 +876,7 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 	
 	workLen[threadId] = workLen_s[threadIdx.x];
 	min[threadId] = min_s[threadIdx.x];
-	workCounts[threadId]+=n;
+	workCounts[threadId]=n;
 	
 }
 
