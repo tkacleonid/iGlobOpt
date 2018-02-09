@@ -248,6 +248,8 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 	h = inBox[1] - inBox[0];
 	hInd = 0;
 	
+	std::cout << "in 1\n";
+	
 	for(i = 0; i < inRank; i++)
 	{
 		if(h < inBox[i*inRank + 1] - inBox[i*inRank])
