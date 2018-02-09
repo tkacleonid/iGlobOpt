@@ -753,7 +753,7 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 				
 			}
 			
-			/*
+			
 			boxIndex = 0;
 			for(i = 0; i < BLOCK_SIZE; i++)
 			{
@@ -778,7 +778,7 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 					break;
 				}
 			}
-			*/
+			
 			
 			
 
