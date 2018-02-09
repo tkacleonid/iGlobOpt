@@ -300,9 +300,11 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 
 	cudaEvent_t start, stop;
 	
+	std::cout << "in 1\n";
+	
 	CHECKED_CALL(cudaSetDevice(DEVICE));
 	
-	std::cout << "in 1\n";
+	
 	
 	CHECKED_CALL(cudaDeviceReset());
 	
