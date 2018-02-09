@@ -714,7 +714,7 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 		
 		__syncthreads();
 		
-		if((threadIdx.x == 0) && (count[threadIdx.x]+1) % 10 == 0)
+		if((threadIdx.x == 0))// && (count[threadIdx.x]+1) % 10 == 0)
 		{
 			for(i = 0; i < BLOCK_SIZE; i++)
 			{
