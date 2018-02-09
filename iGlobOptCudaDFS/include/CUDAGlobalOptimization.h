@@ -752,6 +752,7 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 				
 			}
 			
+			/*
 			boxIndex = 0;
 			for(i = 0; i < BLOCK_SIZE; i++)
 			{
@@ -776,36 +777,10 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 					break;
 				}
 			}
-			
-			
-			
-			/*
-			for(i = 0; i < BLOCK_SIZE; i++)
-			{
-				numWorkBoxes += workLen_s[i]; 	
-				if(workLen_s[i] == 0)
-				{
-					if(curThreadWeTakeBoxesCount < averageBoxesPerThread*2) 
-					{
-						for(j = curThreadWeTakeBoxesIndex; j < BLOCK_SIZE; j++)
-						{	
-							if(workLen_s[i] >= averageBoxesPerThread*2)
-							{
-								curThreadWeTakeBoxesIndex = j;
-								curThreadWeTakeBoxesCount = workLen_s[i];
-							}
-						}
-					}
-					if(curThreadWeTakeBoxesCount < averageBoxesPerThread*2) break;
-					workLen_s[curThreadWeTakeBoxesIndex] -= averageBoxesPerThread;
-					memcpy(inBox + (i+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3), inBox + (curThreadWeTakeBoxesIndex+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[curThreadWeTakeBoxesIndex])*(2*inRank+3), sizeof(double)*(2*inRank+3)*averageBoxesPerThread);
-					workLen_s[i] += averageBoxesPerThread;
-					
-				}
-				
-			}
-			
 			*/
+			
+			
+
 			
 		}
 			
