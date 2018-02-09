@@ -238,7 +238,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 	
 	double funcMin = 0;
 
-	funcMin = -39.1661657038*inRank;
+	funcMin = 39.1661657038*inRank;
 
 	*status = 1;
 
