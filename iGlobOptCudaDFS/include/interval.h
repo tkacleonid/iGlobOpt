@@ -12,9 +12,9 @@ const int BLOCK_SIZE = 1024;
 const int NUM_BLOCKS = 4;
 const int SIZE_BUFFER_PER_THREAD = 1024; 
 const int TYPE_CUDA_OPTIMIZATION = 2;
-const int MAX_GPU_ITER = 5000;
+const int MAX_GPU_ITER = 50;
 const int BORDER_BALANCE = 1;
-const int MAX_ITER_BEFORE_BALANCE = 500;
+const int MAX_ITER_BEFORE_BALANCE = 5;
 
 
 
