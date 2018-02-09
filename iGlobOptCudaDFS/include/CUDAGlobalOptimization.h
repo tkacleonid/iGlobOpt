@@ -291,7 +291,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 	float time, timeAll;
 	
 	long long *workCounts = new long long[numThreads*sizeof(int)];
-	std::cout << "in 1\n";
+	
 	for(i = 0; i < numThreads; i++)
 	{
 		workLen[i] = 1;
@@ -301,6 +301,9 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 	cudaEvent_t start, stop;
 	
 	CHECKED_CALL(cudaSetDevice(DEVICE));
+	
+	std::cout << "in 1\n";
+	
 	CHECKED_CALL(cudaDeviceReset());
 	
 	std::cout << "start CUDA malloc 1\n";
