@@ -23,6 +23,8 @@
 #include <iostream>
 #include <exception>
 #include <time.h>
+#include <cstdio>
+
 
 #define FILEPATH "mmaped.bin"
 
