@@ -248,7 +248,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 	h = inBox[1] - inBox[0];
 	hInd = 0;
 	
-	std::cout << "in 1\n";
+	
 	
 	for(i = 0; i < inRank; i++)
 	{
@@ -276,6 +276,8 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 		}
 
 	}
+	
+	std::cout << "in 1\n";
 
 	double *dev_inBox = 0;
 	int *dev_workLen = 0;
