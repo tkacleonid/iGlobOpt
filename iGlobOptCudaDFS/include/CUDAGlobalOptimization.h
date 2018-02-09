@@ -484,12 +484,12 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 			}
 		}
 		 
-		 
+		/* 
 		 for(int j = 0; j < numThreads; j++)
 		{
 		    printf("%d\t",workLen[j]);  
 		}
-		 
+		 */
 
 		CHECKED_CALL(cudaEventDestroy(start));
 		CHECKED_CALL(cudaEventDestroy(stop));
