@@ -575,7 +575,7 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 			
 
 	
-	while((workLen_s[threadIdx.x] > 0 || threadIdx.x == 0)  && workLen_s[threadIdx.x] < BLOCK_SIZE && count[threadIdx.x] < MAX_GPU_ITER)
+	while(workLen_s[threadIdx.x] < BLOCK_SIZE && count[threadIdx.x] < MAX_GPU_ITER)
 	{
 		if(workLen_s[threadIdx.x] > 0)
 		{
