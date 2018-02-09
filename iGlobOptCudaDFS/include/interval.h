@@ -4,7 +4,7 @@
 #include <iostream>
 #include <stdio.h>
 
-#define DEVICE 2
+#define DEVICE 1
 #define MAX_NUM_RUNS (1000000)
 
 
