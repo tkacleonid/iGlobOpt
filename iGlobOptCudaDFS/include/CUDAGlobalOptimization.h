@@ -361,7 +361,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 
 		std::cout << "time = " << time << "\n";
 		
-		ls = 0;
+		long long ls = 0;
 		
 		for(int j = 0; j < numThreads; j++)
 		{
