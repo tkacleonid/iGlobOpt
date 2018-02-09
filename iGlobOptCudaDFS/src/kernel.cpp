@@ -31,7 +31,7 @@ int main()
 
 	std::cout << "start \n";
 
-	fnGetOptValueWithCUDA(inBox, inRank, inEps, outBox, &outMin, &status);
+	//fnGetOptValueWithCUDA(inBox, inRank, inEps, outBox, &outMin, &status);
 
 	std::cout << "min = " << outMin << "\t";
 
