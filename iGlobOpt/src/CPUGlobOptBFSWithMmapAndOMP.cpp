@@ -140,9 +140,22 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 	
 	auto start = std::chrono::high_resolution_clock::now();
 
+	char tp[100];
 	//While global optimum not found
 	while(true)
 	{
+		std::cin >> tp;
+		std::cout << "\n\n-------------------------";
+		std::cout << "wc:  " << wc << "\n\n";
+		for(int i = 0; i < numWorkBoxes; i++)
+		{
+			for(int j = 0; j < _rank; j++)
+			{
+				std::cout << "[" << restBoxesToSplit[i*_rank+j)*2] << ";" <<  restBoxesToSplit[(i*_rank+j)*2+1] << "]\t";
+			}
+			std::cout << ",";
+			
+		}
 
 		//Workin with file
 		if(numWorkBoxes*_splitCoeff >= MAX_BOXES_IN_BUFFER)
@@ -238,7 +251,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 						workBoxes[((k*_splitCoeff + n)*_rank+i)*2 + 1] = restBoxesToSplit[(k*_rank+i)*2 + 1];
 					}
 				}
-				wc++;
+				
 				_fun(&workBoxes[((k*_splitCoeff + n)*_rank)*2],_rank,&funBounds[(k*_splitCoeff + n)*ARRAY_BOUNDS_LENGTH]);
 			}
 		}
@@ -284,6 +297,8 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 				}
 				cnt++;
 			}
+			else wc++;
+				
 		}
 		numWorkBoxes = cnt;
 		
