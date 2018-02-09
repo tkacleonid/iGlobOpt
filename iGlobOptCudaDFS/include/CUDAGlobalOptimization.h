@@ -331,6 +331,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 	long long wc = 0;
 	for(i = 0; i < MAX_NUM_RUNS ; i++)
 	{
+		std::cin.get();
 		std::cout << "\nNUMBER #" << (i+1) << "\n";
 		
 		CHECKED_CALL(cudaEventCreate(&start));
