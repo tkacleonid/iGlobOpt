@@ -23,7 +23,7 @@ int main() {
     double *argMin = NULL;
     double *outFunBounds = NULL;
     double outMin = 0.0;
-    double inEps = 0.0001;
+    double inEps = 0.1;
     int inNumBoxesSplitCoeff = 2;
     int status = -1;
 
