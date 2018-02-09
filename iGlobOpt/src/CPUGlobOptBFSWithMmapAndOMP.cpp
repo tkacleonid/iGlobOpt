@@ -145,7 +145,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 	while(true)
 	{
 		//scanf("%s",tp);
-		std::cin.get();
+		//std::cin.get();
 		std::cout << "\n\n-------------------------";
 		std::cout << "wc:  " << wc << "\n\n";
 		
