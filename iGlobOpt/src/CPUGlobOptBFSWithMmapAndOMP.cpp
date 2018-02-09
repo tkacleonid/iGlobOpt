@@ -151,7 +151,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 		{
 			for(int j = 0; j < _rank; j++)
 			{
-				std::cout << "[" << restBoxesToSplit[i*_rank+j)*2] << ";" <<  restBoxesToSplit[(i*_rank+j)*2+1] << "]\t";
+				std::cout << "[" << restBoxesToSplit[(i*_rank+j)*2] << ";" <<  restBoxesToSplit[(i*_rank+j)*2+1] << "]\t";
 			}
 			std::cout << ",";
 			
