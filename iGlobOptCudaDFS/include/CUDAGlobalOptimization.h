@@ -319,6 +319,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 	std::ofstream myfile;
 	myfile.open ("test1.txt");
 	timeAll = 0;
+	long long wc = 0;
 	for(i = 0; i < MAX_NUM_RUNS ; i++)
 	{
 		std::cout << "\nNUMBER #" << (i+1) << "\n";
@@ -360,12 +361,13 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 
 		std::cout << "time = " << time << "\n";
 		
-		long long wc = 0, ls = 0;
+		ls = 0;
 		
 		for(int j = 0; j < numThreads; j++)
 		{
 			wc+=workCounts[j];
 			ls += workLen[j];
+			workCounts[j] = 0;
 		}
 		
 		std::cout << "wc = " << wc << "\n";
