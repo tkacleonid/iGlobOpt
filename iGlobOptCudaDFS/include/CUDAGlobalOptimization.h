@@ -385,7 +385,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 		
 		for(int i = 0; i < numThreads; i++)
 		{
-		    printf("%d\n",workLen[i]);  
+		    printf("%d\t",workLen[i]);  
 		}
 		
 		printf("\n\n\n");
