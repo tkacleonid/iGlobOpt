@@ -668,7 +668,7 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 		if(workLen_s[threadIdx.x] > 0)
 		{
 			
-			bInd = threadId*1024*(2*inRank+3) + (workLen_s[threadIdx.x] - 1)*(2*inRank+3);
+			bInd = threadId*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[threadIdx.x] - 1)*(2*inRank+3);
 			fnCalcFunLimitsStyblinski_CUDA(inBox + bInd, inRank);
 			
 			if(min_s[threadIdx.x] > inBox[bInd + 2*inRank + 2])
@@ -774,32 +774,12 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 		
 		/*
 		
-		if(threadIdx.x == 0 && (count[threadIdx.x]+1) % MAX_ITER_BEFORE_BALANCE == 0)
-		{
-			for(i = 0; i < BLOCK_SIZE; i++)
-			{
-				if(workLen_s[i] == 0)
-				{
-					for(j = 0; j < BLOCK_SIZE; j++)
-					{
-						if(workLen_s[j] > BORDER_BALANCE)
-						{
-							half = workLen_s[j]/2;
-							workLen_s[j] -= half;
-								memcpy(inBox + (i+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3), inBox + (j+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[j])*(2*inRank+3), sizeof(double)*(2*inRank+3)*half);
-								workLen_s[i] += half;
-								break;
-						}
-					}
-				}		
-			}	
-		}	
-		
+
 		
 		
 		*/
 		
-				int numWorkBoxes = 0;
+		int numWorkBoxes = 0;
 		int averageBoxesPerThread = 0;
 		int curThreadWeTakeBoxesIndex = -1;
 		int curThreadWeTakeBoxesCount = 0;
