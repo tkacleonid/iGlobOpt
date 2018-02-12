@@ -17,7 +17,7 @@ int main()
 	double *inBox = new double[inRank*2];
 	double *outBox = new double[inRank*2];
 	double outMin = 0.0;
-	double inEps = 0.000001;
+	double inEps = 0.00001;
 	int status = -1;
 
 
