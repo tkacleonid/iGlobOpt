@@ -17,14 +17,14 @@ int main()
 	double *inBox = new double[inRank*2];
 	double *outBox = new double[inRank*2];
 	double outMin = 0.0;
-	double inEps = 0.001;
+	double inEps = 0.1;
 	int status = -1;
 
 
 	for(int i = 0; i < inRank; i++)
 	{
-		inBox[i*2] = -50.0;
-		inBox[i*2+1] = 50.0;
+		inBox[i*2] = -5.0;
+		inBox[i*2+1] = 5.0;
 	}
 
 	std::cout << "start Main\n";
