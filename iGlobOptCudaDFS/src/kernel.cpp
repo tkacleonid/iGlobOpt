@@ -12,7 +12,7 @@
 int main()
 {
 	
-    int inRank = 6;
+    int inRank = 8;
 
 	double *inBox = new double[inRank*2];
 	double *outBox = new double[inRank*2];
