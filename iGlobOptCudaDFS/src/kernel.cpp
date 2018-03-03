@@ -23,7 +23,7 @@ int main()
 
 	for(int i = 0; i < inRank; i++)
 	{
-		inBox[i*2] = -5.0;
+		inBox[i*2] = -50.0;
 		inBox[i*2+1] = 5.0;
 	}
 
