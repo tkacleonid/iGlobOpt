@@ -14,7 +14,7 @@ int main()
 	
 	srand(time(NULL));
 	
-	double *boxes = new double[2*n*m*dim];
+	double *boxes = new double[1*n*m*dim];
 	int *numberOfBoxes = new int[n];
 	
 	for(int i = 0; i < n; i++)
@@ -30,7 +30,11 @@ int main()
 		}
 		
 	}
-		
+	
+	
+	
+	
+
 	return 0;
 }
 
@@ -56,9 +60,6 @@ void balancingOnCPU(int n, int m, int dim)
 		}
 		
 	}
-	
-	
-	
 	
 }
 
