@@ -12,6 +12,7 @@ void balancingOnCPU(int n, int m, int dim);
 void balancingOnCPU2(int n, int m, int dim);
 void sortQuickRecursive(int *indexes,int *ar,  const int n);
 void quickSortBase(int *indexes,int *ar, const int l, const int r);
+void balancingOnCPU_v3(int n, int m, int dim);
 
 int main()
 {	
