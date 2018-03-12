@@ -16,7 +16,7 @@ int main()
 	
 	srand(time(NULL));
 	
-	balancingOnCPU2(100, 100, 2);
+	balancingOnCPU(100, 100, 2);
 		
 	return 0;
 }
@@ -94,9 +94,15 @@ void balancingOnCPU(int n, int m, int dim)
 						countAverageBoxesPerThreadMore--;
 						//if (countAverageBoxesPerThreadMore == 0)
 					}
+					
 					workLen[j] -= numBoxesWeTake;
 					//memcpy(boxes + i*m*(2*dim+3) + (workLen[i])*(2*dim+3), boxes + j*m*(2*dim+3) + (workLen[j])*(2*dim+3), sizeof(double)*(2*dim+3)*numBoxesWeTake);
 					workLen[i] += numBoxesWeTake;	
+					
+					if(workLen[j] == averageBoxesPerThread + 1)  {
+						countAverageBoxesPerThreadMore--;
+						//if (countAverageBoxesPerThreadMore == 0)
+					}
 					if((workLen[i] == averageBoxesPerThread && countAverageBoxesPerThreadMore == 0) || workLen[i] == averageBoxesPerThread + 1) 
 					{
 						curThreadWeTakeBoxesIndex = j;
