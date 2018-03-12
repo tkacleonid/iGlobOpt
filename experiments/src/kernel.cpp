@@ -192,10 +192,10 @@ void balancingOnCPU2(int n, int m, int dim)
 	int boxIndex = 0;
 	int countAverageBoxesPerThreadMore = 0;
 	int plusOne = 0;
-	
+	int i,j;
 	
 
-	for(int i = 0; i < n; i++)
+	for(i = 0; i < n; i++)
 	{
 		numWorkBoxes += workLen[i]; 	
 	}
@@ -204,11 +204,11 @@ void balancingOnCPU2(int n, int m, int dim)
 	if(averageBoxesPerThread == 0) averageBoxesPerThread = averageBoxesPerThread + 1;
 			
 	curThreadWeTakeBoxesIndex = 0;
-	for(int i = 0; i < n; i++)
+	for(i = 0; i < n; i++)
 	{
 		if(workLen[i] < averageBoxesPerThread)
 		{
-			for(int j = curThreadWeTakeBoxesIndex; j < n; j++)
+			for(j = curThreadWeTakeBoxesIndex; j < n; j++)
 			{
 				if(workLen[j] > averageBoxesPerThread)
 				{
@@ -219,24 +219,23 @@ void balancingOnCPU2(int n, int m, int dim)
 					workLen[i] += numBoxesWeTake;	
 					if(workLen[i] == averageBoxesPerThread) 
 					{
-						curThreadWeTakeBoxesIndex = j;
 						break;	
 					}
 				}
 						
 			}
-			
+			curThreadWeTakeBoxesIndex = j;
 		}
 				
 	}
 			
 			
 	boxIndex = 0;
-	for(int i = 0; i < n; i++)
+	for(i = 0; i < n; i++)
 	{
 		if(workLen[i] == averageBoxesPerThread)
 		{
-			for(int j = curThreadWeTakeBoxesIndex; j < n; j++)
+			for(j = curThreadWeTakeBoxesIndex; j < n; j++)
 			{
 				if(workLen[j] > averageBoxesPerThread + 1)
 				{
@@ -244,12 +243,11 @@ void balancingOnCPU2(int n, int m, int dim)
 					workLen[j] -= numBoxesWeTake;
 					//memcpy(inBox + (i+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[i])*(2*inRank+3), inBox + (j+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[j])*(2*inRank+3), sizeof(double)*(2*inRank+3)*numBoxesWeTake);
 					workLen[i] += numBoxesWeTake;	
-					curThreadWeTakeBoxesIndex = j;
 					break;
 				}
 						
 			}
-			
+			curThreadWeTakeBoxesIndex = j;
 		}
 		if(curThreadWeTakeBoxesIndex == n - 1 && workLen[curThreadWeTakeBoxesIndex] <= averageBoxesPerThread + 1)
 		{
@@ -259,7 +257,7 @@ void balancingOnCPU2(int n, int m, int dim)
 	
 
 	printf("\n\n");
-	for(int i = 0; i < n; i++)
+	for(i = 0; i < n; i++)
 	{		
 		printf("%d\t", workLen[i]);	
 	}
