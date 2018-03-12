@@ -352,7 +352,7 @@ void balancingOnCPU_v3(int n, int m, int dim)
 	}
 	printf("\n\n");
 	
-	int *workLenIndexes = new workLenIndexes[n];
+	int *workLenIndexes = new int[n];
 	for (int i = 0; i < n; i++) {
 		workLenIndexes[i] = i;
 	}
@@ -448,7 +448,7 @@ void balancingOnCPU_v3(int n, int m, int dim)
 
 
 void sortQuickRecursive(int *indexes,int *ar,  const int n) {
-   quickSortBase(boxes,boxesResult,inRank,0,n-1);
+   quickSortBase(indexes,ar,inRank,0,n-1);
 }
 
 void quickSortBase(int *indexes,int *ar, const int l, const int r) {
