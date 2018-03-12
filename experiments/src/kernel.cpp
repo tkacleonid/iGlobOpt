@@ -362,13 +362,14 @@ void balancingOnCPU_v3(int n, int m, int dim)
 	
 				
 				
-/*	
+	
 	int numWorkBoxes = 0;
 	int averageBoxesPerThread = 0;
 	int curThreadWeTakeBoxesIndex = -1;
 	int curThreadWeTakeBoxesCount = 0;
 	int numBoxesWeTake = 0;
 	int boxIndex = 0;
+	int countAverageBoxesPerThreadMore = 0;
 	int countAverageBoxesPerThreadMore = 0;
 	int plusOne = 0;
 	int i,j;
@@ -380,60 +381,52 @@ void balancingOnCPU_v3(int n, int m, int dim)
 	}
 	averageBoxesPerThread = numWorkBoxes / n;
 			
-	if(averageBoxesPerThread == 0) averageBoxesPerThread = averageBoxesPerThread + 1;
+	averageBoxesPerThread = numWorkBoxes / n;		
+	countAverageBoxesPerThreadMore = numWorkBoxes - averageBoxesPerThread*n;
+	
+	curThreadWeTakeBoxesIndex = n-1;
+	curThreadWeGiveBoxesIndex = 0;
 			
-	curThreadWeTakeBoxesIndex = 0;
-	for(i = 0; i < n; i++)
+	sortQuickRecursive(workLenIndexes,workLen,n);
+	while(curThreadWeTakeBoxesIndex > curThreadWeGiveBoxesIndex)
 	{
-		if(workLen[i] < averageBoxesPerThread)
-		{
-			for(j = curThreadWeTakeBoxesIndex; j < n; j++)
-			{
-				if(workLen[j] > averageBoxesPerThread)
-				{
-							
-					numBoxesWeTake = averageBoxesPerThread - workLen[i] <= workLen[j] - averageBoxesPerThread ? averageBoxesPerThread - workLen[i] : workLen[j] - averageBoxesPerThread;
-					workLen[j] -= numBoxesWeTake;
-					//memcpy(inBox + (i+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[i])*(2*inRank+3), inBox + (j+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[j])*(2*inRank+3), sizeof(double)*(2*inRank+3)*numBoxesWeTake);
-					workLen[i] += numBoxesWeTake;	
-					if(workLen[i] == averageBoxesPerThread) 
-					{
-						break;	
-					}
-				}
-						
-			}
-			curThreadWeTakeBoxesIndex = j;
+		if(workLen[curThreadWeTakeBoxesIndex] == averageBoxesPerThread && countAverageBoxesPerThreadMore == 0) {
+			curThreadWeGiveBoxesIndex--;
+			continue;
 		}
-				
+		if(workLen[curThreadWeTakeBoxesIndex] == averageBoxesPerThread + 1 && countAverageBoxesPerThreadMore > 0) {
+			curThreadWeGiveBoxesIndex--;
+			countAverageBoxesPerThreadMore--;
+			continue;
+		}
+		
+		if(workLen[curThreadWeGiveBoxesIndex] == averageBoxesPerThread && countAverageBoxesPerThreadMore == 0) {
+			curThreadWeGiveBoxesIndex++;
+			continue;
+		}
+		if(workLen[curThreadWeGiveBoxesIndex] == averageBoxesPerThread + 1 && countAverageBoxesPerThreadMore > 0) {
+			curThreadWeGiveBoxesIndex++;
+			countAverageBoxesPerThreadMore--;
+			continue;
+		}
+			
+		if(countAverageBoxesPerThreadMore > 0) {
+			numBoxesWeTake = averageBoxesPerThread + 1 - workLen[curThreadWeGiveBoxesIndex] <= workLen[curThreadWeTakeBoxesIndex] - averageBoxesPerThread 
+							? averageBoxesPerThread + 1 - workLen[curThreadWeGiveBoxesIndex] 
+							: workLen[curThreadWeTakeBoxesIndex] - averageBoxesPerThread;
+		}
+		else {
+			numBoxesWeTake = averageBoxesPerThread - workLen[curThreadWeGiveBoxesIndex] <= workLen[curThreadWeTakeBoxesIndex] - averageBoxesPerThread 
+							? averageBoxesPerThread - workLen[curThreadWeGiveBoxesIndex] 
+							: workLen[curThreadWeTakeBoxesIndex] - averageBoxesPerThread;
+		}
+		
+		workLen[j] -= numBoxesWeTake;
+		//memcpy(inBox + (i+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[i])*(2*inRank+3), inBox + (j+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[j])*(2*inRank+3), sizeof(double)*(2*inRank+3)*numBoxesWeTake);
+		workLen[i] += numBoxesWeTake;
+			
 	}
 			
-			
-	boxIndex = 0;
-	for(i = 0; i < n; i++)
-	{
-		if(workLen[i] == averageBoxesPerThread)
-		{
-			for(j = curThreadWeTakeBoxesIndex; j < n; j++)
-			{
-				if(workLen[j] > averageBoxesPerThread + 1)
-				{
-					numBoxesWeTake = 1;
-					workLen[j] -= numBoxesWeTake;
-					//memcpy(inBox + (i+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[i])*(2*inRank+3), inBox + (j+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[j])*(2*inRank+3), sizeof(double)*(2*inRank+3)*numBoxesWeTake);
-					workLen[i] += numBoxesWeTake;	
-					break;
-				}
-						
-			}
-			curThreadWeTakeBoxesIndex = j;
-		}
-		if(curThreadWeTakeBoxesIndex == n - 1 && workLen[curThreadWeTakeBoxesIndex] <= averageBoxesPerThread + 1)
-		{
-			break;
-		}
-	}
-	*/
 
 	printf("\n\n");
 	for(int i = 0; i < n; i++)
