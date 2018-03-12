@@ -42,6 +42,15 @@ void balancingOnCPU(int n, int m, int dim)
 		}		
 	}
 	
+	printf("\n\n");
+	for(int i = 0; i < n; i++)
+	{		
+		printf("%d\t", workLen[i]);	
+	}
+	printf("\n\n");
+				
+				
+	
 	int numWorkBoxes = 0;
 	int averageBoxesPerThread = 0;
 	int curThreadWeTakeBoxesIndex = -1;
