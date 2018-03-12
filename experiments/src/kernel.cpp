@@ -79,7 +79,7 @@ void balancingOnCPU(int n, int m, int dim)
 					workLen[j] -= numBoxesWeTake;
 					//memcpy(boxes + i*m*(2*dim+3) + (workLen[i])*(2*dim+3), boxes + j*m*(2*dim+3) + (workLen[j])*(2*dim+3), sizeof(double)*(2*dim+3)*numBoxesWeTake);
 					workLen[i] += numBoxesWeTake;	
-					if(workLen[i] == averageBoxesPerThread) 
+					if(workLen[i] == averageBoxesPerThread || workLen[i] == averageBoxesPerThread + 1) 
 					{
 						curThreadWeTakeBoxesIndex = j;
 						break;	
@@ -93,7 +93,7 @@ void balancingOnCPU(int n, int m, int dim)
 
 	for(int i = 0; i < n; i++)
 	{		
-		printf("%d\t", averageBoxesPerThread);	
+		printf("%d\t", workLen[i]);	
 	}
 				
 }
