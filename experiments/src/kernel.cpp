@@ -388,6 +388,7 @@ void balancingOnCPU_v3(int n, int m, int dim)
 	curThreadWeGiveBoxesIndex = 0;
 			
 	sortQuickRecursive(workLenIndexes,workLen,n);
+	printf("\nStart\n");
 	while(curThreadWeTakeBoxesIndex > curThreadWeGiveBoxesIndex)
 	{
 		if(workLen[curThreadWeTakeBoxesIndex] == averageBoxesPerThread && countAverageBoxesPerThreadMore == 0) {
