@@ -108,7 +108,7 @@ void balancingOnCPU(int n, int m, int dim)
 			for(int j = 0; j <n; j++)
 			{
 				//if(workLen[j] == averageBoxesPerThread + 1 && i > j 
-				if(workLen[j] > averageBoxesPerThread+1)  
+				if(workLen[j] > averageBoxesPerThread)  
 				{
 					if	(countAverageBoxesPerThreadMore > 0) plusOne = 1;
 					else plusOne = 0;
