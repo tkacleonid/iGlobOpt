@@ -199,7 +199,7 @@ void balancingOnCPU2(int n, int m, int dim)
 	{
 		numWorkBoxes += workLen[i]; 	
 	}
-	averageBoxesPerThread = numWorkBoxes / BLOCK_SIZE;
+	averageBoxesPerThread = numWorkBoxes / n;
 			
 	if(averageBoxesPerThread == 0) averageBoxesPerThread = averageBoxesPerThread + 1;
 			
