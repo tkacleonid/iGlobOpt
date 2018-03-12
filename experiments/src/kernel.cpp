@@ -391,11 +391,11 @@ void balancingOnCPU_v3(int n, int m, int dim)
 	while(curThreadWeTakeBoxesIndex > curThreadWeGiveBoxesIndex)
 	{
 		if(workLen[curThreadWeTakeBoxesIndex] == averageBoxesPerThread && countAverageBoxesPerThreadMore == 0) {
-			curThreadWeGiveBoxesIndex--;
+			curThreadWeTakeBoxesIndex--;
 			continue;
 		}
 		if(workLen[curThreadWeTakeBoxesIndex] == averageBoxesPerThread + 1 && countAverageBoxesPerThreadMore > 0) {
-			curThreadWeGiveBoxesIndex--;
+			curThreadWeTakeBoxesIndex--;
 			countAverageBoxesPerThreadMore--;
 			continue;
 		}
