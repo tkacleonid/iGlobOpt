@@ -366,10 +366,11 @@ void balancingOnCPU_v3(int n, int m, int dim)
 	int numWorkBoxes = 0;
 	int averageBoxesPerThread = 0;
 	int curThreadWeTakeBoxesIndex = -1;
-	int curThreadWeGiveBoxesCount = 0;
+	int curThreadWeTakeBoxesCount = 0;
 	int numBoxesWeTake = 0;
 	int boxIndex = 0;
 	int countAverageBoxesPerThreadMore = 0;
+	int curThreadWeGiveBoxesIndex = -1;
 	int plusOne = 0;
 	int i,j;
 	
