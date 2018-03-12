@@ -109,7 +109,7 @@ void balancingOnCPU(int n, int m, int dim)
 		
 	}
 	
-	/*
+	
 	curThreadWeTakeBoxesIndex = 0;
 	for(int i = 0; i < n; i++)
 	{
@@ -139,7 +139,7 @@ void balancingOnCPU(int n, int m, int dim)
 		}
 		
 	}
-	*/
+	
 
 	printf("\n\n");
 	for(int i = 0; i < n; i++)
