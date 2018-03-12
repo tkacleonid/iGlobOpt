@@ -41,7 +41,7 @@ void balancingOnCPU(int n, int m, int dim)
 			}
 		}		
 	}
-/*	
+	
 	int numWorkBoxes = 0;
 	int averageBoxesPerThread = 0;
 	int curThreadWeTakeBoxesIndex = -1;
@@ -62,6 +62,8 @@ void balancingOnCPU(int n, int m, int dim)
 	countAverageBoxesPerThreadMore = numWorkBoxes - averageBoxesPerThread*n;
 	
 	curThreadWeTakeBoxesIndex = 0;
+	
+	/*
 	for(int i = 0; i < n; i++)
 	{
 		if(workLen[i] < averageBoxesPerThread)
