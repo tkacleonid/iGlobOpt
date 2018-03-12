@@ -391,7 +391,7 @@ void balancingOnCPU_v3(int n, int m, int dim)
 	printf("\nStart\n");
 	while(curThreadWeTakeBoxesIndex > curThreadWeGiveBoxesIndex)
 	{
-		if(workLen[curThreadWeTakeBoxesIndex] == averageBoxesPerThread && countAverageBoxesPerThreadMore == 0) {
+		if(workLen[curThreadWeTakeBoxesIndex] == averageBoxesPerThread) {
 			curThreadWeTakeBoxesIndex--;
 			continue;
 		}
@@ -411,10 +411,15 @@ void balancingOnCPU_v3(int n, int m, int dim)
 			continue;
 		}
 			
-		if(countAverageBoxesPerThreadMore > 0) {
-			numBoxesWeTake = averageBoxesPerThread + 1 - workLen[curThreadWeGiveBoxesIndex] <= workLen[curThreadWeTakeBoxesIndex] - averageBoxesPerThread 
+		if(countAverageBoxesPerThreadMore > 1) {
+			numBoxesWeTake = averageBoxesPerThread + 1 - workLen[curThreadWeGiveBoxesIndex] <= workLen[curThreadWeTakeBoxesIndex] - (averageBoxesPerThread+1) 
 							? averageBoxesPerThread + 1 - workLen[curThreadWeGiveBoxesIndex] 
-							: workLen[curThreadWeTakeBoxesIndex] - averageBoxesPerThread;
+							: workLen[curThreadWeTakeBoxesIndex] - (averageBoxesPerThread + 1);
+		}
+		else if(countAverageBoxesPerThreadMore > 0) {
+			numBoxesWeTake = averageBoxesPerThread + 1 - workLen[curThreadWeGiveBoxesIndex] <= workLen[curThreadWeTakeBoxesIndex] - (averageBoxesPerThread) 
+							? averageBoxesPerThread + 1 - workLen[curThreadWeGiveBoxesIndex] 
+							: workLen[curThreadWeTakeBoxesIndex] - (averageBoxesPerThread);
 		}
 		else {
 			numBoxesWeTake = averageBoxesPerThread - workLen[curThreadWeGiveBoxesIndex] <= workLen[curThreadWeTakeBoxesIndex] - averageBoxesPerThread 
