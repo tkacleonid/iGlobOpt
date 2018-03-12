@@ -435,7 +435,7 @@ void balancingOnCPU_v3(int n, int m, int dim)
 	*/
 
 	printf("\n\n");
-	for(i = 0; i < n; i++)
+	for(int i = 0; i < n; i++)
 	{		
 		printf("%d\t", workLen[i]);	
 	}
