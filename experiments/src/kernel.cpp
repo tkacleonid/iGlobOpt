@@ -53,7 +53,7 @@ void balancingOnCPU(int n, int m, int dim)
 	
 	
 
-	for(i = 0; i < n; i++)
+	for(int i = 0; i < n; i++)
 	{
 		numWorkBoxes += workLen[i]; 	
 	}
@@ -79,12 +79,13 @@ void balancingOnCPU(int n, int m, int dim)
 					workLen[i] += numBoxesWeTake;	
 					if(workLen[i] == averageBoxesPerThread) 
 					{
+						curThreadWeTakeBoxesIndex = j;
 						break;	
 					}
 				}
 						
 			}
-			curThreadWeTakeBoxesIndex = j;
+			
 		}		
 	}
 	
