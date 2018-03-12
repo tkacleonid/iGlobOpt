@@ -70,7 +70,7 @@ void balancingOnCPU(int n, int m, int dim)
 	averageBoxesPerThread = numWorkBoxes / n;		
 	countAverageBoxesPerThreadMore = numWorkBoxes - averageBoxesPerThread*n;
 	
-	curThreadWeTakeBoxesIndex = 0;
+	curThreadWeTakeBoxesIndex = n - 1;
 	
 	printf("NumWorkBoxes: %d\n", numWorkBoxes);
 	printf("countAverageBoxesPerThreadMore: %d\n", countAverageBoxesPerThreadMore);
@@ -86,10 +86,11 @@ void balancingOnCPU(int n, int m, int dim)
 		
 		if(workLen[i] < averageBoxesPerThread || (workLen[i] == averageBoxesPerThread && countAverageBoxesPerThreadMore > 0))
 		{
-			for(int j = curThreadWeTakeBoxesIndex; j < n; j++)
+			
+			for(int j = curThreadWeTakeBoxesIndex; j >=0; j--)
 			{
 				//if(workLen[j] == averageBoxesPerThread + 1 && i > j 
-				if(workLen[j] > averageBoxesPerThread + 1)  
+				if(workLen[j] > averageBoxesPerThread)  
 				{
 					if	(countAverageBoxesPerThreadMore > 0) plusOne = 1;
 					else plusOne = 0;
