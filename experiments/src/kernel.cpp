@@ -105,7 +105,7 @@ void balancingOnCPU(int n, int m, int dim)
 		}
 		else if(workLen[i] < averageBoxesPerThread)
 		{
-			for(int j = 0; j <n; j++)
+			for(int j = curThreadWeTakeBoxesIndex; j <n; j++)
 			{
 				//if(workLen[j] == averageBoxesPerThread + 1 && i > j 
 				if(workLen[j] > averageBoxesPerThread)  
@@ -119,7 +119,7 @@ void balancingOnCPU(int n, int m, int dim)
 					workLen[i] += numBoxesWeTake;	
 					if((workLen[i] == averageBoxesPerThread && countAverageBoxesPerThreadMore == 0) || workLen[i] == averageBoxesPerThread + 1) 
 					{
-						//curThreadWeTakeBoxesIndex = j;
+						curThreadWeTakeBoxesIndex = j;
 						break;	
 					}
 				}
