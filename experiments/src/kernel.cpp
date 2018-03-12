@@ -8,6 +8,7 @@
 #include <exception>
 #include <stdlib.h>
 
+void balancingOnCPU(int n, int m, int dim);
 
 int main()
 {	
