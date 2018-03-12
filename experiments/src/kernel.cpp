@@ -64,7 +64,7 @@ void balancingOnCPU(int n, int m, int dim)
 	curThreadWeTakeBoxesIndex = 0;
 	
 	printf("NumWorkBoxes: %d\n", numWorkBoxes);
-	printf("countAverageBoxesPerThreadMore: %d\n, countAverageBoxesPerThreadMore);
+	printf("countAverageBoxesPerThreadMore: %d\n", countAverageBoxesPerThreadMore);
 	
 	for(int i = 0; i < n; i++)
 	{
