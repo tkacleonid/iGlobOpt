@@ -91,10 +91,12 @@ void balancingOnCPU(int n, int m, int dim)
 		}		
 	}
 
+	printf("\n\n");
 	for(int i = 0; i < n; i++)
 	{		
 		printf("%d\t", workLen[i]);	
 	}
+	printf("\n\n");
 				
 }
 
