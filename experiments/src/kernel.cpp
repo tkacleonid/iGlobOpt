@@ -16,12 +16,12 @@ void balancingOnCPU_v3(int n, int m, int dim);
 
 int main()
 {	
-	const int DIM = 2;
-	const int NUM_THREADS = 100;
-	const int MAX_BOXES_PER_THREAD = 100;
+	int dim = 2;
+	int numThreads = 100;
+	int maxBoxesPerThread = 100;
 
 
-	double *boxes = new double[(2*dim+3) * n*m];
+	double *boxes = new double[(2*DIM+3) * NUM_THREADS*m];
 	int *workLen = new int[n];
 	
 	
