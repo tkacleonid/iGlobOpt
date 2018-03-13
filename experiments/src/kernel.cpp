@@ -251,6 +251,7 @@ void balancingOnCPU_v2(int n, int m, int dim)
 	int countAverageBoxesPerThreadMore = 0;
 	int plusOne = 0;
 	int i,j;
+	int countMemoryCopies = 0;
 	
 
 	for(i = 0; i < n; i++)
@@ -262,6 +263,7 @@ void balancingOnCPU_v2(int n, int m, int dim)
 	if(averageBoxesPerThread == 0) averageBoxesPerThread = averageBoxesPerThread + 1;
 			
 	curThreadWeTakeBoxesIndex = 0;
+	countMemoryCopies = 0;
 	for(i = 0; i < n; i++)
 	{
 		if(workLen[i] < averageBoxesPerThread)
@@ -275,6 +277,7 @@ void balancingOnCPU_v2(int n, int m, int dim)
 					workLen[j] -= numBoxesWeTake;
 					//memcpy(inBox + (i+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[i])*(2*inRank+3), inBox + (j+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[j])*(2*inRank+3), sizeof(double)*(2*inRank+3)*numBoxesWeTake);
 					workLen[i] += numBoxesWeTake;	
+					countMemoryCopies++;
 					if(workLen[i] == averageBoxesPerThread) 
 					{
 						break;	
@@ -301,6 +304,7 @@ void balancingOnCPU_v2(int n, int m, int dim)
 					workLen[j] -= numBoxesWeTake;
 					//memcpy(inBox + (i+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[i])*(2*inRank+3), inBox + (j+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[j])*(2*inRank+3), sizeof(double)*(2*inRank+3)*numBoxesWeTake);
 					workLen[i] += numBoxesWeTake;	
+					countMemoryCopies++;
 					break;
 				}
 						
@@ -320,6 +324,7 @@ void balancingOnCPU_v2(int n, int m, int dim)
 		printf("%d\t", workLen[i]);	
 	}
 	printf("\n\n");
+	printf("countMemoryCopies: %d\n", countMemoryCopies);
 				
 }
 
@@ -358,11 +363,7 @@ void balancingOnCPU_v3(int n, int m, int dim)
 		workLenIndexes[i] = i;
 	}
 	
-	//sortQuickRecursive(workLenIndexes,workLen,n);
-	
-				
-				
-	
+
 	int numWorkBoxes = 0;
 	int averageBoxesPerThread = 0;
 	int curThreadWeTakeBoxesIndex = -1;
@@ -373,6 +374,7 @@ void balancingOnCPU_v3(int n, int m, int dim)
 	int curThreadWeGiveBoxesIndex = -1;
 	int plusOne = 0;
 	int i,j;
+	int countMemoryCopies = 0;
 	
 
 	for(i = 0; i < n; i++)
