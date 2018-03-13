@@ -391,6 +391,8 @@ void balancingOnCPU_v3(int n, int m, int dim)
 			
 	sortQuickRecursive(workLenIndexes,workLen,n);
 	printf("\nStart\n");
+	
+	countMemoryCopies = 0;
 	while(curThreadWeTakeBoxesIndex > curThreadWeGiveBoxesIndex)
 	{
 		if(workLen[curThreadWeTakeBoxesIndex] == averageBoxesPerThread) {
@@ -432,6 +434,7 @@ void balancingOnCPU_v3(int n, int m, int dim)
 		workLen[curThreadWeTakeBoxesIndex] -= numBoxesWeTake;
 		//memcpy(inBox + (i+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[i])*(2*inRank+3), inBox + (j+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[j])*(2*inRank+3), sizeof(double)*(2*inRank+3)*numBoxesWeTake);
 		workLen[curThreadWeGiveBoxesIndex] += numBoxesWeTake;
+		countMemoryCopies++;
 			
 	}
 			
@@ -442,6 +445,7 @@ void balancingOnCPU_v3(int n, int m, int dim)
 		printf("%d\t", workLen[i]);	
 	}
 	printf("\n\n");
+	printf("countMemoryCopies: %d\n", countMemoryCopies);
 				
 }
 
