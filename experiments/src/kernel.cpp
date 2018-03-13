@@ -22,13 +22,28 @@ int main()
 
 
 	double *boxes = new double[(2*dim+3) * numThreads*maxBoxesPerThread];
-	int *workLen = new int[n];
+	int *workLen = new int[numThreads];
 	
+	printf("..........................\n");
+	printf("Stage 1: \n");
+	printf("\tDimension: %d\n",dim);
+	printf("\tNumber of threads: %d\n",numThreads);
+	printf("\tMax number of boxes for thread: %d\n",maxBoxesPerThread);
+	
+	
+	
+	printf("Initializing boxes\n");
+	printf("Testing balancing on CPU (version 1)\n");
 	
 	
 	
 	
 	balancingOnCPU_v3(100, 100, 2);
+	
+	delete [] boxes;
+	delete [] workLen;
+	
+	printf("..........................\n");
 		
 	return 0;
 }
