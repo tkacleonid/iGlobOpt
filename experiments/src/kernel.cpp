@@ -21,7 +21,7 @@ int main()
 	int maxBoxesPerThread = 100;
 
 
-	double *boxes = new double[(2*DIM+3) * NUM_THREADS*m];
+	double *boxes = new double[(2*dim+3) * numThreads*maxBoxesPerThread];
 	int *workLen = new int[n];
 	
 	
