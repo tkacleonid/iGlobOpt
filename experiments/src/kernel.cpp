@@ -36,7 +36,7 @@ int main()
 	printf("Initializing boxes\n");
 	initializeBoxes(boxes, workLen, numThreads, maxBoxesPerThread, dim);
 	printf("Testing balancing on CPU (version 1)\n");
-	balancingOnCPU_v3(100, 100, 2);
+	balancingOnCPU_v3(boxes, workLen, numThreads, maxBoxesPerThread, dim);
 	
 	delete [] boxes;
 	delete [] workLen;
