@@ -33,6 +33,7 @@ int main()
 	
 	
 	printf("Initializing boxes\n");
+	void initializeBoxes(boxes, workLen, numThreads, maxBoxesPerThread, dim);
 	printf("Testing balancing on CPU (version 1)\n");
 	
 	
