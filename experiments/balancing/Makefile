@@ -1,4 +1,4 @@
-PROGRAM=iGlobOptCuda
+PROGRAM=balancing
 BINDIR = build/bin
 SRC = src
 OBJ = build/obj
@@ -16,8 +16,11 @@ OBJS = ${OBJ}/kernel.o
 ${BINDIR}/${PROGRAM}: crdir ${OBJS}
 	${CLINK} ${CLINKFLAGS} -o ${BINDIR}/${PROGRAM} ${OBJS} ${C_LIB}
 
-${OBJ}/kernel.o: ${SRC}/kernel.cpp ${INC}/interval.h ${INC}/CUDAGlobalOptimization.h
-	$(CC) $(CFLAGS) -c ${SRC}/kernel.cpp -o ${OBJ}/kernel.o 
+${OBJ}/kernel.o: ${SRC}/kernel.cpp ${INC}/balancing.hpp
+	$(CC) $(CFLAGS) -c ${SRC}/kernel.cpp -o ${OBJ}/kernel.o ${OBJ}/balancing.o 
+	
+${OBJ}/balancing.o: ${SRC}/balancing.cpp ${INC}/balancing.hpp
+	$(CC) $(CFLAGS) -c ${SRC}/balancing.cpp -o ${OBJ}/balancing.o 
 
 crdir:
 	mkdir -p build
