@@ -17,7 +17,7 @@ ${BINDIR}/${PROGRAM}: crdir ${OBJS}
 	${CLINK} ${CLINKFLAGS} -o ${BINDIR}/${PROGRAM} ${OBJS} ${C_LIB}
 
 ${OBJ}/kernel.o: ${SRC}/kernel.cpp ${INC}/balancing.hpp
-	$(CC) $(CFLAGS) -c ${SRC}/kernel.cpp ${SRC}/balancing.cpp -o ${OBJ}/kernel.o ${OBJ}/balancing.o 
+	$(CC) $(CFLAGS) -c ${SRC}/kernel.cpp  -o ${OBJ}/kernel.o 
 	
 ${OBJ}/balancing.o: ${SRC}/balancing.cpp ${INC}/balancing.hpp
 	$(CC) $(CFLAGS) -c ${SRC}/balancing.cpp -o ${OBJ}/balancing.o 
