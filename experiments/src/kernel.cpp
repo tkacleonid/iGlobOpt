@@ -68,24 +68,6 @@ void initializeBoxes(double* boxes, int *workLen, int n, int m, int dim)
 
 void balancingOnCPU(double* boxes, int *workLen, int n, int m, int dim)
 {
-	//Initialize random seed
-	srand(time(NULL));
-	
-	double *boxes = new double[(2*dim+3) * n*m];
-	int *workLen = new int[n];
-	
-	for(int i = 0; i < n; i++)
-	{
-		workLen[i] = rand()%(m+1);
-		for(int j = 0; j < workLen[i]; j++)
-		{
-			for(int k = 0; k < dim; k++)
-			{
-				boxes[(2*dim+3)*i*m + (2*dim+3)*j + 2*k] = (rand() % (m+1))/(double) n;
-				boxes[(2*dim+3)*i*m + (2*dim+3)*j + 2*k + 1] = (rand() % (m+1))/(double) n;
-			}
-		}		
-	}
 	
 	printf("\n\n");
 	for(int i = 0; i < n; i++)
