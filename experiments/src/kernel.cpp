@@ -24,7 +24,10 @@ int main()
 	return 0;
 }
 
-
+void initializeBoxes(double* boxes, int *workLen, int n, int m, int dim)
+{
+	
+}
 
 
 void balancingOnCPU(double* boxes, int *workLen, int n, int m, int dim)
