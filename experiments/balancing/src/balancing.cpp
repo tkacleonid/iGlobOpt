@@ -77,14 +77,15 @@ BalancingInfo balancingOnCPU(double* boxes, int *workLen, int n, int m, int dim)
 	int numWorkBoxes = 0;
 	int averageBoxesPerThread = 0;
 	int curThreadWeTakeBoxesIndex = -1;
-	int curThreadWeTakeBoxesCount = 0;
 	int numBoxesWeTake = 0;
-	int boxIndex = 0;
 	int countAverageBoxesPerThreadMore = 0;
 	int plusOne = 0;
 	int stopMore;
 	
-	
+	BalancingInfo balancingInfo;
+	balancingInfo.numThreads = n;
+	balancingInfo.maxNumberOfBoxesPerThread = m;
+	balancingInfo.version = WITHOUT_SORT_ON_CPU;
 
 	for(int i = 0; i < n; i++)
 	{
@@ -227,7 +228,10 @@ BalancingInfo balancingOnCPU(double* boxes, int *workLen, int n, int m, int dim)
 		printf("%d\t", workLen[i]);	
 	}
 	printf("\n\n");
-				
+		
+
+
+	return balancingInfo;
 }
 
 
