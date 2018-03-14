@@ -308,7 +308,7 @@ BalancingInfo balancingOnCPU_v2(int n, int m, int dim)
 
 
 
-void balancingOnCPU_v3(double* boxes, int *workLen,int n, int m, int dim)
+BalancingInfo balancingOnCPU_v3(double* boxes, int *workLen,int n, int m, int dim)
 {
 
 	printf("\n\n");
