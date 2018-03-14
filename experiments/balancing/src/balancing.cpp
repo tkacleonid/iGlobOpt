@@ -359,7 +359,7 @@ BalancingInfo balancingOnCPU_v3(double* boxes, int *workLen, int n, int m, int d
 	BalancingInfo balancingInfo;
 	balancingInfo.numThreads = n;
 	balancingInfo.maxNumberOfBoxesPerThread = m;
-	balancingInfo.version = BalancinVersion.WITH_SORT_ON_CPU;
+	balancingInfo.version = BalancingVersion.WITH_SORT_ON_CPU;
 	
 	
 	auto start = std::chrono::high_resolution_clock::now();
