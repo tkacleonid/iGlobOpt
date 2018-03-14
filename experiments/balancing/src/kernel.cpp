@@ -10,6 +10,7 @@ int main()
 
 	double *boxes = new double[(2*dim+3) * numThreads*maxBoxesPerThread];
 	int *workLen = new int[numThreads];
+	BalancingInfo balancingInfo;
 	
 	printf("..........................\n");
 	printf("Stage 1: \n");
@@ -22,7 +23,7 @@ int main()
 	printf("Initializing boxes\n");
 	initializeBoxes(boxes, workLen, numThreads, maxBoxesPerThread, dim);
 	printf("Testing balancing on CPU (version 1)\n");
-	balancingOnCPU_v3(boxes, workLen, numThreads, maxBoxesPerThread, dim);
+	balancingInfo = balancingOnCPU_v3(boxes, workLen, numThreads, maxBoxesPerThread, dim);
 	
 	delete [] boxes;
 	delete [] workLen;
