@@ -284,7 +284,7 @@ BalancingInfo balancingOnCPU_v2(double* boxes, int *workLen, int n, int m, int d
 
 
 
-BalancingInfo balancingOnCPU_v3(double* boxes, int *workLen,int n, int m, int dim)
+BalancingInfo balancingOnCPU_v3(double* boxes, int *workLen, int n, int m, int dim)
 {
 
 	printf("\n\n");
@@ -317,6 +317,8 @@ BalancingInfo balancingOnCPU_v3(double* boxes, int *workLen,int n, int m, int di
 	balancingInfo.maxNumberOfBoxesPerThread = m;
 	balancingInfo.version = BalancinVersion.WITH_SORT_ON_CPU;
 	
+	
+	auto start = std::chrono::high_resolution_clock::now();
 
 	for(i = 0; i < n; i++)
 	{
