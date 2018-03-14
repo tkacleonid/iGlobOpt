@@ -212,6 +212,11 @@ BalancingInfo balancingOnCPU_v2(double* boxes, int *workLen, int n, int m, int d
 	int i,j;
 	int countMemoryCopies;
 	
+	BalancingInfo balancingInfo;
+	balancingInfo.numThreads = n;
+	balancingInfo.maxNumberOfBoxesPerThread = m;
+	balancingInfo.version = BalancinVersion.WITHOUT_SORT_ON_CPU;
+	
 
 	for (i = 0; i < n; i++) {
 		numWorkBoxes += workLen[i]; 	
