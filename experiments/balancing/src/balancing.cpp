@@ -273,8 +273,7 @@ BalancingInfo balancingOnCPU_v2(double* boxes, int *workLen, int n, int m, int d
 	balancingInfo.numberOfMemoryCopies = countMemoryCopies;
 	
 	printf("\n\n");
-	for(i = 0; i < n; i++)
-	{		
+	for (i = 0; i < n; i++) {		
 		printf("%d\t", workLen[i]);	
 	}
 	printf("\n\n");
