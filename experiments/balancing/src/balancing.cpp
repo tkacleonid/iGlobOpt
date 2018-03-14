@@ -190,7 +190,7 @@ BalancingInfo balancingOnCPU(double* boxes, int *workLen, int n, int m, int dim)
 }
 
 
-void balancingOnCPU_v2(int n, int m, int dim)
+BalancingInfo balancingOnCPU_v2(int n, int m, int dim)
 {
 	//Initialize random seed
 	srand(time(NULL));
