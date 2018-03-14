@@ -21,7 +21,7 @@ void initializeBoxes(double* boxes, int *workLen, int n, int m, int dim)
 }
 
 
-void balancingOnCPU(double* boxes, int *workLen, int n, int m, int dim)
+BalancingInfo balancingOnCPU(double* boxes, int *workLen, int n, int m, int dim)
 {
 	
 	printf("\n\n");
