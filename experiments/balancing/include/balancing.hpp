@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include <fstream>
 
-enum BalancinVersion
+enum BalancingVersion
 {
 	WITHOUT_SORT_ON_CPU,
 	WITH_SORT_ON_CPU,
@@ -27,7 +27,7 @@ struct BalancingInfo
 	int time;
 	int numThreads;
 	int maxNumberOfBoxesPerThread;
-	BalancinVersion version;
+	BalancingVersion version;
 };
 
 
