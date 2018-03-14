@@ -312,6 +312,11 @@ BalancingInfo balancingOnCPU_v3(double* boxes, int *workLen,int n, int m, int di
 	int i,j;
 	int countMemoryCopies = 0;
 	
+	BalancingInfo balancingInfo;
+	balancingInfo.numThreads = n;
+	balancingInfo.maxNumberOfBoxesPerThread = m;
+	balancingInfo.version = BalancinVersion.WITH_SORT_ON_CPU;
+	
 
 	for(i = 0; i < n; i++)
 	{
