@@ -250,7 +250,6 @@ BalancingInfo balancingOnCPU_v2(double* boxes, int *workLen, int n, int m, int d
 	int averageBoxesPerThread;
 	int curThreadWeTakeBoxesIndex;
 	int numBoxesWeTake;
-	int plusOne;
 	int i,j;
 	int countMemoryCopies;
 	
