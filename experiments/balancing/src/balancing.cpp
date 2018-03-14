@@ -387,6 +387,8 @@ BalancingInfo balancingOnCPU_v3(double* boxes, int *workLen, int n, int m, int d
 	auto end = std::chrono::high_resolution_clock::now();
 	
 	balancingInfo.time = (std::chrono::duration_cast<std::chrono::milliseconds>(end - start)).count();
+	
+	balancingInfo.numberOfCopies = countMemoryCopies;
 
 	printf("\n\n");
 	for(int i = 0; i < n; i++)
