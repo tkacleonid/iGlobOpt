@@ -380,7 +380,9 @@ BalancingInfo balancingOnCPU_v3(double* boxes, int *workLen, int n, int m, int d
 		countMemoryCopies++;
 			
 	}
-			
+		
+
+	auto end = std::chrono::high_resolution_clock::now();
 
 	printf("\n\n");
 	for(int i = 0; i < n; i++)
