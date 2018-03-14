@@ -418,11 +418,11 @@ BalancingInfo balancingOnCPU_v3(double* boxes, int *workLen, int n, int m, int d
 	}
 		
 //std::this_thread::sleep_for(std::chrono::milliseconds(2000));
-	auto end = std::chrono::high_resolution_clock::now();
+	//auto end = std::chrono::high_resolution_clock::now();
 	
-	balancingInfo.time = (std::chrono::duration_cast<std::chrono::milliseconds>(end - start)).count();
+	//balancingInfo.time = (std::chrono::duration_cast<std::chrono::milliseconds>(end - start)).count();
 	
-	balancingInfo.numberOfMemoryCopies = countMemoryCopies;
+	//balancingInfo.numberOfMemoryCopies = countMemoryCopies;
 
 	printf("\n\n");
 	for (int i = 0; i < n; i++) {		
@@ -430,6 +430,14 @@ BalancingInfo balancingOnCPU_v3(double* boxes, int *workLen, int n, int m, int d
 	}
 	printf("\n\n");
 	printf("countMemoryCopies: %d\n", countMemoryCopies);
+	
+	
+	
+	auto end = std::chrono::high_resolution_clock::now();
+	
+	balancingInfo.time = (std::chrono::duration_cast<std::chrono::milliseconds>(end - start)).count();
+	
+	balancingInfo.numberOfMemoryCopies = countMemoryCopies;
 	
 	return balancingInfo;
 				
