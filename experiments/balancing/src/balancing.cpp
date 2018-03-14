@@ -289,7 +289,7 @@ BalancingInfo balancingOnCPU_v2(double* boxes, int *workLen, int n, int m, int d
 	}
 			
 			
-	boxIndex = 0;
+	
 	for (i = 0; i < n; i++) {
 		if (workLen[i] == averageBoxesPerThread) {
 			for (j = curThreadWeTakeBoxesIndex; j < n; j++) {
