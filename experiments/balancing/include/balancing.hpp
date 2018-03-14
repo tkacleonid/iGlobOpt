@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <fstream>
 #include <chrono>
+#include <thread>
 
 enum BalancingVersion
 {
