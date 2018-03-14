@@ -289,8 +289,7 @@ BalancingInfo balancingOnCPU_v3(double* boxes, int *workLen, int n, int m, int d
 {
 
 	printf("\n\n");
-	for(int i = 0; i < n; i++)
-	{		
+	for (int i = 0; i < n; i++) {		
 		printf("%d\t", workLen[i]);	
 	}
 	printf("\n\n");
