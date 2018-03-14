@@ -190,27 +190,8 @@ BalancingInfo balancingOnCPU(double* boxes, int *workLen, int n, int m, int dim)
 }
 
 
-BalancingInfo balancingOnCPU_v2(int n, int m, int dim)
+BalancingInfo balancingOnCPU_v2(double* boxes, int *workLen, int n, int m, int dim)
 {
-	//Initialize random seed
-	srand(time(NULL));
-	
-	double *boxes = new double[(2*dim+3) * n*m];
-	int *workLen = new int[n];
-	
-	for(int i = 0; i < n; i++)
-	{
-		workLen[i] = rand()%(m+1);
-		for(int j = 0; j < workLen[i]; j++)
-		{
-			for(int k = 0; k < dim; k++)
-			{
-				boxes[(2*dim+3)*i*m + (2*dim+3)*j + 2*k] = (rand() % (m+1))/(double) n;
-				boxes[(2*dim+3)*i*m + (2*dim+3)*j + 2*k + 1] = (rand() % (m+1))/(double) n;
-			}
-		}		
-	}
-	
 	printf("\n\n");
 	for(int i = 0; i < n; i++)
 	{		
@@ -220,48 +201,37 @@ BalancingInfo balancingOnCPU_v2(int n, int m, int dim)
 				
 				
 	
-	int numWorkBoxes = 0;
-	int averageBoxesPerThread = 0;
-	int curThreadWeTakeBoxesIndex = -1;
-	int curThreadWeTakeBoxesCount = 0;
-	int numBoxesWeTake = 0;
-	int boxIndex = 0;
-	int countAverageBoxesPerThreadMore = 0;
-	int plusOne = 0;
+	int numWorkBoxes;
+	int averageBoxesPerThread;
+	int curThreadWeTakeBoxesIndex;
+	int curThreadWeTakeBoxesCount;
+	int numBoxesWeTake;
+	int boxIndex;
+	int countAverageBoxesPerThreadMore;
+	int plusOne;
 	int i,j;
-	int countMemoryCopies = 0;
+	int countMemoryCopies;
 	
 
-	for(i = 0; i < n; i++)
-	{
+	for (i = 0; i < n; i++) {
 		numWorkBoxes += workLen[i]; 	
 	}
-	averageBoxesPerThread = numWorkBoxes / n;
-			
+	averageBoxesPerThread = numWorkBoxes / n;		
 	if(averageBoxesPerThread == 0) averageBoxesPerThread = averageBoxesPerThread + 1;
 			
 	curThreadWeTakeBoxesIndex = 0;
 	countMemoryCopies = 0;
-	for(i = 0; i < n; i++)
-	{
-		if(workLen[i] < averageBoxesPerThread)
-		{
-			for(j = curThreadWeTakeBoxesIndex; j < n; j++)
-			{
-				if(workLen[j] > averageBoxesPerThread)
-				{
-							
+	for (i = 0; i < n; i++) {
+		if (workLen[i] < averageBoxesPerThread) {
+			for (j = curThreadWeTakeBoxesIndex; j < n; j++) {
+				if (workLen[j] > averageBoxesPerThread) {		
 					numBoxesWeTake = averageBoxesPerThread - workLen[i] <= workLen[j] - averageBoxesPerThread ? averageBoxesPerThread - workLen[i] : workLen[j] - averageBoxesPerThread;
 					workLen[j] -= numBoxesWeTake;
 					//memcpy(inBox + (i+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[i])*(2*inRank+3), inBox + (j+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[j])*(2*inRank+3), sizeof(double)*(2*inRank+3)*numBoxesWeTake);
 					workLen[i] += numBoxesWeTake;	
 					countMemoryCopies++;
-					if(workLen[i] == averageBoxesPerThread) 
-					{
-						break;	
-					}
-				}
-						
+					if (workLen[i] == averageBoxesPerThread) break;	
+				}			
 			}
 			curThreadWeTakeBoxesIndex = j;
 		}
@@ -270,14 +240,10 @@ BalancingInfo balancingOnCPU_v2(int n, int m, int dim)
 			
 			
 	boxIndex = 0;
-	for(i = 0; i < n; i++)
-	{
-		if(workLen[i] == averageBoxesPerThread)
-		{
-			for(j = curThreadWeTakeBoxesIndex; j < n; j++)
-			{
-				if(workLen[j] > averageBoxesPerThread + 1)
-				{
+	for (i = 0; i < n; i++) {
+		if (workLen[i] == averageBoxesPerThread) {
+			for (j = curThreadWeTakeBoxesIndex; j < n; j++) {
+				if (workLen[j] > averageBoxesPerThread + 1) {
 					numBoxesWeTake = 1;
 					workLen[j] -= numBoxesWeTake;
 					//memcpy(inBox + (i+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[i])*(2*inRank+3), inBox + (j+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[j])*(2*inRank+3), sizeof(double)*(2*inRank+3)*numBoxesWeTake);
@@ -289,10 +255,8 @@ BalancingInfo balancingOnCPU_v2(int n, int m, int dim)
 			}
 			curThreadWeTakeBoxesIndex = j;
 		}
-		if(curThreadWeTakeBoxesIndex == n - 1 && workLen[curThreadWeTakeBoxesIndex] <= averageBoxesPerThread + 1)
-		{
-			break;
-		}
+		if (curThreadWeTakeBoxesIndex == n - 1 && workLen[curThreadWeTakeBoxesIndex] <= averageBoxesPerThread + 1) break;
+
 	}
 	
 
