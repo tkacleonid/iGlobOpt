@@ -324,7 +324,7 @@ BalancingInfo balancingOnCPU_v2(double* boxes, int *workLen, int n, int m, int d
 	printf("\n\n");
 	printf("countMemoryCopies: %d\n", countMemoryCopies);
 	
-	return balancingInfo
+	return balancingInfo;
 				
 }
 
