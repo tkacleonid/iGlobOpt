@@ -305,7 +305,6 @@ BalancingInfo balancingOnCPU_v3(double* boxes, int *workLen, int n, int m, int d
 	int curThreadWeTakeBoxesIndex = -1;
 	int curThreadWeTakeBoxesCount = 0;
 	int numBoxesWeTake = 0;
-	int boxIndex = 0;
 	int countAverageBoxesPerThreadMore = 0;
 	int curThreadWeGiveBoxesIndex = -1;
 	int plusOne = 0;
@@ -320,8 +319,7 @@ BalancingInfo balancingOnCPU_v3(double* boxes, int *workLen, int n, int m, int d
 	
 	auto start = std::chrono::high_resolution_clock::now();
 
-	for(i = 0; i < n; i++)
-	{
+	for (i = 0; i < n; i++) {
 		numWorkBoxes += workLen[i]; 	
 	}
 	averageBoxesPerThread = numWorkBoxes / n;
@@ -336,34 +334,33 @@ BalancingInfo balancingOnCPU_v3(double* boxes, int *workLen, int n, int m, int d
 	printf("\nStart\n");
 	
 	countMemoryCopies = 0;
-	while(curThreadWeTakeBoxesIndex > curThreadWeGiveBoxesIndex)
-	{
-		if(workLen[curThreadWeTakeBoxesIndex] == averageBoxesPerThread) {
+	while (curThreadWeTakeBoxesIndex > curThreadWeGiveBoxesIndex) {
+		if (workLen[curThreadWeTakeBoxesIndex] == averageBoxesPerThread) {
 			curThreadWeTakeBoxesIndex--;
 			continue;
 		}
-		if(workLen[curThreadWeTakeBoxesIndex] == averageBoxesPerThread + 1 && countAverageBoxesPerThreadMore > 0) {
+		if (workLen[curThreadWeTakeBoxesIndex] == averageBoxesPerThread + 1 && countAverageBoxesPerThreadMore > 0) {
 			curThreadWeTakeBoxesIndex--;
 			countAverageBoxesPerThreadMore--;
 			continue;
 		}
 		
-		if(workLen[curThreadWeGiveBoxesIndex] == averageBoxesPerThread && countAverageBoxesPerThreadMore == 0) {
+		if (workLen[curThreadWeGiveBoxesIndex] == averageBoxesPerThread && countAverageBoxesPerThreadMore == 0) {
 			curThreadWeGiveBoxesIndex++;
 			continue;
 		}
-		if(workLen[curThreadWeGiveBoxesIndex] == averageBoxesPerThread + 1 && countAverageBoxesPerThreadMore > 0) {
+		if (workLen[curThreadWeGiveBoxesIndex] == averageBoxesPerThread + 1 && countAverageBoxesPerThreadMore > 0) {
 			curThreadWeGiveBoxesIndex++;
 			countAverageBoxesPerThreadMore--;
 			continue;
 		}
 			
-		if(countAverageBoxesPerThreadMore > 1) {
+		if (countAverageBoxesPerThreadMore > 1) {
 			numBoxesWeTake = averageBoxesPerThread + 1 - workLen[curThreadWeGiveBoxesIndex] <= workLen[curThreadWeTakeBoxesIndex] - (averageBoxesPerThread+1) 
 							? averageBoxesPerThread + 1 - workLen[curThreadWeGiveBoxesIndex] 
 							: workLen[curThreadWeTakeBoxesIndex] - (averageBoxesPerThread + 1);
 		}
-		else if(countAverageBoxesPerThreadMore > 0) {
+		else if (countAverageBoxesPerThreadMore > 0) {
 			numBoxesWeTake = averageBoxesPerThread + 1 - workLen[curThreadWeGiveBoxesIndex] <= workLen[curThreadWeTakeBoxesIndex] - (averageBoxesPerThread) 
 							? averageBoxesPerThread + 1 - workLen[curThreadWeGiveBoxesIndex] 
 							: workLen[curThreadWeTakeBoxesIndex] - (averageBoxesPerThread);
@@ -389,8 +386,7 @@ BalancingInfo balancingOnCPU_v3(double* boxes, int *workLen, int n, int m, int d
 	balancingInfo.numberOfMemoryCopies = countMemoryCopies;
 
 	printf("\n\n");
-	for(int i = 0; i < n; i++)
-	{		
+	for (int i = 0; i < n; i++) {		
 		printf("%d\t", workLen[i]);	
 	}
 	printf("\n\n");
