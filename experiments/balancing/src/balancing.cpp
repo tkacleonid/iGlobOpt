@@ -411,7 +411,7 @@ BalancingInfo balancingOnCPU_v3(double* boxes, int *workLen, int n, int m, int d
 		}
 		
 		workLen[curThreadWeTakeBoxesIndex] -= numBoxesWeTake;
-		//memcpy(inBox + (i+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[i])*(2*inRank+3), inBox + (j+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[j])*(2*inRank+3), sizeof(double)*(2*inRank+3)*numBoxesWeTake);
+		memcpy(boxes + curThreadWeGiveBoxesIndex*m*(2*inRank+3) + (workLen[curThreadWeGiveBoxesIndex])*(2*inRank+3), boxes + curThreadWeTakeBoxesIndex*m*(2*inRank+3) + (workLen[curThreadWeTakeBoxesIndex])*(2*inRank+3), sizeof(double)*(2*inRank+3)*numBoxesWeTake);
 		workLen[curThreadWeGiveBoxesIndex] += numBoxesWeTake;
 		countMemoryCopies++;
 			
