@@ -4,7 +4,7 @@
 int main()
 {	
 	int dim = 2;
-	int numThreads = 100s;
+	int numThreads = 100;
 	int maxBoxesPerThread = 1000;
 
 
