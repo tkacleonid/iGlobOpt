@@ -26,6 +26,8 @@ int main()
 	balancingInfo = balancingOnCPU_v3(boxes, workLen, numThreads, maxBoxesPerThread, dim);
 	printf("numberOfMemoryCopies = %d\n",balancingInfo.numberOfMemoryCopies);
 	printf("time = %d\n",balancingInfo.time);
+	printf("numAllBoxes = %d\n",balancingInfo.numAllBoxes);
+	printf("numAverageBoxes = %d\n",balancingInfo.numAverageBoxes);
 	
 	
 	delete [] boxes;

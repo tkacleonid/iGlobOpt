@@ -29,6 +29,8 @@ struct BalancingInfo
 	int time;
 	int numThreads;
 	int maxNumberOfBoxesPerThread;
+	int numAllBoxes;
+	int numAverageBoxes;
 	BalancingVersion version;
 };
 
