@@ -258,6 +258,9 @@ BalancingInfo balancingOnCPU_v2(double* boxes, int *workLen, int n, int m, int d
 	balancingInfo.maxNumberOfBoxesPerThread = m;
 	balancingInfo.version = WITHOUT_SORT_ON_CPU;
 	
+	balancingInfo.numAllBoxes = numWorkBoxes;
+	balancingInfo.numAverageBoxes = countAverageBoxesPerThreadMore;
+	
 	auto start = std::chrono::high_resolution_clock::now();
 
 	for (i = 0; i < n; i++) {
@@ -274,7 +277,7 @@ BalancingInfo balancingOnCPU_v2(double* boxes, int *workLen, int n, int m, int d
 				if (workLen[j] > averageBoxesPerThread) {		
 					numBoxesWeTake = averageBoxesPerThread - workLen[i] <= workLen[j] - averageBoxesPerThread ? averageBoxesPerThread - workLen[i] : workLen[j] - averageBoxesPerThread;
 					workLen[j] -= numBoxesWeTake;
-					//memcpy(inBox + (i+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[i])*(2*inRank+3), inBox + (j+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[j])*(2*inRank+3), sizeof(double)*(2*inRank+3)*numBoxesWeTake);
+					memcpy(boxes + i*m*(2*inRank+3) + workLen[i]*(2*inRank+3), boxes + j*m*(2*inRank+3) + workLen[j]*(2*inRank+3), sizeof(double)*(2*inRank+3)*numBoxesWeTake);
 					workLen[i] += numBoxesWeTake;	
 					countMemoryCopies++;
 					if (workLen[i] == averageBoxesPerThread) break;	
@@ -306,12 +309,6 @@ BalancingInfo balancingOnCPU_v2(double* boxes, int *workLen, int n, int m, int d
 
 	}
 	
-
-	auto end = std::chrono::high_resolution_clock::now();
-	
-	balancingInfo.time = (std::chrono::duration_cast<std::chrono::milliseconds>(end - start)).count();
-	
-	balancingInfo.numberOfMemoryCopies = countMemoryCopies;
 	
 	printf("\n\n");
 	for (i = 0; i < n; i++) {		
@@ -319,6 +316,12 @@ BalancingInfo balancingOnCPU_v2(double* boxes, int *workLen, int n, int m, int d
 	}
 	printf("\n\n");
 	printf("countMemoryCopies: %d\n", countMemoryCopies);
+	
+	auto end = std::chrono::high_resolution_clock::now();
+	
+	balancingInfo.time = (std::chrono::duration_cast<std::chrono::milliseconds>(end - start)).count();
+	
+	balancingInfo.numberOfMemoryCopies = countMemoryCopies;
 	
 	return balancingInfo;
 				
@@ -420,12 +423,7 @@ BalancingInfo balancingOnCPU_v3(double* boxes, int *workLen, int n, int m, int d
 			
 	}
 		
-//std::this_thread::sleep_for(std::chrono::milliseconds(2000));
-	//auto end = std::chrono::high_resolution_clock::now();
-	
-	//balancingInfo.time = (std::chrono::duration_cast<std::chrono::milliseconds>(end - start)).count();
-	
-	//balancingInfo.numberOfMemoryCopies = countMemoryCopies;
+
 
 	printf("\n\n");
 	for (int i = 0; i < n; i++) {		
