@@ -23,7 +23,7 @@ int main()
 	printf("Initializing boxes\n");
 	initializeBoxes(boxes, workLen, numThreads, maxBoxesPerThread, dim);
 	printf("Testing balancing on CPU (version 1)\n");
-	balancingInfo = balancingOnCPU_v3(boxes, workLen, numThreads, maxBoxesPerThread, dim);
+	balancingInfo = balancingOnCPU_v2(boxes, workLen, numThreads, maxBoxesPerThread, dim);
 	printf("numberOfMemoryCopies = %d\n",balancingInfo.numberOfMemoryCopies);
 	printf("time = %d\n",balancingInfo.time);
 	printf("numAllBoxes = %d\n",balancingInfo.numAllBoxes);
