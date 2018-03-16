@@ -236,7 +236,7 @@ BalancingInfo balancingOnCPU_v3(double* boxes, int *workLen, int n, int m, int d
 			countAverageBoxesPerThreadMore--;
 			continue;
 		}
-		printf("av: %d\tmore: %d\tnum: %d\n",averageBoxesPerThread,countAverageBoxesPerThreadMore,numBoxesWeTake);
+		printf("av: %d\tmore: %d\tnum: %d\n",numWorkBoxes,countAverageBoxesPerThreadMore,numBoxesWeTake);
 		if (countAverageBoxesPerThreadMore > 1) {
 			numBoxesWeTake = averageBoxesPerThread + 1 - workLen[curThreadWeGiveBoxesIndex] <= workLen[curThreadWeTakeBoxesIndex] - (averageBoxesPerThread+1) 
 							? averageBoxesPerThread + 1 - workLen[curThreadWeGiveBoxesIndex] 
