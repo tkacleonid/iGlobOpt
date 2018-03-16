@@ -10,6 +10,10 @@ int main()
 
 	double *boxes = new double[(2*dim+3) * numThreads*maxBoxesPerThread];
 	int *workLen = new int[numThreads];
+	
+	double *tempBoxes = new double[(2*dim+3) * numThreads*maxBoxesPerThread];
+	int *tempWorkLen = new int[numThreads];
+	
 	BalancingInfo balancingInfo;
 	
 	printf("..........................\n");
@@ -22,8 +26,20 @@ int main()
 	
 	printf("Initializing boxes\n");
 	initializeBoxes(boxes, workLen, numThreads, maxBoxesPerThread, dim);
+	
+	memcpy(tempBoxes,boxes,sizeof(double)*(2*dim+3) * numThreads*maxBoxesPerThread);
+	memcpy(tempWorkLen,workLen,sizeof(int)*numThreads);	
 	printf("Testing balancing on CPU (version 1)\n");
 	balancingInfo = balancingOnCPU_v2(boxes, workLen, numThreads, maxBoxesPerThread, dim);
+	printf("numberOfMemoryCopies = %d\n",balancingInfo.numberOfMemoryCopies);
+	printf("time = %d\n",balancingInfo.time);
+	printf("numAllBoxes = %d\n",balancingInfo.numAllBoxes);
+	printf("numAverageBoxes = %d\n",balancingInfo.numAverageBoxes);
+	
+	memcpy(tempBoxes,boxes,sizeof(double)*(2*dim+3) * numThreads*maxBoxesPerThread);
+	memcpy(tempWorkLen,workLen,sizeof(int)*numThreads);	
+	printf("Testing balancing on CPU (version 2)\n");
+	balancingInfo = balancingOnCPU_v3(boxes, workLen, numThreads, maxBoxesPerThread, dim);
 	printf("numberOfMemoryCopies = %d\n",balancingInfo.numberOfMemoryCopies);
 	printf("time = %d\n",balancingInfo.time);
 	printf("numAllBoxes = %d\n",balancingInfo.numAllBoxes);
@@ -32,6 +48,8 @@ int main()
 	
 	delete [] boxes;
 	delete [] workLen;
+	delete [] tempBoxes;
+	delete [] tempWorkLen;
 	
 	printf("..........................\n");
 		
