@@ -96,7 +96,7 @@ BalancingInfo balancingOnCPU_v2(double* boxes, int *workLen, int n, int m, int d
 		numWorkBoxes += workLen[i]; 	
 	}
 	
-	printf("ST\n");
+	
 	averageBoxesPerThread = numWorkBoxes / n;	
 	countAverageBoxesPerThreadMore = numWorkBoxes - averageBoxesPerThread*n;
 	if(averageBoxesPerThread == 0) averageBoxesPerThread = averageBoxesPerThread + 1;
@@ -254,6 +254,7 @@ BalancingInfo balancingOnCPU_v3(double* boxes, int *workLen, int n, int m, int d
 		}
 		
 		workLen[curThreadWeTakeBoxesIndex] -= numBoxesWeTake;
+		printf("give: %d\ttake: %d\tnum: %d\n",curThreadWeGiveBoxesIndex*m*(2*dim+3) + (workLen[curThreadWeGiveBoxesIndex])*(2*dim+3), curThreadWeTakeBoxesIndex*m*(2*dim+3) + (workLen[curThreadWeTakeBoxesIndex])*(2*dim+3),numBoxesWeTake);
 		memcpy(boxes + curThreadWeGiveBoxesIndex*m*(2*dim+3) + (workLen[curThreadWeGiveBoxesIndex])*(2*dim+3), boxes + curThreadWeTakeBoxesIndex*m*(2*dim+3) + (workLen[curThreadWeTakeBoxesIndex])*(2*dim+3), sizeof(double)*(2*dim+3)*numBoxesWeTake);
 		workLen[curThreadWeGiveBoxesIndex] += numBoxesWeTake;
 		countMemoryCopies++;
