@@ -258,8 +258,6 @@ BalancingInfo balancingOnCPU_v2(double* boxes, int *workLen, int n, int m, int d
 	balancingInfo.maxNumberOfBoxesPerThread = m;
 	balancingInfo.version = WITHOUT_SORT_ON_CPU;
 	
-	balancingInfo.numAllBoxes = numWorkBoxes;
-	balancingInfo.numAverageBoxes = countAverageBoxesPerThreadMore;
 	
 	auto start = std::chrono::high_resolution_clock::now();
 
@@ -268,6 +266,10 @@ BalancingInfo balancingOnCPU_v2(double* boxes, int *workLen, int n, int m, int d
 	}
 	averageBoxesPerThread = numWorkBoxes / n;		
 	if(averageBoxesPerThread == 0) averageBoxesPerThread = averageBoxesPerThread + 1;
+	
+	balancingInfo.numAllBoxes = numWorkBoxes;
+	balancingInfo.numAverageBoxes = countAverageBoxesPerThreadMore;
+	
 			
 	curThreadWeTakeBoxesIndex = 0;
 	countMemoryCopies = 0;
