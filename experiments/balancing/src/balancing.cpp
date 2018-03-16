@@ -95,6 +95,8 @@ BalancingInfo balancingOnCPU_v2(double* boxes, int *workLen, int n, int m, int d
 	for (i = 0; i < n; i++) {
 		numWorkBoxes += workLen[i]; 	
 	}
+	
+	printf("ST\n");
 	averageBoxesPerThread = numWorkBoxes / n;	
 	countAverageBoxesPerThreadMore = numWorkBoxes - averageBoxesPerThread*n;
 	if(averageBoxesPerThread == 0) averageBoxesPerThread = averageBoxesPerThread + 1;
