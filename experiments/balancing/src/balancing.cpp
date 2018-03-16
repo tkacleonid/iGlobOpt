@@ -353,7 +353,7 @@ BalancingInfo balancingOnCPU_v3(double* boxes, int *workLen, int n, int m, int d
 	int curThreadWeTakeBoxesIndex;
 	int numBoxesWeTake;
 	int countAverageBoxesPerThreadMore;
-	int curThreadWeGiveBoxesIndex = -1;
+	int curThreadWeGiveBoxesIndex;
 	int i;
 	int countMemoryCopies = 0;
 	
