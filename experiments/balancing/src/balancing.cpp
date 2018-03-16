@@ -122,7 +122,7 @@ BalancingInfo balancingOnCPU_v2(double* boxes, int *workLen, int n, int m, int d
 				
 	}
 			
-			
+	/*		
 	
 	for (i = 0; i < n; i++) {
 		if (workLen[i] == averageBoxesPerThread) {
@@ -144,7 +144,7 @@ BalancingInfo balancingOnCPU_v2(double* boxes, int *workLen, int n, int m, int d
 
 	}
 	
-	
+	*/
 	printf("\n\n");
 	for (i = 0; i < n; i++) {		
 		printf("%d\t", workLen[i]);	
