@@ -30,7 +30,7 @@ int main()
 	memcpy(tempBoxes,boxes,sizeof(double)*(2*dim+3) * numThreads*maxBoxesPerThread);
 	memcpy(tempWorkLen,workLen,sizeof(int)*numThreads);	
 	printf("Testing balancing on CPU (version 1)\n");
-	balancingInfo = balancingOnCPU_v2(boxes, workLen, numThreads, maxBoxesPerThread, dim);
+	balancingInfo = balancingOnCPU_v2(tempBoxes, workLen, numThreads, maxBoxesPerThread, dim);
 	printf("numberOfMemoryCopies = %d\n",balancingInfo.numberOfMemoryCopies);
 	printf("time = %d\n",balancingInfo.time);
 	printf("numAllBoxes = %d\n",balancingInfo.numAllBoxes);
@@ -38,8 +38,8 @@ int main()
 	
 	memcpy(tempBoxes,boxes,sizeof(double)*(2*dim+3) * numThreads*maxBoxesPerThread);
 	memcpy(tempWorkLen,workLen,sizeof(int)*numThreads);	
-	printf("Testing balancing on CPU (version 2)\n");
-	balancingInfo = balancingOnCPU_v3(boxes, workLen, numThreads, maxBoxesPerThread, dim);
+	printf("\nTesting balancing on CPU (version 2)\n");
+	balancingInfo = balancingOnCPU_v3(tempBoxes, tempWorkLen, numThreads, maxBoxesPerThread, dim);
 	printf("numberOfMemoryCopies = %d\n",balancingInfo.numberOfMemoryCopies);
 	printf("time = %d\n",balancingInfo.time);
 	printf("numAllBoxes = %d\n",balancingInfo.numAllBoxes);
