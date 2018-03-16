@@ -8,7 +8,7 @@ int main()
 	int maxBoxesPerThread = 1000;
 
 
-	double *boxes = new double[(2*dim+3) * numThreads*maxBoxesPerThread +1];
+	double *boxes = new double[(2*dim+3) * numThreads*(maxBoxesPerThread +1)];
 	int *workLen = new int[numThreads];
 	BalancingInfo balancingInfo;
 	
