@@ -269,7 +269,7 @@ BalancingInfo balancingOnCPU_v2(double* boxes, int *workLen, int n, int m, int d
 	countAverageBoxesPerThreadMore = numWorkBoxes - averageBoxesPerThread*n;
 	if(averageBoxesPerThread == 0) averageBoxesPerThread = averageBoxesPerThread + 1;
 	
-	balancingInfo.numAllBoxes = numWorkBoxes1;
+	balancingInfo.numAllBoxes = numWorkBoxes;
 	balancingInfo.numAverageBoxes = countAverageBoxesPerThreadMore;
 	
 			
