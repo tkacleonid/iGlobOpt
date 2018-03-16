@@ -102,7 +102,7 @@ BalancingInfo balancingOnCPU_v2(double* boxes, int *workLen, int n, int m, int d
 	balancingInfo.numAllBoxes = numWorkBoxes;
 	balancingInfo.numAverageBoxes = countAverageBoxesPerThreadMore;
 	
-			
+	/*		
 	curThreadWeTakeBoxesIndex = 0;
 	countMemoryCopies = 0;
 	for (i = 0; i < n; i++) {
@@ -111,7 +111,7 @@ BalancingInfo balancingOnCPU_v2(double* boxes, int *workLen, int n, int m, int d
 				if (workLen[j] > averageBoxesPerThread) {		
 					numBoxesWeTake = averageBoxesPerThread - workLen[i] <= workLen[j] - averageBoxesPerThread ? averageBoxesPerThread - workLen[i] : workLen[j] - averageBoxesPerThread;
 					workLen[j] -= numBoxesWeTake;
-					//memcpy(boxes + i*m*(2*dim+3) + workLen[i]*(2*dim+3), boxes + j*m*(2*dim+3) + workLen[j]*(2*dim+3), sizeof(double)*(2*dim+3)*numBoxesWeTake);
+					memcpy(boxes + i*m*(2*dim+3) + workLen[i]*(2*dim+3), boxes + j*m*(2*dim+3) + workLen[j]*(2*dim+3), sizeof(double)*(2*dim+3)*numBoxesWeTake);
 					workLen[i] += numBoxesWeTake;	
 					countMemoryCopies++;
 					if (workLen[i] == averageBoxesPerThread) break;	
