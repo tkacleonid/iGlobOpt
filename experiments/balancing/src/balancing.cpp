@@ -74,7 +74,7 @@ BalancingInfo balancingOnCPU(double* boxes, int *workLen, int n, int m, int dim)
 				
 				
 	
-	int numWorkBoxes = 0;
+	int numWorkBoxes;
 	int averageBoxesPerThread = 0;
 	int curThreadWeTakeBoxesIndex = -1;
 	int numBoxesWeTake = 0;
