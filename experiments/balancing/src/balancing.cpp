@@ -248,7 +248,7 @@ BalancingInfo balancingOnGPU_v1(double* boxes, int *workLen, int n, int m, int d
 	int curThreadWeTakeBoxesIndex = 0;
 	int numBoxesWeTake = 0;
 	int i,j;
-	int countMemoryCopies ;
+	int countMemoryCopies = 0;
 	int countAverageBoxesPerThreadMore ;
 	
 	BalancingInfo balancingInfo;
