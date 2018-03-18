@@ -325,11 +325,11 @@ BalancingInfo balancingOnGPU_v1(double* boxes, int *workLen, int n, int m, int d
 
 
 
-__global__ void globOptCUDA_2(double *boxes, const int dim, int *workLen)
+__global__ void globOptCUDA_2(double *boxes, const int dim, int *workLen, int *countMemoryCopies, const int numThreads)
 {
 	__shared__ double min_s[BLOCK_SIZE];
 	__shared__ int workLen_s[BLOCK_SIZE];
-	__shared__ int count[BLOCK_SIZE];
+	__shared__ int countMemoryCopies[BLOCK_SIZE];
 	
 	double minRec = inRec;
 	int i, j,bInd, hInd, n;
@@ -351,230 +351,105 @@ __global__ void globOptCUDA_2(double *boxes, const int dim, int *workLen)
 
 	n = 0;
 	
-	while(workLen_s[threadIdx.x] < BLOCK_SIZE && count[threadIdx.x] < MAX_GPU_ITER)
+
+	__syncthreads();
+		
+	if((threadIdx.x == 0))// && (count[threadIdx.x]+1) % 10 == 0)
 	{
-		if(workLen_s[threadIdx.x] > 0)
+		for(i = 0; i < BLOCK_SIZE; i++)
 		{
-			
-			bInd = threadId*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[threadIdx.x] - 1)*(2*inRank+3);
-			fnCalcFunLimitsStyblinski_CUDA(inBox + bInd, inRank);
-			
-			if(min_s[threadIdx.x] > inBox[bInd + 2*inRank + 2])
+			if(minRec > min_s[i])
 			{
-				min_s[threadIdx.x] = inBox[bInd + 2*inRank + 2];
-			}
-	
-			if(min_s[threadIdx.x] - inBox[bInd + 2*inRank] < inEps)
-			{
-				--workLen_s[threadIdx.x];
-				n++;
-			}
-			else
-			{
-				
-
-				for(int j = 0; j < 16; j++)
-				{
-				bInd = threadId*1024*(2*inRank+3) + (workLen_s[threadIdx.x] - 1)*(2*inRank+3);
-					
-				hInd = 0;
-				h = inBox[bInd + 1] - inBox[bInd];
-				
-				for(i = 0; i < inRank; i++)
-				{
-					if( h < inBox[bInd + i*2 + 1] - inBox[bInd + i*2]) 
-					{
-						h = inBox[bInd + i*2 + 1] - inBox[bInd + i*2];
-						hInd = i;
-					}
-				}
-				for(i = 0; i < inRank; i++)
-				{
-					if(i == hInd) 
-					{
-						inBox[bInd + i*2 + 1] = inBox[bInd + i*2] + h/2.0;
-						inBox[bInd + 2*inRank + 3 + i*2] = inBox[bInd + i*2] + h/2.0;
-						inBox[bInd + 2*inRank + 3 + i*2 + 1] = inBox[bInd + i*2] + h;
-					}
-					else
-					{
-						inBox[bInd + 2*inRank + 3 + i*2] = inBox[bInd + i*2];
-						inBox[bInd + 2*inRank + 3 + i*2 + 1] = inBox[bInd + i*2 + 1];
-					}
-				}
-				++workLen_s[threadIdx.x];
-				}
+				minRec = min_s[i];
 			}
 		}
-			
-		
-
-		
-		__syncthreads();
-		
-		if((threadIdx.x == 0))// && (count[threadIdx.x]+1) % 10 == 0)
-		{
-			for(i = 0; i < BLOCK_SIZE; i++)
-			{
-				if(minRec > min_s[i])
-				{
-					minRec = min_s[i];
-				}
-			}
-		}
-		
-		__syncthreads();
-		
-		min_s[threadIdx.x] = minRec;	
-		
-		
-		
-		/*
-		workLen_s_temp[threadId] = workLen[threadId];
-		
-		__syncthreads();
-		
-			
-		
-			
-		if(workLen_s[threadId] == 0)
-		{
-			for(i = 0; i < 1024; i++)
-			{
-				if(workLen_s_temp[i] > 6 && workLen_s_temp[threadId] == 0)
-				{
-					atomicAdd(workLen_s_temp + i, -3);
-					memcpy(inBox + bInd, inBox + i*1024*(2*inRank+3) + (workLen_s_temp[i] - 1)*(2*inRank+3), sizeof(double)*(2*inRank+3)*3);
-					workLen_s_temp[threadId] += 3;
-					break;
-				}
-			}
-		}
-			
-			//workLen[threadId] = workLen_s_temp[threadId];
-		__syncthreads();
-			
-		workLen_s[threadId] = workLen_s_temp[threadId];
-			
-			*/		
-			
-		__syncthreads();	
-		
-		/*
-		
-		
-		if(threadIdx.x == 0 && (count[threadIdx.x]+1) % MAX_ITER_BEFORE_BALANCE == 0)
-		{
-			for(i = 0; i < BLOCK_SIZE; i++)
-			{
-				if(workLen_s[i] == 0)
-				{
-					for(j = 0; j < BLOCK_SIZE; j++)
-					{
-						if(workLen_s[j] > BORDER_BALANCE)
-						{
-							half = workLen_s[j]/2;
-							workLen_s[j] -= half;
-								memcpy(inBox + (i+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3), inBox + (j+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[j])*(2*inRank+3), sizeof(double)*(2*inRank+3)*half);
-								workLen_s[i] += half;
-								break;
-						}
-					}
-				}		
-			}	
-		}	
-		
-		
-		
-		
-		
-		
-		*/
-		
-		int numWorkBoxes = 0;
-		int averageBoxesPerThread = 0;
-		int curThreadWeTakeBoxesIndex = -1;
-		int curThreadWeTakeBoxesCount = 0;
-		int numBoxesWeTake = 0;
-		int boxIndex = 0;
-		if(threadIdx.x == 0 && (count[threadIdx.x]+1) % MAX_ITER_BEFORE_BALANCE == 0)
-		{
-			for(i = 0; i < BLOCK_SIZE; i++)
-			{
-				numWorkBoxes += workLen_s[i]; 	
-			}
-			averageBoxesPerThread = numWorkBoxes / BLOCK_SIZE;
-			
-			if(averageBoxesPerThread == 0) averageBoxesPerThread = averageBoxesPerThread + 1;
-			
-			curThreadWeTakeBoxesIndex = 0;
-			for(i = 0; i < BLOCK_SIZE; i++)
-			{
-				if(workLen_s[i] < averageBoxesPerThread)
-				{
-					for(j = curThreadWeTakeBoxesIndex; j < BLOCK_SIZE; j++)
-					{
-						if(workLen_s[j] > averageBoxesPerThread)
-						{
-							
-							numBoxesWeTake = averageBoxesPerThread - workLen_s[i] <= workLen_s[j] - averageBoxesPerThread ? averageBoxesPerThread - workLen_s[i] : workLen_s[j] - averageBoxesPerThread;
-							workLen_s[j] -= numBoxesWeTake;
-							memcpy(inBox + (i+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[i])*(2*inRank+3), inBox + (j+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[j])*(2*inRank+3), sizeof(double)*(2*inRank+3)*numBoxesWeTake);
-							workLen_s[i] += numBoxesWeTake;	
-							if(workLen_s[i] == averageBoxesPerThread) 
-							{
-								break;	
-							}
-						}
-						
-					}
-					curThreadWeTakeBoxesIndex = j;
-				}
-				
-			}
-			
-			
-			boxIndex = 0;
-			for(i = 0; i < BLOCK_SIZE; i++)
-			{
-				if(workLen_s[i] == averageBoxesPerThread)
-				{
-					for(j = curThreadWeTakeBoxesIndex; j < BLOCK_SIZE; j++)
-					{
-						if(workLen_s[j] > averageBoxesPerThread + 1)
-						{
-							numBoxesWeTake = 1;
-							workLen_s[j] -= numBoxesWeTake;
-							memcpy(inBox + (i+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[i])*(2*inRank+3), inBox + (j+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[j])*(2*inRank+3), sizeof(double)*(2*inRank+3)*numBoxesWeTake);
-							workLen_s[i] += numBoxesWeTake;	
-							break;
-						}
-						
-					}
-					curThreadWeTakeBoxesIndex = j;
-				}
-				if(curThreadWeTakeBoxesIndex == BLOCK_SIZE - 1 && workLen_s[curThreadWeTakeBoxesIndex] <= averageBoxesPerThread + 1)
-				{
-					break;
-				}
-			}
-			
-			
-			
-
-			
-		}
-			
-		
-		
-		__syncthreads();
-		
-		
-
-		++count[threadIdx.x];
-
-		
 	}
+		
+	__syncthreads();
+		
+	min_s[threadIdx.x] = minRec;	
+		
+		
+		
+		
+    int numWorkBoxes = 0;
+	int averageBoxesPerThread = 0;
+	int curThreadWeTakeBoxesIndex = -1;
+	int curThreadWeTakeBoxesCount = 0;
+	int numBoxesWeTake = 0;
+	int boxIndex = 0;
+	if(threadIdx.x == 0 && (count[threadIdx.x]+1) % MAX_ITER_BEFORE_BALANCE == 0)
+	{
+		for(i = 0; i < BLOCK_SIZE; i++)
+		{
+			numWorkBoxes += workLen_s[i]; 	
+		}
+		averageBoxesPerThread = numWorkBoxes / BLOCK_SIZE;
+			
+		if(averageBoxesPerThread == 0) averageBoxesPerThread = averageBoxesPerThread + 1;
+			
+		curThreadWeTakeBoxesIndex = 0;
+		for(i = 0; i < BLOCK_SIZE; i++)
+		{
+			if(workLen_s[i] < averageBoxesPerThread)
+			{
+				for(j = curThreadWeTakeBoxesIndex; j < BLOCK_SIZE; j++)
+				{
+					if(workLen_s[j] > averageBoxesPerThread)
+					{
+							
+						numBoxesWeTake = averageBoxesPerThread - workLen_s[i] <= workLen_s[j] - averageBoxesPerThread ? averageBoxesPerThread - workLen_s[i] : workLen_s[j] - averageBoxesPerThread;
+						workLen_s[j] -= numBoxesWeTake;
+						memcpy(inBox + (i+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[i])*(2*inRank+3), inBox + (j+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[j])*(2*inRank+3), sizeof(double)*(2*inRank+3)*numBoxesWeTake);
+						workLen_s[i] += numBoxesWeTake;	
+						if(workLen_s[i] == averageBoxesPerThread) 
+						{
+							break;	
+						}
+					}
+						
+				}
+				curThreadWeTakeBoxesIndex = j;
+			}
+				
+		}
+			
+			
+		boxIndex = 0;
+		for(i = 0; i < BLOCK_SIZE; i++)
+		{
+			if(workLen_s[i] == averageBoxesPerThread)
+			{
+				for(j = curThreadWeTakeBoxesIndex; j < BLOCK_SIZE; j++)
+				{
+					if(workLen_s[j] > averageBoxesPerThread + 1)
+					{
+						numBoxesWeTake = 1;
+						workLen_s[j] -= numBoxesWeTake;
+						memcpy(inBox + (i+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[i])*(2*inRank+3), inBox + (j+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[j])*(2*inRank+3), sizeof(double)*(2*inRank+3)*numBoxesWeTake);
+						workLen_s[i] += numBoxesWeTake;	
+						break;
+					}
+						
+				}
+				curThreadWeTakeBoxesIndex = j;
+			}
+			if(curThreadWeTakeBoxesIndex == BLOCK_SIZE - 1 && workLen_s[curThreadWeTakeBoxesIndex] <= averageBoxesPerThread + 1)
+			{
+				break;
+			}
+		}
+			
+			
+			
+
+			
+	}
+			
+		
+		
+	__syncthreads();
+		
 	
 	workLen[threadId] = workLen_s[threadIdx.x];
 	min[threadId] = min_s[threadIdx.x];
