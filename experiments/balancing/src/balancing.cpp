@@ -243,8 +243,8 @@ BalancingInfo balancingOnCPU_v3(double* boxes, int *workLen, int n, int m, int d
 BalancingInfo balancingOnGPU_v1(double* boxes, int *workLen, int n, int m, int dim)
 {
 				
-	int numWorkBoxes = ;
-	int averageBoxesPerThread = 0;
+	int numWorkBoxes = 0;
+	int averageBoxesPerThread = ;
 	int curThreadWeTakeBoxesIndex = 0;
 	int numBoxesWeTake = 0;
 	int i,j;
