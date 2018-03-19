@@ -61,6 +61,11 @@ __global__ void testCUDARun(double *boxes);
 */
 void testGPUKernelRun(const int numRuns, dim3 gridSize, dim3 blockSize);
 
+/**
+*	Test transfer data to GPU
+*/
+void testGPUTransferDataToDevice(const int numRuns, dim3 gridSize, dim3 blockSize);
+
 
 BalancingInfo balancingOnCPU(double* boxes, int *workLen,int n, int m, int dim);
 BalancingInfo balancingOnCPU2(int n, int m, int dim);
