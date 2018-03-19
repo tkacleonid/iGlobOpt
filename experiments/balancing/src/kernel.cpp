@@ -92,8 +92,8 @@ int main()
 	printf("\n\n");
 */	
 
-	for (int i = 0; i < n; i++) {
-			for (int j = i+1; j < n; j++) {
+	for (int i = 0; i < numThreads; i++) {
+			for (int j = i+1; j < numThreads; j++) {
 				if(tempWorkLen[i] > tempWorkLen[j]) {
 					int temp = tempWorkLen[i];
 					tempWorkLen[i] = tempWorkLen[j];
