@@ -33,7 +33,7 @@ void testGPUKernelRun(int numRuns, dim3 gridSize, dim3 blockSize)
 
 	auto end = std::chrono::high_resolution_clock::now();
 	
-	printf("AverageTime with synchronize: %d", (std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count());
+	printf("AverageTime with synchronize: %d\n", (std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count());
 
 	
 }

@@ -7,6 +7,9 @@ int main()
 	int numThreads = 512;
 	int maxBoxesPerThread = 10000;
 
+	
+	testGPUKernelRun(100, dim3(1,0,0), dim3(1,0,0));
+	
 
 	double *boxes = new double[(2*dim+3) * numThreads*maxBoxesPerThread];
 	int *workLen = new int[numThreads];
