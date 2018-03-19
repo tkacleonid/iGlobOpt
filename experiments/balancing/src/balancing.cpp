@@ -708,7 +708,7 @@ __global__ void balancingCUDA_v2(double *boxes, const int dim, int *workLen, int
 			for (int d = 0; d < numBoxesWeTake*(2*dim+3); d++) {
 				double f = boxes[indFrom + d];
 				if(f == 8.999) break;
-				boxes[indTo + d] = d;
+				//boxes[indTo + d] = d;
 				
 				
 			}
