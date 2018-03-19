@@ -43,7 +43,7 @@ void testGPUKernelRun(const int numRuns, dim3 gridSize, dim3 blockSize)
 
 __global__ void testCUDARun()
 {
-	//int a = 5.6;
+	int a = 5.6;
 }
 
 
