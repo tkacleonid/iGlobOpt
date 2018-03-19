@@ -5,7 +5,7 @@ int main()
 {	
 	int dim = 2;
 	int numThreads = 1024;
-	int maxBoxesPerThread = 10000;
+	int maxBoxesPerThread = 1000;
 
 
 	double *boxes = new double[(2*dim+3) * numThreads*maxBoxesPerThread];
