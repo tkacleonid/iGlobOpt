@@ -44,6 +44,7 @@ BalancingInfo balancingOnCPU_v3(double* boxes, int *workLen, int n, int m, int d
 BalancingInfo balancingOnCPU_v2(double* boxes, int *workLen, int n, int m, int dim);
 void initializeBoxes(double* boxes, int *workLen, int n, int m, int dim);
 
+BalancingInfo balancingOnGPU_v1(double* boxes, int *workLen, int n, int m, int dim);
 
 
 __global__ void balancingCUDA_v1(double *boxes, const int dim, int *workLen, int *countMemoryCopies, const int m);
