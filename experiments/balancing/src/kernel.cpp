@@ -5,7 +5,7 @@ int main()
 {	
 	int dim = 2;
 	int numThreads = 1024;
-	int maxBoxesPerThread = 1000;
+	int maxBoxesPerThread = 10000;
 
 
 	double *boxes = new double[(2*dim+3) * numThreads*maxBoxesPerThread];
@@ -32,7 +32,7 @@ int main()
 	printf("Testing balancing on CPU (version 1)\n");
 	balancingInfo = balancingOnCPU_v2(tempBoxes, tempWorkLen, numThreads, maxBoxesPerThread, dim);
 	printf("numberOfMemoryCopies = %d\n",balancingInfo.numberOfMemoryCopies);
-	printf("time = %d\n",balancingInfo.time);
+	printf("time = %f\n",balancingInfo.time);
 	printf("numAllBoxes = %d\n",balancingInfo.numAllBoxes);
 	printf("numAverageBoxes = %d\n",balancingInfo.numAverageBoxes);
 	
@@ -48,7 +48,7 @@ int main()
 	printf("\nTesting balancing on CPU (version 2)\n");
 	balancingInfo = balancingOnCPU_v3(tempBoxes, tempWorkLen, numThreads, maxBoxesPerThread, dim);
 	printf("numberOfMemoryCopies = %d\n",balancingInfo.numberOfMemoryCopies);
-	printf("time = %d\n",balancingInfo.time);
+	printf("time = %f\n",balancingInfo.time);
 	printf("numAllBoxes = %d\n",balancingInfo.numAllBoxes);
 	printf("numAverageBoxes = %d\n",balancingInfo.numAverageBoxes);
 
