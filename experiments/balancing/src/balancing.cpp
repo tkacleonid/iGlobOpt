@@ -643,7 +643,7 @@ __global__ void balancingCUDA_v2(double *boxes, const int dim, int *workLen, int
 		
 		//countMemoryCopies = 0;
 		while (curThreadWeTakeBoxesIndex > curThreadWeGiveBoxesIndex) {
-			if (workLen[curThreadWeTakeBoxesIndex] == averageBoxesPerThread) {
+			if (workLen_s[curThreadWeTakeBoxesIndex] == averageBoxesPerThread) {
 				curThreadWeTakeBoxesIndex--;
 				continue;
 			}
