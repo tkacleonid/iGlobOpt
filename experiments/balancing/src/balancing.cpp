@@ -55,8 +55,8 @@ void testGPUTransferDataToDevice(const int numRuns, dim3 gridSize, dim3 blockSiz
 	CHECKED_CALL(cudaDeviceReset());
 	
 	int numThreads = gridSize.x*gridSize.y*gridSize.x*blockSize.x*blockSize.y*blockSize.z;
-	double *boxes = new double[(2*dim+3) * numThreads];
-	int sizeInBox = (2*dim+3) * numThreads*sizeof(double);
+	double *boxes = new double[numThreads];
+	int sizeInBox = numThreads*sizeof(double);
 	double *dev_boxes;
 	
 	CHECKED_CALL(cudaMalloc((void **)&dev_boxes, sizeInBox));
