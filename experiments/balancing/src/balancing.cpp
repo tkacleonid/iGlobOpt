@@ -495,7 +495,7 @@ __global__ void balancingCUDA_v2(double *boxes, const int dim, int *workLen, int
 	workLen_s[threadIdx.x] = workLen[threadId];	
 	countMemoryCopies[threadIdx.x] = 0;
 	
-	__shared__ *workLenIndexes = new int[1024];
+	__shared__ int workLenIndexes[1024];
 
 	workLenIndexes[i] = threadId;
 	
