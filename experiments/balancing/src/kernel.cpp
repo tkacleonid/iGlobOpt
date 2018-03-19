@@ -36,6 +36,13 @@ int main()
 	printf("numAllBoxes = %d\n",balancingInfo.numAllBoxes);
 	printf("numAverageBoxes = %d\n",balancingInfo.numAverageBoxes);
 	
+	printf("\n\n");
+	for (int i = 0; i < numThreads; i++) {
+		printf("%d\t", tempWorkLen[i]);
+	}
+	printf("\n\n");
+	
+	
 	memcpy(tempBoxes,boxes,sizeof(double)*(2*dim+3) * numThreads*maxBoxesPerThread);
 	memcpy(tempWorkLen,workLen,sizeof(int)*numThreads);	
 	printf("\nTesting balancing on CPU (version 2)\n");
