@@ -625,12 +625,12 @@ __global__ void balancingCUDA_v2(double *boxes, const int dim, int *workLen, int
 			for (i = 0; i < blockDim.x; i++) {
 			numWorkBoxes += workLen_s[i]; 	
 		}
-		averageBoxesPerThread = numWorkBoxes / n;
+		averageBoxesPerThread = numWorkBoxes / blockDim.x;
 					
-		countAverageBoxesPerThreadMore = numWorkBoxes - averageBoxesPerThread*n;
+		countAverageBoxesPerThreadMore = numWorkBoxes - averageBoxesPerThread*blockDim.x;
 		
 		
-		curThreadWeTakeBoxesIndex = n-1;
+		curThreadWeTakeBoxesIndex = blockDim.x-1;
 		curThreadWeGiveBoxesIndex = 0;
 		
 		
