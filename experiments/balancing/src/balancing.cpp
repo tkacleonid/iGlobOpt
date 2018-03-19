@@ -27,7 +27,7 @@ void testGPUKernelRun(const int numRuns, dim3 gridSize, dim3 blockSize)
 	
 	printf("AverageTime without synchronize: %d microseconds\n", (std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count()/numRuns);
 
-	
+/*	
 	start = std::chrono::high_resolution_clock::now();
 	for(int i = 0; i < numRuns; i++)
 	{
@@ -38,7 +38,7 @@ void testGPUKernelRun(const int numRuns, dim3 gridSize, dim3 blockSize)
 	end = std::chrono::high_resolution_clock::now();
 	
 	printf("AverageTime with synchronize: %d microseconds\n", (std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count()/numRuns);
-	
+*/	
 	
 }
 
