@@ -59,7 +59,7 @@ __global__ void testCUDARun();
 /**
 *	Test time of GPU kernel runs
 */
-void testGPUKernelRun(int numRuns, dim3 gridSize, dim3 blockSize);
+void testGPUKernelRun(const int numRuns, dim3 gridSize, dim3 blockSize);
 
 
 BalancingInfo balancingOnCPU(double* boxes, int *workLen,int n, int m, int dim);

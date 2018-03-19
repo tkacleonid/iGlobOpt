@@ -12,28 +12,31 @@
 /**
 *	Test time of GPU kernel runs
 */
-void testGPUKernelRun(int numRuns, dim3 gridSize, dim3 blockSize)
+void testGPUKernelRun(const int numRuns, dim3 gridSize, dim3 blockSize)
 {
 	
 	CHECKED_CALL(cudaSetDevice(DEVICE));
 	CHECKED_CALL(cudaDeviceReset());
 	
-	
 	auto start = std::chrono::high_resolution_clock::now();
-	
 	for(int i = 0; i < numRuns; i++)
 	{
 		CHECKED_CALL(cudaDeviceSynchronize());
 		testCUDARun<<<gridSize, blockSize>>>();
 		CHECKED_CALL(cudaDeviceSynchronize());
 	}
-
-
-
-
 	auto end = std::chrono::high_resolution_clock::now();
 	
-	printf("AverageTime with synchronize: %d\n", (std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count());
+	printf("AverageTime with synchronize: %d microseconds\n", (std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count()/numRuns);
+	
+	start = std::chrono::high_resolution_clock::now();
+	for(int i = 0; i < numRuns; i++)
+	{
+		testCUDARun<<<gridSize, blockSize>>>();
+	}
+	end = std::chrono::high_resolution_clock::now();
+	
+	printf("AverageTime without synchronize: %d microseconds\n", (std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count()/numRuns);
 
 	
 }
