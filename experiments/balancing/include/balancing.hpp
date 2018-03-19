@@ -52,7 +52,7 @@ struct BalancingInfo
 BalancingInfo balancingOnCPU(double* boxes, int *workLen,int n, int m, int dim);
 BalancingInfo balancingOnCPU2(int n, int m, int dim);
 void sortQuickRecursive(int *indexes,int *ar,  const int n);
-__global__ void quickSortBase(int *indexes,int *ar, const int l, const int r);
+void quickSortBase(int *indexes,int *ar, const int l, const int r);
 BalancingInfo balancingOnCPU_v3(double* boxes, int *workLen, int n, int m, int dim);
 BalancingInfo balancingOnCPU_v2(double* boxes, int *workLen, int n, int m, int dim);
 void initializeBoxes(double* boxes, int *workLen, int n, int m, int dim);
@@ -61,4 +61,6 @@ BalancingInfo balancingOnGPU_v1(double* boxes, int *workLen, int n, int m, int d
 
 
 __global__ void balancingCUDA_v1(double *boxes, const int dim, int *workLen, int *countMemoryCopies, const int m);
+
+__device__ void quickSortBaseGPU(int *indexes,int *ar, const int l, const int r);
 
