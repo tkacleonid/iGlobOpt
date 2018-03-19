@@ -328,7 +328,7 @@ BalancingInfo balancingOnGPU_v1(double* boxes, int *workLen, int n, int m, int d
 
 	auto end = std::chrono::high_resolution_clock::now();
 	
-	balancingInfo.time = (std::chrono::duration_cast<std::chrono::microseconds>(end - start1)).count();
+	balancingInfo.time = time;//(std::chrono::duration_cast<std::chrono::microseconds>(end - start1)).count();
 	balancingInfo.numberOfMemoryCopies = countMemoryCopies[0];
 	
 	return balancingInfo;

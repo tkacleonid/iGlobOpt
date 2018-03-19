@@ -26,7 +26,7 @@ enum BalancingVersion
 struct BalancingInfo 
 {
 	int numberOfMemoryCopies;
-	int time;
+	float time;
 	int numThreads;
 	int maxNumberOfBoxesPerThread;
 	int numAllBoxes;
