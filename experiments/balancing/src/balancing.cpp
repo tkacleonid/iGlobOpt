@@ -526,7 +526,7 @@ __global__ void balancingCUDA_v1(double *boxes, const int dim, int *workLen, int
 						int indTo = (i+blockIdx.x * blockDim.x)*m*(2*dim+3) + (workLen_s[i])*(2*dim+3);
 						int indFrom = (j+blockIdx.x * blockDim.x)*m*(2*dim+3) + (workLen_s[j])*(2*dim+3);
 						for (int d = 0; d < numBoxesWeTake*(2*dim+3); d++) {			
-							boxes[indTo+d] = boxes[indFrom+d];
+							//boxes[indTo+d] = boxes[indFrom+d];
 						}
 						
 						//memcpy(boxes + (i+blockIdx.x * blockDim.x)*m*(2*dim+3) + (workLen_s[i])*(2*dim+3), boxes + (j+blockIdx.x * blockDim.x)*m*(2*dim+3) + (workLen_s[j])*(2*dim+3), sizeof(double)*(2*dim+3)*numBoxesWeTake);
@@ -559,7 +559,7 @@ __global__ void balancingCUDA_v1(double *boxes, const int dim, int *workLen, int
 						int indTo = (i+blockIdx.x * blockDim.x)*m*(2*dim+3) + (workLen_s[i])*(2*dim+3);
 						int indFrom = (j+blockIdx.x * dim)*m*(2*dim+3) + (workLen_s[j])*(2*dim+3);
 						for (int d = 0; d < numBoxesWeTake*(2*dim+3); d++) {			
-							boxes[indTo+d] = boxes[indFrom+d];
+							//boxes[indTo+d] = boxes[indFrom+d];
 						}
 						
 						//memcpy(boxes + (i+blockIdx.x * blockDim.x)*m*(2*dim+3) + (workLen_s[i])*(2*dim+3), boxes + (j+blockIdx.x * dim)*m*(2*dim+3) + (workLen_s[j])*(2*dim+3), sizeof(double)*(2*dim+3)*numBoxesWeTake);
