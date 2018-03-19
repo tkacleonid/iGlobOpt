@@ -629,7 +629,7 @@ __global__ void balancingCUDA_v2(double *boxes, const int dim, int *workLen, int
 				
 		for (i = 0; i < n; i++) {
 			for (j = i+1; j < n; j++) {
-				if(workLen_s[i] < workLen_s[j]) {
+				if(workLen_s[i] > workLen_s[j]) {
 					int temp = workLen_s[i];
 					workLen_s[i] = workLen_s[j];
 					workLen_s[j] = temp;
