@@ -341,8 +341,8 @@ BalancingInfo balancingOnGPU_v1(double* boxes, int *workLen, int n, int m, int d
 
 __global__ void balancingCUDA_v1(double *boxes, const int dim, int *workLen, int *countMemoryCopies, const int m)
 {
-	__shared__ int workLen_s[blockDim.x];
-	__shared__ int countMemoryCopies[blockDim.x];
+	__shared__ int workLen_s[1024];
+	__shared__ int countMemoryCopies[1024];
 	
 	double minRec = inRec;
 	int i, j,bInd, hInd, n;
