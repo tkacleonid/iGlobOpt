@@ -24,10 +24,9 @@ void testGPUKernelRun(const int numRuns, dim3 gridSize, dim3 blockSize)
 		testCUDARun<<<gridSize, blockSize>>>(0);
 	}
 	auto end = std::chrono::high_resolution_clock::now();
-	
 	printf("AverageTime without synchronize: %d microseconds\n", (std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count()/numRuns);
 
-	/* start = std::chrono::high_resolution_clock::now();
+	start = std::chrono::high_resolution_clock::now();
 	for(int i = 0; i < numRuns; i++)
 	{
 		CHECKED_CALL(cudaThreadSynchronize());
@@ -35,15 +34,61 @@ void testGPUKernelRun(const int numRuns, dim3 gridSize, dim3 blockSize)
 		CHECKED_CALL(cudaThreadSynchronize());
 	}
 	end = std::chrono::high_resolution_clock::now();
-	
 	printf("AverageTime with synchronize: %d microseconds\n", (std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count()/numRuns);
-	*/
+	
 	
 }
 
 __global__ void testCUDARun(double *boxes)
 {
-	//int a = 5.6;
+	//code
+}
+
+
+/**
+*	Test time of GPU kernel runs
+*/
+void testGPUTransferDataToDevice(const int numRuns, dim3 gridSize, dim3 blockSize)
+{
+	
+	CHECKED_CALL(cudaSetDevice(DEVICE));
+	CHECKED_CALL(cudaDeviceReset());
+	
+	int numThreads = gridSize.x*gridSize.y*gridSize.x*blockSize.x*blockSize.y*blockSize.z;
+	double *boxes = new double[(2*dim+3) * numThreads];
+	int sizeInBox = (2*dim+3) * numThreads*sizeof(double);
+	double *dev_boxes;
+	
+	CHECKED_CALL(cudaMalloc((void **)&dev_boxes, sizeInBox));
+	
+	
+	auto start1 = std::chrono::high_resolution_clock::now();
+	
+	for(int i = 0; i < numRuns; i++)
+	{
+		CHECKED_CALL(cudaMemcpy(dev_boxes, boxes, sizeInBox, cudaMemcpyHostToDevice));
+		//balancingCUDA_v1<<<GridSize, n>>>(dev_boxes, dim, dev_workLen, dev_countMemoryCopies, m);		
+		CHECKED_CALL(cudaGetLastError());
+		CHECKED_CALL(cudaDeviceSynchronize());
+		CHECKED_CALL(cudaMemcpy(boxes, dev_boxes, sizeInBox, cudaMemcpyDeviceToHost));
+	}
+	
+	CHECKED_CALL(cudaFree(dev_boxes));
+	auto end = std::chrono::high_resolution_clock::now();
+	
+	printf("Time to ytransfer data to Device: %d microseconds\n", (std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count()/numRuns);
+
+	
+	
+	delete [] boxes;
+
+		
+	
+}
+
+__global__ void testCUDATransferDataToDevice(double *boxes)
+{
+	//code
 }
 
 

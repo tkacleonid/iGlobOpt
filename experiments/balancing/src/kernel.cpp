@@ -8,7 +8,7 @@ int main()
 	int maxBoxesPerThread = 10000;
 
 	
-	testGPUKernelRun(1000, dim3(2), dim3(2));
+	testGPUTransferDataToDevice(1000, dim3(2), dim3(2));
 	
 
 	double *boxes = new double[(2*dim+3) * numThreads*maxBoxesPerThread];
