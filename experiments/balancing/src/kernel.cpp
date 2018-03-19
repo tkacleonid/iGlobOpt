@@ -45,7 +45,7 @@ int main()
 	printf("numAllBoxes = %d\n",balancingInfo.numAllBoxes);
 	printf("numAverageBoxes = %d\n",balancingInfo.numAverageBoxes);
 	
-	for (int i = 0; i < n; i++) {
+	for (int i = 0; i < numThreads; i++) {
 		printf("%d\t", workLen[i]);
 	}
 	printf("\n\n");
@@ -53,7 +53,7 @@ int main()
 	memcpy(tempBoxes,boxes,sizeof(double)*(2*dim+3) * numThreads*maxBoxesPerThread);
 	memcpy(tempWorkLen,workLen,sizeof(int)*numThreads);	
 	
-	for (int i = 0; i < n; i++) {
+	for (int i = 0; i < numThreads; i++) {
 		printf("%d\t", tempWorkLen[i]);
 	}
 	printf("\n\n");
@@ -67,7 +67,7 @@ int main()
 	printf("numAverageBoxes = %d\n",balancingInfo.numAverageBoxes);
 	
 	printf("\n\n");
-	for (int i = 0; i < n; i++) {
+	for (int i = 0; i < numThreads; i++) {
 		printf("%d\t", tempWorkLen[i]);
 	}
 	printf("\n\n");
