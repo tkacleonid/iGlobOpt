@@ -35,7 +35,7 @@ void testGPUKernelRun(const int numRuns, dim3 gridSize, dim3 blockSize)
 		testCUDARun<<<gridSize, blockSize>>>(0);
 		CHECKED_CALL(cudaThreadSynchronize());
 	}
-	autoend = std::chrono::high_resolution_clock::now();
+	auto end = std::chrono::high_resolution_clock::now();
 	
 	printf("AverageTime with synchronize: %d microseconds\n", (std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count()/numRuns);
 
