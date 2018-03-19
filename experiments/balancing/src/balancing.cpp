@@ -307,7 +307,7 @@ BalancingInfo balancingOnGPU_v1(double* boxes, int *workLen, int n, int m, int d
 
 	balancingCUDA_v1<<<GridSize, n>>>(dev_boxes, dim, dev_workLen, dev_countMemoryCopies, m);
 			
-	CHECKED_CALL(cudaGetLastError());
+	CHECKED_CALL(cudaGetLastError());.
 
 	CHECKED_CALL(cudaEventRecord(stop, 0));
 	CHECKED_CALL(cudaDeviceSynchronize());
