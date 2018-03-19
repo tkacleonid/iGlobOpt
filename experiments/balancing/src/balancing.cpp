@@ -72,12 +72,45 @@ __device__ void quickSortBaseGPU (int *indexes,int *ar, const int l, const int r
     }
 
     if (l < j)
+       quickSortBaseGPU(indexes,ar,l, j);
+    if (i < r)
+       quickSortBaseGPU(indexes,ar,i, r);
+}
+
+
+__device__ void quickSortBaseGPU (int *indexes,int *ar, const int l, const int r) {
+    int i = l, j = r;
+    int pp[3] = { ar[l], ar[r], ar[(l+r)>>1]};
+    int p = pp[0];
+    if (pp[1] >= pp[0] && pp[1]<=pp[0]) p=pp[1];
+    else if (pp[2] >= pp[0] && pp[2]<=pp[1]) p=pp[2];
+    
+    while (i <= j) {
+        while (p > ar[i])
+           i++;
+        while (ar[j] > p)
+           j--;
+        if (i <= j) {
+			int temp;
+			temp = ar[i];
+			ar[i] = ar[j];
+			ar[j] = temp;
+			
+
+			temp = indexes[i];
+			indexes[i] = indexes[j];
+			indexes[j] = temp;
+
+            i++;
+            j--;
+        }
+    }
+
+    if (l < j)
        quickSortBase(indexes,ar,l, j);
     if (i < r)
        quickSortBase(indexes,ar,i, r);
 }
-
-
 
 
 
