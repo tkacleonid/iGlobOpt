@@ -5,7 +5,7 @@ int main()
 {	
 	int dim = 2;
 	int numThreads = 1024;
-	int maxBoxesPerThread = 1000;
+	int maxBoxesPerThread = 10000;
 
 
 	double *boxes = new double[(2*dim+3) * numThreads*maxBoxesPerThread];
@@ -38,7 +38,7 @@ int main()
 	
 	printf("\n\n");
 	for (int i = 0; i < numThreads; i++) {
-		printf("%d\t", tempWorkLen[i]);
+		//printf("%d\t", tempWorkLen[i]);
 	}
 	printf("\n\n");
 	
@@ -70,6 +70,28 @@ int main()
 */	
 	
 	printf("\nTesting balancing on GPU (version 1)\n");
+	balancingInfo = balancingOnGPU_v1(tempBoxes, tempWorkLen, numThreads, maxBoxesPerThread, dim);
+	printf("numberOfMemoryCopies = %d\n",balancingInfo.numberOfMemoryCopies);
+	printf("time = %f\n",balancingInfo.time);
+	printf("numAllBoxes = %d\n",balancingInfo.numAllBoxes);
+	printf("numAverageBoxes = %d\n",balancingInfo.numAverageBoxes);
+	
+	printf("\n\n");
+	for (int i = 0; i < numThreads; i++) {
+		//printf("%d\t", tempWorkLen[i]);
+	}
+	printf("\n\n");
+	
+	
+	memcpy(tempBoxes,boxes,sizeof(double)*(2*dim+3) * numThreads*maxBoxesPerThread);
+	memcpy(tempWorkLen,workLen,sizeof(int)*numThreads);	
+/*	
+	for (int i = 0; i < numThreads; i++) {
+		printf("%d\t", tempWorkLen[i]);
+	}
+	printf("\n\n");
+*/	
+	printf("\nTesting balancing on GPU (version 1)\n");
 	balancingInfo = balancingOnGPU_v2(tempBoxes, tempWorkLen, numThreads, maxBoxesPerThread, dim);
 	printf("numberOfMemoryCopies = %d\n",balancingInfo.numberOfMemoryCopies);
 	printf("time = %f\n",balancingInfo.time);
@@ -78,7 +100,7 @@ int main()
 	
 	printf("\n\n");
 	for (int i = 0; i < numThreads; i++) {
-		printf("%d\t", tempWorkLen[i]);
+		//printf("%d\t", tempWorkLen[i]);
 	}
 	printf("\n\n");
 	
