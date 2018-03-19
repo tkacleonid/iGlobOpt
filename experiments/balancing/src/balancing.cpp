@@ -378,6 +378,99 @@ BalancingInfo balancingOnGPU_v1(double* boxes, int *workLen, int n, int m, int d
 				
 }
 
+BalancingInfo balancingOnGPU_v2(double* boxes, int *workLen, int n, int m, int dim)
+{
+				
+	int numWorkBoxes = 0;
+	int averageBoxesPerThread = 0;
+	int curThreadWeTakeBoxesIndex = 0;
+	int numBoxesWeTake = 0;
+	int i,j;
+	//int countMemoryCopies = 0;
+	int countAverageBoxesPerThreadMore = 0;
+	
+	BalancingInfo balancingInfo;
+	balancingInfo.numThreads = n;
+	balancingInfo.maxNumberOfBoxesPerThread = m;
+	balancingInfo.version = WITHOUT_SORT_ON_GPU;
+	
+	
+	
+	double *dev_boxes = 0;
+	int *dev_workLen = 0;
+	int *dev_countMemoryCopies = 0;
+
+
+	int GridSize = 1;
+	int numThreads = n;
+	int sizeInBox = numThreads*(dim*2+3)*sizeof(double)*m;
+	
+	float time, timeAll;
+	
+	int *countMemoryCopies = new int[numThreads*sizeof(int)];
+	
+	for(i = 0; i < numThreads; i++)
+	{
+		countMemoryCopies[i] = 0;
+	}
+
+	cudaEvent_t start, stop;
+	
+	for (i = 0; i < n; i++) {
+		numWorkBoxes += workLen[i]; 	
+	}
+		
+	averageBoxesPerThread = numWorkBoxes / n;	
+	countAverageBoxesPerThreadMore = numWorkBoxes - averageBoxesPerThread*n;
+	
+	balancingInfo.numAllBoxes = numWorkBoxes;
+	balancingInfo.numAverageBoxes = countAverageBoxesPerThreadMore;
+
+	auto start1 = std::chrono::high_resolution_clock::now();
+	
+	CHECKED_CALL(cudaSetDevice(0));
+	CHECKED_CALL(cudaDeviceReset());
+    CHECKED_CALL(cudaMalloc((void **)&dev_boxes, sizeInBox));
+	CHECKED_CALL(cudaMalloc((void **)&dev_workLen, numThreads*sizeof(int)));	
+	CHECKED_CALL(cudaMalloc((void **)&dev_countMemoryCopies, numThreads*sizeof(int)));
+	
+	
+	CHECKED_CALL(cudaEventCreate(&start));
+	CHECKED_CALL(cudaEventCreate(&stop));
+	CHECKED_CALL(cudaMemcpy(dev_boxes, boxes, n*(2*dim+3)*sizeof(double)*m, cudaMemcpyHostToDevice));
+	CHECKED_CALL(cudaMemcpy(dev_workLen, workLen, numThreads*sizeof(int), cudaMemcpyHostToDevice));
+	CHECKED_CALL(cudaMemcpy(dev_countMemoryCopies, countMemoryCopies, numThreads*sizeof(int), cudaMemcpyHostToDevice));
+	CHECKED_CALL(cudaEventRecord(start, 0));
+
+	balancingCUDA_v2<<<GridSize, n>>>(dev_boxes, dim, dev_workLen, dev_countMemoryCopies, m);
+			
+	CHECKED_CALL(cudaGetLastError());
+
+	CHECKED_CALL(cudaEventRecord(stop, 0));
+	CHECKED_CALL(cudaDeviceSynchronize());
+
+	CHECKED_CALL(cudaMemcpy(boxes, dev_boxes, n*(2*dim+3)*sizeof(double)*m, cudaMemcpyDeviceToHost));
+	CHECKED_CALL(cudaMemcpy(workLen, dev_workLen, numThreads*sizeof(int), cudaMemcpyDeviceToHost));
+	CHECKED_CALL(cudaMemcpy(countMemoryCopies, dev_countMemoryCopies, numThreads*sizeof(int), cudaMemcpyDeviceToHost));
+
+	CHECKED_CALL(cudaEventElapsedTime(&time, start, stop));
+
+	CHECKED_CALL(cudaEventDestroy(start));
+	CHECKED_CALL(cudaEventDestroy(stop));
+		
+	CHECKED_CALL(cudaFree(dev_boxes));
+    CHECKED_CALL(cudaFree(dev_workLen));
+	CHECKED_CALL(cudaFree(dev_countMemoryCopies));
+	
+
+	auto end = std::chrono::high_resolution_clock::now();
+	
+	balancingInfo.time = time;//(std::chrono::duration_cast<std::chrono::microseconds>(end - start1)).count();
+	balancingInfo.numberOfMemoryCopies = countMemoryCopies[0];
+	
+	return balancingInfo;
+				
+}
 
 
 
