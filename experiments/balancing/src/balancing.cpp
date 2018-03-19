@@ -22,7 +22,7 @@ void testGPUKernelRun(const int numRuns, dim3 gridSize, dim3 blockSize)
 	for(int i = 0; i < numRuns; i++)
 	{
 		CHECKED_CALL(cudaThreadSynchronize());
-		testCUDARun<<<gridSize, blockSize>>>();
+		testCUDARun<<<gridSize, blockSize>>>(0);
 		CHECKED_CALL(cudaThreadSynchronize());
 	}
 	auto end = std::chrono::high_resolution_clock::now();
@@ -32,7 +32,7 @@ void testGPUKernelRun(const int numRuns, dim3 gridSize, dim3 blockSize)
 	start = std::chrono::high_resolution_clock::now();
 	for(int i = 0; i < numRuns; i++)
 	{
-		testCUDARun<<<gridSize, blockSize>>>();
+		testCUDARun<<<gridSize, blockSize>>>(0);
 	}
 	end = std::chrono::high_resolution_clock::now();
 	
@@ -41,9 +41,9 @@ void testGPUKernelRun(const int numRuns, dim3 gridSize, dim3 blockSize)
 	
 }
 
-__global__ void testCUDARun()
+__global__ void testCUDARun(double *boxes)
 {
-	int a = 5.6;
+	//int a = 5.6;
 }
 
 

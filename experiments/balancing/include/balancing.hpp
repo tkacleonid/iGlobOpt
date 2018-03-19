@@ -54,7 +54,7 @@ struct BalancingInfo
 /**
 *	Test CUDA kernel
 */
-__global__ void testCUDARun();
+__global__ void testCUDARun(double *boxes);
 
 /**
 *	Test time of GPU kernel runs
