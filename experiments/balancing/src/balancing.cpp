@@ -517,8 +517,6 @@ __global__ void balancingCUDA_v2(double *boxes, const int dim, int *workLen, int
 	int numBoxesWeTake  = 0;
 	int countAverageBoxesPerThreadMore = 0;
 	int curThreadWeGiveBoxesIndex = 0;
-	int i = 0;
-	int countMemoryCopies = 0;
 	if(threadIdx.x == 0)
 	{
 			for (i = 0; i < blockDim.x; i++) {
@@ -528,8 +526,6 @@ __global__ void balancingCUDA_v2(double *boxes, const int dim, int *workLen, int
 					
 		countAverageBoxesPerThreadMore = numWorkBoxes - averageBoxesPerThread*n;
 		
-		balancingInfo.numAllBoxes = numWorkBoxes;
-		balancingInfo.numAverageBoxes = countAverageBoxesPerThreadMore;
 		
 		curThreadWeTakeBoxesIndex = n-1;
 		curThreadWeGiveBoxesIndex = 0;
