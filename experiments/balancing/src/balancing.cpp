@@ -715,6 +715,11 @@ __global__ void balancingCUDA_v2(double *boxes, const int dim, int *workLen, int
 				
 		}
 		
+		for (int t = 0; t < blockDim.x; t++) {
+			boxes[t] = t*2 + 1;
+		}
+			
+		
 		
 	
 	
