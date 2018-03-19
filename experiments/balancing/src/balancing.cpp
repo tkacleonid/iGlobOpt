@@ -766,7 +766,7 @@ __global__ void balancingCUDA_v2(double *boxes, const int dim, int *workLen, int
 	*/		
 			
 			
-	//}
+	}
 			
 				
 	__syncthreads();
