@@ -15,6 +15,10 @@
 #include <chrono>
 #include <thread>
 
+#define DEVICE 0
+
+
+
 enum BalancingVersion
 {
 	WITHOUT_SORT_ON_CPU,
@@ -46,7 +50,16 @@ struct BalancingInfo
     } while (0)
 
 
+		
+/**
+*	Test CUDA kernel
+*/
+__global__ void testCUDARun();
 
+/**
+*	Test time of GPU kernel runs
+*/
+void testGPUKernelRun(int numRuns, dim3 gridSize, dim3 blockSize);
 
 
 BalancingInfo balancingOnCPU(double* boxes, int *workLen,int n, int m, int dim);
