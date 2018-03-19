@@ -625,7 +625,7 @@ __global__ void balancingCUDA_v2(double *boxes, const int dim, int *workLen, int
 		curThreadWeTakeBoxesIndex = n-1;
 		curThreadWeGiveBoxesIndex = 0;
 		
-/*		
+		
 				
 		for (i = 0; i < n; i++) {
 			for (j = i+1; j < n; j++) {
@@ -641,8 +641,8 @@ __global__ void balancingCUDA_v2(double *boxes, const int dim, int *workLen, int
 
 			}
 		}		
-*/				
-		sortQuickRecursiveGPU(workLenIndexes,workLen_s,n);
+				
+		//sortQuickRecursiveGPU(workLenIndexes,workLen_s,n);
 		
 		//countMemoryCopies = 0;
 		while (curThreadWeTakeBoxesIndex > curThreadWeGiveBoxesIndex) {
