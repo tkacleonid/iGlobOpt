@@ -4,7 +4,7 @@
 int main()
 {	
 	int dim = 2;
-	int numThreads = 100;
+	int numThreads = 1024;
 	int maxBoxesPerThread = 100000;
 
 
@@ -40,6 +40,15 @@ int main()
 	memcpy(tempWorkLen,workLen,sizeof(int)*numThreads);	
 	printf("\nTesting balancing on CPU (version 2)\n");
 	balancingInfo = balancingOnCPU_v3(tempBoxes, tempWorkLen, numThreads, maxBoxesPerThread, dim);
+	printf("numberOfMemoryCopies = %d\n",balancingInfo.numberOfMemoryCopies);
+	printf("time = %d\n",balancingInfo.time);
+	printf("numAllBoxes = %d\n",balancingInfo.numAllBoxes);
+	printf("numAverageBoxes = %d\n",balancingInfo.numAverageBoxes);
+	
+	memcpy(tempBoxes,boxes,sizeof(double)*(2*dim+3) * numThreads*maxBoxesPerThread);
+	memcpy(tempWorkLen,workLen,sizeof(int)*numThreads);	
+	printf("\nTesting balancing on GPU (version 1)\n");
+	balancingInfo = balancingOnGPU_v1(tempBoxes, tempWorkLen, numThreads, maxBoxesPerThread, dim);
 	printf("numberOfMemoryCopies = %d\n",balancingInfo.numberOfMemoryCopies);
 	printf("time = %d\n",balancingInfo.time);
 	printf("numAllBoxes = %d\n",balancingInfo.numAllBoxes);
