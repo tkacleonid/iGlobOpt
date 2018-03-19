@@ -549,6 +549,7 @@ __global__ void balancingCUDA_v1(double *boxes, const int dim, int *workLen, int
 						numBoxesWeTake = 1;
 						workLen_s[j] -= numBoxesWeTake;
 						memcpy(boxes + (i+blockIdx.x * blockDim.x)*m*(2*dim+3) + (workLen_s[i])*(2*dim+3), boxes + (j+blockIdx.x * dim)*m*(2*dim+3) + (workLen_s[j])*(2*dim+3), sizeof(double)*(2*dim+3)*numBoxesWeTake);
+						countMemoryCopies[threadIdx.x] = countMemoryCopies[threadIdx.x] + 1;
 						workLen_s[i] += numBoxesWeTake;	
 						break;
 					}

@@ -91,7 +91,7 @@ int main()
 	}
 	printf("\n\n");
 */	
-	printf("\nTesting balancing on GPU (version 1)\n");
+	printf("\nTesting balancing on GPU (version 2)\n");
 	balancingInfo = balancingOnGPU_v2(tempBoxes, tempWorkLen, numThreads, maxBoxesPerThread, dim);
 	printf("numberOfMemoryCopies = %d\n",balancingInfo.numberOfMemoryCopies);
 	printf("time = %f\n",balancingInfo.time);
