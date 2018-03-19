@@ -482,4 +482,186 @@ __global__ void balancingCUDA_v1(double *boxes, const int dim, int *workLen, int
 
 
 
+__global__ void balancingCUDA_v2(double *boxes, const int dim, int *workLen, int *countMemoryCopies, const int m)
+{
+	__shared__ int workLen_s[1024];
+	//__shared__ int countMemoryCopies[1024];
+	
+	int i, j;
+
+	
+	int threadId = blockIdx.x * blockDim.x + threadIdx.x;
+	
+	workLen_s[threadIdx.x] = workLen[threadId];	
+	countMemoryCopies[threadIdx.x] = 0;
+	
+	__shared__ *workLenIndexes = new int[1024];
+
+	workLenIndexes[i] = threadId;
+	
+	__syncthreads();	
+
+
+	
+	int n = 1024;
+	
+	
+
+
+	
+	
+		
+    int numWorkBoxes = 0;
+	int averageBoxesPerThread = 0;
+	int curThreadWeTakeBoxesIndex = -1;
+	int curThreadWeTakeBoxesCount = 0;
+	int numBoxesWeTake = 0;
+	int boxIndex = 0;
+	if(threadIdx.x == 0)
+	{
+			for (i = 0; i < blockDim.x; i++) {
+			numWorkBoxes += workLen_s[i]; 	
+		}
+		averageBoxesPerThread = numWorkBoxes / n;
+					
+		countAverageBoxesPerThreadMore = numWorkBoxes - averageBoxesPerThread*n;
+		
+		balancingInfo.numAllBoxes = numWorkBoxes;
+		balancingInfo.numAverageBoxes = countAverageBoxesPerThreadMore;
+		
+		curThreadWeTakeBoxesIndex = n-1;
+		curThreadWeGiveBoxesIndex = 0;
+				
+		sortQuickRecursive(workLenIndexes,workLen,n);
+		
+		countMemoryCopies = 0;
+		while (curThreadWeTakeBoxesIndex > curThreadWeGiveBoxesIndex) {
+			if (workLen[curThreadWeTakeBoxesIndex] == averageBoxesPerThread) {
+				curThreadWeTakeBoxesIndex--;
+				continue;
+			}
+			if (workLen_s[curThreadWeTakeBoxesIndex] == averageBoxesPerThread + 1 && countAverageBoxesPerThreadMore > 0) {
+				curThreadWeTakeBoxesIndex--;
+				countAverageBoxesPerThreadMore--;
+				continue;
+			}
+			
+			if (workLen_s[curThreadWeGiveBoxesIndex] == averageBoxesPerThread && countAverageBoxesPerThreadMore == 0) {
+				curThreadWeGiveBoxesIndex++;
+				continue;
+			}
+			if (workLen_s[curThreadWeGiveBoxesIndex] == averageBoxesPerThread + 1 && countAverageBoxesPerThreadMore > 0) {
+				curThreadWeGiveBoxesIndex++;
+				countAverageBoxesPerThreadMore--;
+				continue;
+			}
+			if (countAverageBoxesPerThreadMore > 1) {
+				numBoxesWeTake = averageBoxesPerThread + 1 - workLen_s[curThreadWeGiveBoxesIndex] <= workLen_s[curThreadWeTakeBoxesIndex] - (averageBoxesPerThread+1) 
+								? averageBoxesPerThread + 1 - workLen_s[curThreadWeGiveBoxesIndex] 
+								: workLen_s[curThreadWeTakeBoxesIndex] - (averageBoxesPerThread + 1);
+			}
+			else if (countAverageBoxesPerThreadMore > 0) {
+				numBoxesWeTake = averageBoxesPerThread + 1 - workLen_s[curThreadWeGiveBoxesIndex] <= workLen_s[curThreadWeTakeBoxesIndex] - (averageBoxesPerThread) 
+								? averageBoxesPerThread + 1 - workLen_s[curThreadWeGiveBoxesIndex] 
+								: workLen_s[curThreadWeTakeBoxesIndex] - (averageBoxesPerThread);
+			}
+			else {
+				numBoxesWeTake = averageBoxesPerThread - workLen_s[curThreadWeGiveBoxesIndex] <= workLen_s[curThreadWeTakeBoxesIndex] - averageBoxesPerThread 
+								? averageBoxesPerThread - workLen[curThreadWeGiveBoxesIndex] 
+								: workLen_s[curThreadWeTakeBoxesIndex] - averageBoxesPerThread;
+			}
+			
+			workLen_s[curThreadWeTakeBoxesIndex] -= numBoxesWeTake;
+			memcpy(boxes + (curThreadWeGiveBoxesIndex+blockIdx.x * blockDim.x)*m*(2*dim+3) + (workLen[curThreadWeGiveBoxesIndex])*(2*dim+3), boxes + (curThreadWeTakeBoxesIndex+blockIdx.x * blockDim.x)*m*(2*dim+3) + (workLen[curThreadWeTakeBoxesIndex])*(2*dim+3), sizeof(double)*(2*dim+3)*numBoxesWeTake);
+			workLen[curThreadWeGiveBoxesIndex] += numBoxesWeTake;
+			countMemoryCopies++;
+				
+		}
+		
+		
+	
+	
+	
+	
+		
+		
+	/*	
+		
+		
+		
+		for(i = 0; i < blockDim.x; i++)
+		{
+			numWorkBoxes += workLen_s[i]; 	
+		}
+		averageBoxesPerThread = numWorkBoxes / blockDim.x;
+			
+		if(averageBoxesPerThread == 0) averageBoxesPerThread = averageBoxesPerThread + 1;
+			
+		curThreadWeTakeBoxesIndex = 0;
+		for(i = 0; i < blockDim.x; i++)
+		{
+			if(workLen_s[i] < averageBoxesPerThread)
+			{
+				for(j = curThreadWeTakeBoxesIndex; j < blockDim.x; j++)
+				{
+					if(workLen_s[j] > averageBoxesPerThread)
+					{
+							
+						numBoxesWeTake = averageBoxesPerThread - workLen_s[i] <= workLen_s[j] - averageBoxesPerThread ? averageBoxesPerThread - workLen_s[i] : workLen_s[j] - averageBoxesPerThread;
+						workLen_s[j] -= numBoxesWeTake;
+						memcpy(boxes + (i+blockIdx.x * blockDim.x)*m*(2*dim+3) + (workLen_s[i])*(2*dim+3), boxes + (j+blockIdx.x * blockDim.x)*m*(2*dim+3) + (workLen_s[j])*(2*dim+3), sizeof(double)*(2*dim+3)*numBoxesWeTake);
+						countMemoryCopies[threadIdx.x] = countMemoryCopies[threadIdx.x] + 1;
+						workLen_s[i] += numBoxesWeTake;	
+						if(workLen_s[i] == averageBoxesPerThread) 
+						{
+							break;	
+						}
+					}
+						
+				}
+				curThreadWeTakeBoxesIndex = j;
+			}
+				
+		}
+			
+			
+		for(i = 0; i < blockDim.x; i++)
+		{
+			if(workLen_s[i] == averageBoxesPerThread)
+			{
+				for(j = curThreadWeTakeBoxesIndex; j < blockDim.x; j++)
+				{
+					if(workLen_s[j] > averageBoxesPerThread + 1)
+					{
+						numBoxesWeTake = 1;
+						workLen_s[j] -= numBoxesWeTake;
+						memcpy(boxes + (i+blockIdx.x * blockDim.x)*m*(2*dim+3) + (workLen_s[i])*(2*dim+3), boxes + (j+blockIdx.x * dim)*m*(2*dim+3) + (workLen_s[j])*(2*dim+3), sizeof(double)*(2*dim+3)*numBoxesWeTake);
+						workLen_s[i] += numBoxesWeTake;	
+						break;
+					}
+						
+				}
+				curThreadWeTakeBoxesIndex = j;
+			}
+			if(curThreadWeTakeBoxesIndex == blockDim.x - 1 && workLen_s[curThreadWeTakeBoxesIndex] <= averageBoxesPerThread + 1)
+			{
+				break;
+			}
+		}
+	*/		
+			
+			
+	}
+			
+				
+	__syncthreads();
+		
+	
+	workLen[threadId] = workLen_s[threadIdx.x];
+	countMemoryCopies[threadId] = countMemoryCopies[threadIdx.x];
+	
+}
+
+
+
 
