@@ -21,9 +21,9 @@ void testGPUKernelRun(const int numRuns, dim3 gridSize, dim3 blockSize)
 	auto start = std::chrono::high_resolution_clock::now();
 	for(int i = 0; i < numRuns; i++)
 	{
-		CHECKED_CALL(cudaDeviceSynchronize());
+		CHECKED_CALL(cudaThreadSynchronize(););
 		testCUDARun<<<gridSize, blockSize>>>();
-		CHECKED_CALL(cudaDeviceSynchronize());
+		CHECKED_CALL(cudaThreadSynchronize(););
 	}
 	auto end = std::chrono::high_resolution_clock::now();
 	
