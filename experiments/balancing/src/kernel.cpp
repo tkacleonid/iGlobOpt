@@ -44,20 +44,23 @@ int main()
 	printf("time = %d\n",balancingInfo.time);
 	printf("numAllBoxes = %d\n",balancingInfo.numAllBoxes);
 	printf("numAverageBoxes = %d\n",balancingInfo.numAverageBoxes);
-	
+
+/*	
 	for (int i = 0; i < numThreads; i++) {
 		printf("%d\t", workLen[i]);
 	}
 	printf("\n\n");
+*/
+	
 	
 	memcpy(tempBoxes,boxes,sizeof(double)*(2*dim+3) * numThreads*maxBoxesPerThread);
 	memcpy(tempWorkLen,workLen,sizeof(int)*numThreads);	
-	
+/*	
 	for (int i = 0; i < numThreads; i++) {
 		printf("%d\t", tempWorkLen[i]);
 	}
 	printf("\n\n");
-	
+*/	
 	
 	printf("\nTesting balancing on GPU (version 1)\n");
 	balancingInfo = balancingOnGPU_v1(tempBoxes, tempWorkLen, numThreads, maxBoxesPerThread, dim);
