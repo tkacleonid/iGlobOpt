@@ -796,7 +796,7 @@ __global__ void balancingCUDA_v2(double *boxes, const int dim, int *workLen, int
 	}
 			
 				
-	__syncthreads();
+	//__syncthreads();
 		
 	
 	workLen[threadId] = workLen_s[threadIdx.x];
