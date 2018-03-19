@@ -62,6 +62,7 @@ BalancingInfo balancingOnGPU_v2(double* boxes, int *workLen, int n, int m, int d
 
 
 __global__ void balancingCUDA_v1(double *boxes, const int dim, int *workLen, int *countMemoryCopies, const int m);
+__global__ void balancingCUDA_v2(double *boxes, const int dim, int *workLen, int *countMemoryCopies, const int m);
 
 __device__ void quickSortBaseGPU(int *indexes,int *ar, const int l, const int r);
 __device__ void sortQuickRecursiveGPU(int *indexes,int *ar,  const int n);
