@@ -45,8 +45,8 @@ void quickSortBase (int *indexes,int *ar, const int l, const int r) {
 
 
 
-__device__ void sortQuickRecursive(int *indexes,int *ar,  const int n) {
-   quickSortBase(indexes,ar,0,n-1);
+__device__ void sortQuickRecursiveGPU(int *indexes,int *ar,  const int n) {
+   quickSortBaseGPU(indexes,ar,0,n-1);
 }
 
 __device__ void quickSortBaseGPU (int *indexes,int *ar, const int l, const int r) {
