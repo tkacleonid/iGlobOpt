@@ -8,7 +8,7 @@ int main()
 	int maxBoxesPerThread = 10000;
 
 	
-	testGPUKernelRun(100, dim3(1,0,0), dim3(1,0,0));
+	testGPUKernelRun(100, dim3(1), dim3(1));
 	
 
 	double *boxes = new double[(2*dim+3) * numThreads*maxBoxesPerThread];
