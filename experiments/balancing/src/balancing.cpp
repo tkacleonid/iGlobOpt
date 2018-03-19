@@ -7,7 +7,8 @@ void sortQuickRecursive(int *indexes,int *ar,  const int n) {
    quickSortBase(indexes,ar,0,n-1);
 }
 
-void quickSortBase (int *indexes,int *ar, const int l, const int r) {
+
+__global__ void quickSortBase (int *indexes,int *ar, const int l, const int r) {
     int i = l, j = r;
     int pp[3] = { ar[l], ar[r], ar[(l+r)>>1]};
     int p = pp[0];
