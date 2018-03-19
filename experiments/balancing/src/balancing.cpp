@@ -300,7 +300,7 @@ BalancingInfo balancingOnGPU_v1(double* boxes, int *workLen, int n, int m, int d
 	
 	CHECKED_CALL(cudaEventCreate(&start));
 	CHECKED_CALL(cudaEventCreate(&stop));
-	CHECKED_CALL(cudaMemcpy(dev_boxes, boxes, numBoxes*(2*dim+3)*sizeof(double)*m, cudaMemcpyHostToDevice));
+	CHECKED_CALL(cudaMemcpy(dev_boxes, boxes, n*(2*dim+3)*sizeof(double)*m, cudaMemcpyHostToDevice));
 	CHECKED_CALL(cudaMemcpy(dev_workLen, workLen, numThreads*sizeof(int), cudaMemcpyHostToDevice));
 	CHECKED_CALL(cudaMemcpy(dev_countMemoryCopies, countMemoryCopies, numThreads*sizeof(int), cudaMemcpyHostToDevice));
 	CHECKED_CALL(cudaEventRecord(start, 0));
@@ -312,7 +312,7 @@ BalancingInfo balancingOnGPU_v1(double* boxes, int *workLen, int n, int m, int d
 	CHECKED_CALL(cudaEventRecord(stop, 0));
 	CHECKED_CALL(cudaDeviceSynchronize());
 
-	CHECKED_CALL(cudaMemcpy(boxes, dev_boxes, numBoxes*(2*dim+3)*sizeof(double)*m, cudaMemcpyDeviceToHost));
+	CHECKED_CALL(cudaMemcpy(boxes, dev_boxes, n*(2*dim+3)*sizeof(double)*m, cudaMemcpyDeviceToHost));
 	CHECKED_CALL(cudaMemcpy(workLen, dev_workLen, numThreads*sizeof(int), cudaMemcpyDeviceToHost));
 	CHECKED_CALL(cudaMemcpy(countMemoryCopies, dev_countMemoryCopies, numThreads*sizeof(int), cudaMemcpyDeviceToHost));
 
