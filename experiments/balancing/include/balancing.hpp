@@ -34,6 +34,19 @@ struct BalancingInfo
 	BalancingVersion version;
 };
 
+#define CHECKED_CALL(func)                                     \
+    do {                                                       \
+        cudaError_t err = (func);                              \
+        if (err != cudaSuccess) {                              \
+            printf("%s(%d): ERROR: %s returned %s (err#%d)\n", \
+                   __FILE__, __LINE__, #func,                  \
+                   cudaGetErrorString(err), err);              \
+            exit(EXIT_FAILURE);                                \
+        }                                                      \
+    } while (0)
+
+#endif
+
 
 
 BalancingInfo balancingOnCPU(double* boxes, int *workLen,int n, int m, int dim);
