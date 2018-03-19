@@ -91,6 +91,18 @@ int main()
 	}
 	printf("\n\n");
 */	
+
+	for (int i = 0; i < n; i++) {
+			for (int j = i+1; j < n; j++) {
+				if(tempWorkLen[i] > tempWorkLen[j]) {
+					int temp = tempWorkLen[i];
+					tempWorkLen[i] = tempWorkLen[j];
+					tempWorkLen[j] = temp;
+				}
+
+			}
+		}	
+
 	printf("\nTesting balancing on GPU (version 2)\n");
 	balancingInfo = balancingOnGPU_v2(tempBoxes, tempWorkLen, numThreads, maxBoxesPerThread, dim);
 	printf("numberOfMemoryCopies = %d\n",balancingInfo.numberOfMemoryCopies);
