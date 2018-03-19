@@ -289,9 +289,9 @@ BalancingInfo balancingOnGPU_v1(double* boxes, int *workLen, int n, int m, int d
 	balancingInfo.numAllBoxes = numWorkBoxes;
 	balancingInfo.numAverageBoxes = countAverageBoxesPerThreadMore;
 
-	auto start = std::chrono::high_resolution_clock::now();
+	auto start1 = std::chrono::high_resolution_clock::now();
 	
-	CHECKED_CALL(cudaSetDevice(DEVICE));
+	CHECKED_CALL(cudaSetDevice(0));
 	CHECKED_CALL(cudaDeviceReset());
     CHECKED_CALL(cudaMalloc((void **)&dev_boxes, sizeInBox));
 	CHECKED_CALL(cudaMalloc((void **)&dev_workLen, numThreads*sizeof(int)));	
@@ -328,7 +328,7 @@ BalancingInfo balancingOnGPU_v1(double* boxes, int *workLen, int n, int m, int d
 
 	auto end = std::chrono::high_resolution_clock::now();
 	
-	balancingInfo.time = (std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count();
+	balancingInfo.time = (std::chrono::duration_cast<std::chrono::microseconds>(end - start1)).count();
 	balancingInfo.numberOfMemoryCopies = countMemoryCopies[0];
 	
 	return balancingInfo;
