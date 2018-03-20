@@ -68,9 +68,9 @@ void testGPUTransferDataToDevice(const int numRuns, dim3 gridSize, dim3 blockSiz
 	{
 		CHECKED_CALL(cudaMemcpy(dev_boxes, boxes, sizeInBox, cudaMemcpyHostToDevice));
 		//balancingCUDA_v1<<<GridSize, n>>>(dev_boxes, dim, dev_workLen, dev_countMemoryCopies, m);		
-		CHECKED_CALL(cudaGetLastError());
-		CHECKED_CALL(cudaDeviceSynchronize());
-		CHECKED_CALL(cudaMemcpy(boxes, dev_boxes, sizeInBox, cudaMemcpyDeviceToHost));
+		//CHECKED_CALL(cudaGetLastError());
+		//CHECKED_CALL(cudaDeviceSynchronize());
+		//CHECKED_CALL(cudaMemcpy(boxes, dev_boxes, sizeInBox, cudaMemcpyDeviceToHost));
 	}
 	
 	CHECKED_CALL(cudaFree(dev_boxes));
