@@ -89,7 +89,7 @@ void testGPUTransferDataToDevice(const int numRuns, dim3 gridSize, dim3 blockSiz
 void testGPUTransferDataFromDevice(const int numRuns, dim3 gridSize, dim3 blockSize, long long dataVolume, char* fileName, bool isToFile);
 
 /**
-*	Test time of GPU kernel runs
+*	Test GPU inner memory access
 *	@param numRuns the number of cuda testing calls
 *	@param gridSize CUDA grid's size
 *	@param blockSize CUDA block's size
