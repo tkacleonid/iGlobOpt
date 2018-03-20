@@ -48,14 +48,14 @@ __global__ void testCUDARun(double *boxes)
 /**
 *	Test time of GPU kernel runs
 */
-void testGPUTransferDataToDevice(const int numRuns, dim3 gridSize, dim3 blockSize)
+void testGPUTransferDataToDevice(const int numRuns, dim3 gridSize, dim3 blockSize, long long dataVolume)
 {
 	
 	CHECKED_CALL(cudaSetDevice(DEVICE));
 	CHECKED_CALL(cudaDeviceReset());
 	
 	int numThreads = gridSize.x*gridSize.y*gridSize.x*blockSize.x*blockSize.y*blockSize.z;
-	double *boxes = new double[numThreads];
+	double *boxes = (double*) malloc(sizeof(double)*dataVolume);
 	int sizeInBox = numThreads*sizeof(double);
 	double *dev_boxes;
 	
@@ -67,10 +67,6 @@ void testGPUTransferDataToDevice(const int numRuns, dim3 gridSize, dim3 blockSiz
 	for(int i = 0; i < numRuns; i++)
 	{
 		CHECKED_CALL(cudaMemcpy(dev_boxes, boxes, sizeInBox, cudaMemcpyHostToDevice));
-		//balancingCUDA_v1<<<GridSize, n>>>(dev_boxes, dim, dev_workLen, dev_countMemoryCopies, m);		
-		//CHECKED_CALL(cudaGetLastError());
-		//CHECKED_CALL(cudaDeviceSynchronize());
-		//CHECKED_CALL(cudaMemcpy(boxes, dev_boxes, sizeInBox, cudaMemcpyDeviceToHost));
 	}
 	
 	CHECKED_CALL(cudaFree(dev_boxes));
@@ -80,7 +76,7 @@ void testGPUTransferDataToDevice(const int numRuns, dim3 gridSize, dim3 blockSiz
 
 	
 	
-	delete [] boxes;
+	free(boxes);
 
 		
 	
