@@ -63,7 +63,11 @@ __global__ void testCUDARun(double *boxes);
 void testGPUKernelRun(const int numRuns, dim3 gridSize, dim3 blockSize);
 
 /**
-*	Test transfer data to GPU
+*	Test Transfer data to device
+*	@param numRuns the number of cuda testing calls
+*	@param gridSize CUDA grid's size
+*	@param blockSize CUDA block's size
+*	@param dataVolume the volume of data for transering to CUDA
 */
 void testGPUTransferDataToDevice(const int numRuns, dim3 gridSize, dim3 blockSize, long long dataVolume, char* fileName, bool isToFile);
 
