@@ -11,6 +11,9 @@
 
 /**
 *	Test time of GPU kernel runs
+*	@param numRuns the number of cuda testing calls
+*	@param gridSize CUDA grid's size
+*	@param blockSize CUDA block's size
 */
 void testGPUKernelRun(const int numRuns, dim3 gridSize, dim3 blockSize)
 {
@@ -39,6 +42,10 @@ void testGPUKernelRun(const int numRuns, dim3 gridSize, dim3 blockSize)
 	
 }
 
+/**
+*	Test CUDA kernel for GPU kernel runs
+*	@param boxes the test boxes
+*/
 __global__ void testCUDARun(double *boxes)
 {
 	//code
