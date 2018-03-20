@@ -55,11 +55,10 @@ void testGPUTransferDataToDevice(const int numRuns, dim3 gridSize, dim3 blockSiz
 	CHECKED_CALL(cudaDeviceReset());
 	
 	int numThreads = gridSize.x*gridSize.y*gridSize.x*blockSize.x*blockSize.y*blockSize.z;
-	double *boxes = (double*) malloc(sizeof(double)*dataVolume);
-	int sizeInBox = numThreads*sizeof(double);
+	double *boxes = (double*) malloc(dataVolume);
 	double *dev_boxes;
 	
-	CHECKED_CALL(cudaMalloc((void **)&dev_boxes, sizeInBox));
+	CHECKED_CALL(cudaMalloc((void **)&dev_boxes, dataVolume));
 	
 	
 	auto start = std::chrono::high_resolution_clock::now();
