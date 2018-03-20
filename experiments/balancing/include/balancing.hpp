@@ -53,7 +53,8 @@ struct BalancingInfo
 
 		
 /**
-*	Test CUDA kernel
+*	Test CUDA kernel for GPU kernel runs
+*	@param boxes the test boxes
 */
 __global__ void testCUDARun(double *boxes);
 
