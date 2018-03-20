@@ -98,7 +98,12 @@ void testGPUTransferDataFromDevice(const int numRuns, dim3 gridSize, dim3 blockS
 */
 void testGPUMemoryAccess(const int numRuns, dim3 gridSize, dim3 blockSize, char* fileName, bool isToFile);
 
-
+/**
+*	Test CUDA kernel for GPU multiple thread memory access
+*	@param ar1 the test array copy from
+*	@param ar2 the test array copy To
+*/
+__global__ void testCUDAMemoryAccessRunMultiThread(double *ar1, double *ar2);
 
 
 
