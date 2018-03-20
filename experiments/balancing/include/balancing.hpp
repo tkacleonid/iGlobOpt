@@ -14,6 +14,7 @@
 #include <fstream>
 #include <chrono>
 #include <thread>
+#include <cstring>
 
 #define DEVICE 0
 
