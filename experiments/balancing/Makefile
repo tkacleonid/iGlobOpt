@@ -26,6 +26,7 @@ crdir:
 	mkdir -p build
 	mkdir -p build/obj
 	mkdir -p build/bin
+	mkdir -p build/data
 
 clean:
 	rm -f ${OBJ}/*.o
