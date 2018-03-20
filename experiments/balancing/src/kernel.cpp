@@ -7,7 +7,7 @@ int main()
 	int numThreads = 512;
 	int maxBoxesPerThread = 10000;
 
-	for (int i = 0; i < 30; i++) {
+	for (int i = 0; i < 28; i++) {
 		testGPUTransferDataToDevice(1000, dim3(24), dim3(24),(1 << i)*sizeof(double),"./build/data/transferDataToDeviceTest.txt", true);
 	}
 	
