@@ -64,7 +64,7 @@ void testGPUKernelRun(const int numRuns, dim3 gridSize, dim3 blockSize);
 /**
 *	Test transfer data to GPU
 */
-void testGPUTransferDataToDevice(const int numRuns, dim3 gridSize, dim3 blockSize, long long dataVolume);
+void testGPUTransferDataToDevice(const int numRuns, dim3 gridSize, dim3 blockSize, long long dataVolume, char* fileName, bool isToFile);
 
 
 BalancingInfo balancingOnCPU(double* boxes, int *workLen,int n, int m, int dim);

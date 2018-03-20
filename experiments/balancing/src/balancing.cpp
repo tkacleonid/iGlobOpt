@@ -52,7 +52,7 @@ __global__ void testCUDARun(double *boxes)
 *	@param blockSize CUDA block's size
 *	@param dataVolume the volume of data for transering to CUDA
 */
-void testGPUTransferDataToDevice(const int numRuns, dim3 gridSize, dim3 blockSize, long long dataVolume)
+void testGPUTransferDataToDevice(const int numRuns, dim3 gridSize, dim3 blockSize, long long dataVolume, char* fileName, bool isToFile)
 {
 	
 	CHECKED_CALL(cudaSetDevice(DEVICE));
@@ -72,7 +72,14 @@ void testGPUTransferDataToDevice(const int numRuns, dim3 gridSize, dim3 blockSiz
 	}
 	auto end = std::chrono::high_resolution_clock::now();
 	
-	printf("Speed to transfer data to Device: %f byte/s\n", dataVolume/((std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count()/(((double) numRuns)*1000000)));
+	long long speed = (long long) dataVolume/((std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count()/(((double) numRuns)*1000000));
+	if (isToFile) {
+		std::ofstream outfile;
+		outfile.open(fileName,std::ios_base::app);
+		outfile << dataVolume << "\t" << speed << "\n";
+		outfile.close();
+	}
+	printf("Speed to transfer data to Device: %f byte/s\n", speed);
 
 	CHECKED_CALL(cudaFree(dev_boxes));
 	free(boxes);
