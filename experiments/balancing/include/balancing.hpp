@@ -72,6 +72,8 @@ void testGPUKernelRun(const int numRuns, dim3 gridSize, dim3 blockSize);
 *	@param gridSize CUDA grid's size
 *	@param blockSize CUDA block's size
 *	@param dataVolume the volume of data for transering to CUDA
+*	@param fileName file to save data
+*	@param isToFile if we should save data to file
 */
 void testGPUTransferDataToDevice(const int numRuns, dim3 gridSize, dim3 blockSize, long long dataVolume, char* fileName, bool isToFile);
 
@@ -81,8 +83,15 @@ void testGPUTransferDataToDevice(const int numRuns, dim3 gridSize, dim3 blockSiz
 *	@param gridSize CUDA grid's size
 *	@param blockSize CUDA block's size
 *	@param dataVolume the volume of data for transering to CUDA
+*	@param fileName file to save data
+*	@param isToFile if we should save data to file
 */
 void testGPUTransferDataFromDevice(const int numRuns, dim3 gridSize, dim3 blockSize, long long dataVolume, char* fileName, bool isToFile);
+
+
+
+
+
 
 
 BalancingInfo balancingOnCPU(double* boxes, int *workLen,int n, int m, int dim);
