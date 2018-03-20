@@ -76,6 +76,8 @@ void testGPUTransferDataToDevice(const int numRuns, dim3 gridSize, dim3 blockSiz
 	if (isToFile) {
 		std::ofstream outfile;
 		outfile.open(fileName,std::ios_base::out);
+		if (outfile.fail())
+			throw std::ios_base::failure(std::strerror(errno));
 		outfile << dataVolume << "\t" << speed << "\n";
 		outfile.close();
 	}
