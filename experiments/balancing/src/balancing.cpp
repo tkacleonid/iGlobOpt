@@ -168,14 +168,27 @@ void testGPUMemoryAccess(const int numRuns, dim3 gridSize, dim3 blockSize, char*
 	CHECKED_CALL(cudaMalloc((void **)&dev_ar2, numThreads*sizeof(double)));
 	CHECKED_CALL(cudaMemcpy(dev_ar1, ar1, numThreads*sizeof(double), cudaMemcpyHostToDevice));
 	
+	cudaEvent_t startCuda, stopCuda;
+	float time;
 	
+	CHECKED_CALL(cudaEventCreate(&start));
+	CHECKED_CALL(cudaEventCreate(&stop));
+
+	CHECKED_CALL(cudaEventRecord(start, 0));	
+		
 	auto start = std::chrono::high_resolution_clock::now();
 	for (int i = 0; i < numRuns; i++) {
 		testCUDAMemoryAccessRunSingleThread<<<gridSize, blockSize>>>(dev_ar1,dev_ar2);
 	}
 	CHECKED_CALL(cudaGetLastError());
+	CHECKED_CALL(cudaEventRecord(stop, 0));
+	CHECKED_CALL(cudaDeviceSynchronize());
+	
 	auto end = std::chrono::high_resolution_clock::now();
 	CHECKED_CALL(cudaMemcpy(ar2,dev_ar2, numThreads*sizeof(double), cudaMemcpyDeviceToHost));
+	CHECKED_CALL(cudaEventElapsedTime(&time, start, stop));
+	CHECKED_CALL(cudaEventDestroy(start));
+	CHECKED_CALL(cudaEventDestroy(stop));
 	
 	long long speed = (long long) ((std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count());
 	if (isToFile) {
@@ -186,7 +199,7 @@ void testGPUMemoryAccess(const int numRuns, dim3 gridSize, dim3 blockSize, char*
 		outfile << numThreads << "\t" << speed << "\n";
 		outfile.close();
 	}
-	printf("Time assign array: %lld microseconds \t %d\n", speed,numThreads);
+	printf("Time assign array: %lld microseconds \t%d\t%f milliseconds\n", speed,numThreads,time);
 
 	CHECKED_CALL(cudaFree(dev_ar1));
 	CHECKED_CALL(cudaFree(dev_ar2));
