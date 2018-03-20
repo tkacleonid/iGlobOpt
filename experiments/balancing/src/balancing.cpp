@@ -75,7 +75,7 @@ void testGPUTransferDataToDevice(const int numRuns, dim3 gridSize, dim3 blockSiz
 	long long speed = (long long) dataVolume/((std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count()/(((double) numRuns)*1000000));
 	if (isToFile) {
 		std::ofstream outfile;
-		outfile.open(fileName,std::ios_base::app);
+		outfile.open(fileName,std::ios_base::out);
 		outfile << dataVolume << "\t" << speed << "\n";
 		outfile.close();
 	}
