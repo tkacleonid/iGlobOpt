@@ -160,7 +160,7 @@ void testGPUMemoryAccess(const int numRuns, dim3 gridSize, dim3 blockSize, char*
 	
 	CHECKED_CALL(cudaMalloc((void **)&dev_ar1, numThreads*sizeof(double)));
 	CHECKED_CALL(cudaMalloc((void **)&dev_ar2, numThreads*sizeof(double)));
-	CHECKED_CALL(cudaMemcpy(dev_ar1, boxes, numThreads*sizeof(double), cudaMemcpyHostToDevice));
+	CHECKED_CALL(cudaMemcpy(dev_ar1, ar1, numThreads*sizeof(double), cudaMemcpyHostToDevice));
 	
 	
 	auto start = std::chrono::high_resolution_clock::now();
@@ -208,7 +208,7 @@ void testGPUMemoryAccess(const int numRuns, dim3 gridSize, dim3 blockSize, char*
 *	Test CUDA kernel for GPU kernel runs
 *	@param boxes the test boxes
 */
-__global__ void testCUDARun(double *boxes)
+__global__ void testCUDAMemoryAccessRun(double *boxes)
 {
 	//code
 }
