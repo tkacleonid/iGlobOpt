@@ -79,7 +79,7 @@ void testGPUTransferDataToDevice(const int numRuns, dim3 gridSize, dim3 blockSiz
 		outfile << dataVolume << "\t" << speed << "\n";
 		outfile.close();
 	}
-	printf("Speed to transfer data to Device: %ld byte/s\n", speed);
+	printf("Speed to transfer data to Device: %lld byte/s\n", speed);
 
 	CHECKED_CALL(cudaFree(dev_boxes));
 	free(boxes);
