@@ -65,13 +65,13 @@ void testGPUTransferDataToDevice(const int numRuns, dim3 gridSize, dim3 blockSiz
 	
 	for(int i = 0; i < numRuns; i++)
 	{
-		CHECKED_CALL(cudaMemcpy(dev_boxes, boxes, sizeInBox, cudaMemcpyHostToDevice));
+		CHECKED_CALL(cudaMemcpy(dev_boxes, boxes, dataVolume, cudaMemcpyHostToDevice));
 	}
 	
 	CHECKED_CALL(cudaFree(dev_boxes));
 	auto end = std::chrono::high_resolution_clock::now();
 	
-	printf("Speed to transfer data to Device: %f byte/s\n", sizeInBox/((std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count()/(((double) numRuns)*1000000)));
+	printf("Speed to transfer data to Device: %f byte/s\n", dataVolume/((std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count()/(((double) numRuns)*1000000)));
 
 	
 	
