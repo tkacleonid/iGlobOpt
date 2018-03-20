@@ -105,6 +105,12 @@ void testGPUMemoryAccess(const int numRuns, dim3 gridSize, dim3 blockSize, char*
 */
 __global__ void testCUDAMemoryAccessRunMultiThread(double *ar1, double *ar2);
 
+/**
+*	Test CUDA kernel for GPU single thread memory access
+*	@param ar1 the test array copy from
+*	@param ar2 the test array copy To
+*/
+__global__ void testCUDAMemoryAccessRunSingleThread(double *ar1, double *ar2);
 
 
 
