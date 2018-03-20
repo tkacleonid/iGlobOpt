@@ -46,7 +46,7 @@ __global__ void testCUDARun(double *boxes)
 
 
 /**
-*	Test time of GPU kernel runs
+*	Test Transfer data to device
 *	@param numRuns the number of cuda testing calls
 *	@param gridSize CUDA grid's size
 *	@param blockSize CUDA block's size
@@ -66,8 +66,7 @@ void testGPUTransferDataToDevice(const int numRuns, dim3 gridSize, dim3 blockSiz
 	
 	
 	auto start = std::chrono::high_resolution_clock::now();
-	for(int i = 0; i < numRuns; i++)
-	{
+	for (int i = 0; i < numRuns; i++) {
 		CHECKED_CALL(cudaMemcpy(dev_boxes, boxes, dataVolume, cudaMemcpyHostToDevice));
 	}
 	auto end = std::chrono::high_resolution_clock::now();
@@ -84,16 +83,51 @@ void testGPUTransferDataToDevice(const int numRuns, dim3 gridSize, dim3 blockSiz
 	printf("Speed to transfer data to Device: %lld byte/s\n", speed);
 
 	CHECKED_CALL(cudaFree(dev_boxes));
-	free(boxes);
-
-		
-	
+	free(boxes);	
 }
 
-__global__ void testCUDATransferDataToDevice(double *boxes)
+/**
+*	Test transfer data from device
+*	@param numRuns the number of cuda testing calls
+*	@param gridSize CUDA grid's size
+*	@param blockSize CUDA block's size
+*	@param dataVolume the volume of data for transering to CUDA
+*/
+void testGPUTransferDataFromDevice(const int numRuns, dim3 gridSize, dim3 blockSize, long long dataVolume, char* fileName, bool isToFile)
 {
-	//code
+	
+	CHECKED_CALL(cudaSetDevice(DEVICE));
+	CHECKED_CALL(cudaDeviceReset());
+	
+	int numThreads = gridSize.x*gridSize.y*gridSize.x*blockSize.x*blockSize.y*blockSize.z;
+	double *boxes = (double*) malloc(dataVolume);
+	double *dev_boxes;
+	
+	CHECKED_CALL(cudaMalloc((void **)&dev_boxes, dataVolume));
+	CHECKED_CALL(cudaMemcpy(dev_boxes, boxes, dataVolume, cudaMemcpyHostToDevice));
+	
+	
+	auto start = std::chrono::high_resolution_clock::now();
+	for (int i = 0; i < numRuns; i++) {
+		CHECKED_CALL(cudaMemcpy(boxes, dev_boxes, dataVolume, cudaMemcpyDeviceToHost));
+	}
+	auto end = std::chrono::high_resolution_clock::now();
+	
+	long long speed = (long long) dataVolume/((std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count()/(((double) numRuns)*1000000));
+	if (isToFile) {
+		std::ofstream outfile;
+		outfile.open(fileName, std::ios_base::app);
+		if (outfile.fail())
+			throw std::ios_base::failure(std::strerror(errno));
+		outfile << dataVolume << "\t" << speed << "\n";
+		outfile.close();
+	}
+	printf("Speed to transfer data to Device: %lld byte/s\n", speed);
+
+	CHECKED_CALL(cudaFree(dev_boxes));
+	free(boxes);	
 }
+
 
 
 
