@@ -173,20 +173,20 @@ void testGPUMemoryAccess(const int numRuns, dim3 gridSize, dim3 blockSize, char*
 	for (int i = 0; i < numRuns; i++) {
 		testCUDAMemoryAccessRunMultiThread<<<gridSize, blockSize>>>(dev_ar1,dev_ar2);
 	}
-	auto end = std::chrono::high_resolution_clock::now();
 	CHECKED_CALL(cudaThreadSynchronize());
+	auto end = std::chrono::high_resolution_clock::now();
 	CHECKED_CALL(cudaMemcpy(ar2,dev_ar2, numThreads*sizeof(double), cudaMemcpyDeviceToHost));
 	
-	long long speed = (long long) (numThreads*sizeof(double))/((std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count()/(((double) numRuns)*1000000));
+	long long speed = (long long) ((std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count());
 	if (isToFile) {
 		std::ofstream outfile;
 		outfile.open(fileName, std::ios_base::app);
 		if (outfile.fail())
 			throw std::ios_base::failure(std::strerror(errno));
-		outfile << numThreads*sizeof(double) << "\t" << speed << "\n";
+		outfile << numThreads << "\t" << speed << "\n";
 		outfile.close();
 	}
-	printf("Speed to transfer data from Device: %lld byte/s\n", speed);
+	printf("Time assign array: %lld microseconds \t %d\n", speed,numThreads);
 
 	CHECKED_CALL(cudaFree(dev_ar1));
 	CHECKED_CALL(cudaFree(dev_ar2));
