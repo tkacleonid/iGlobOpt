@@ -58,6 +58,8 @@ __global__ void testCUDARun(double *boxes)
 *	@param gridSize CUDA grid's size
 *	@param blockSize CUDA block's size
 *	@param dataVolume the volume of data for transering to CUDA
+*	@param fileName file to save data
+*	@param isToFile if we should save data to file
 */
 void testGPUTransferDataToDevice(const int numRuns, dim3 gridSize, dim3 blockSize, long long dataVolume, char* fileName, bool isToFile)
 {
@@ -99,6 +101,8 @@ void testGPUTransferDataToDevice(const int numRuns, dim3 gridSize, dim3 blockSiz
 *	@param gridSize CUDA grid's size
 *	@param blockSize CUDA block's size
 *	@param dataVolume the volume of data for transering to CUDA
+*	@param fileName file to save data
+*	@param isToFile if we should save data to file
 */
 void testGPUTransferDataFromDevice(const int numRuns, dim3 gridSize, dim3 blockSize, long long dataVolume, char* fileName, bool isToFile)
 {
@@ -142,13 +146,15 @@ void testGPUTransferDataFromDevice(const int numRuns, dim3 gridSize, dim3 blockS
 *	@param numRuns the number of cuda testing calls
 *	@param gridSize CUDA grid's size
 *	@param blockSize CUDA block's size
+*	@param fileName file to save data
+*	@param isToFile if we should save data to file
 */
 void testGPUMemoryAccess(const int numRuns, dim3 gridSize, dim3 blockSize, char* fileName, bool isToFile)
 {	
 	CHECKED_CALL(cudaSetDevice(DEVICE));
 	CHECKED_CALL(cudaDeviceReset());
 	
-	int numThreads = gridSize.x*gridSize.y*gridSize.x*blockSize.x*blockSize.y*blockSize.z;
+	int numThreads = gridSize.x*gridSize.y*gridSize.z*blockSize.x*blockSize.y*blockSize.z;
 	double *ar1 = (double*) malloc(numThreads*sizeof(double));
 	double *ar2 = (double*) malloc(numThreads*sizeof(double));
 	double *dev_ar1;
@@ -165,52 +171,65 @@ void testGPUMemoryAccess(const int numRuns, dim3 gridSize, dim3 blockSize, char*
 	
 	auto start = std::chrono::high_resolution_clock::now();
 	for (int i = 0; i < numRuns; i++) {
-		CHECKED_CALL(cudaMemcpy(boxes, dev_boxes, dataVolume, cudaMemcpyDeviceToHost));
+		testCUDAMemoryAccessRunMultiThread<<<gridSize, blockSize>>>(dev_ar1,dev_ar2);
 	}
 	auto end = std::chrono::high_resolution_clock::now();
+	CHECKED_CALL(cudaThreadSynchronize());
+	CHECKED_CALL(cudaMemcpy(ar2,dev_ar2, numThreads*sizeof(double), cudaMemcpyDeviceToHost));
 	
-	long long speed = (long long) dataVolume/((std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count()/(((double) numRuns)*1000000));
+	long long speed = (long long) (numThreads*sizeof(double))/((std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count()/(((double) numRuns)*1000000));
 	if (isToFile) {
 		std::ofstream outfile;
 		outfile.open(fileName, std::ios_base::app);
 		if (outfile.fail())
 			throw std::ios_base::failure(std::strerror(errno));
-		outfile << dataVolume << "\t" << speed << "\n";
+		outfile << numThreads*sizeof(double) << "\t" << speed << "\n";
 		outfile.close();
 	}
 	printf("Speed to transfer data from Device: %lld byte/s\n", speed);
 
-	CHECKED_CALL(cudaFree(dev_boxes));
-	free(boxes);
-	
-	auto start = std::chrono::high_resolution_clock::now();
-	for(int i = 0; i < numRuns; i++)
-	{
-		testCUDARun<<<gridSize, blockSize>>>(0);
-	}
-	auto end = std::chrono::high_resolution_clock::now();
-	printf("AverageTime without synchronize: %d microseconds\n", (std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count()/numRuns);
-
-	start = std::chrono::high_resolution_clock::now();
-	for(int i = 0; i < numRuns; i++)
-	{
-		CHECKED_CALL(cudaThreadSynchronize());
-		testCUDARun<<<gridSize, blockSize>>>(0);
-		CHECKED_CALL(cudaThreadSynchronize());
-	}
-	end = std::chrono::high_resolution_clock::now();
-	printf("AverageTime with synchronize: %d microseconds\n", (std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count()/numRuns);
-	
-	
+	CHECKED_CALL(cudaFree(dev_ar1));
+	CHECKED_CALL(cudaFree(dev_ar2));
+	free(ar1);
+	free(ar2);
 }
 
 /**
 *	Test CUDA kernel for GPU kernel runs
 *	@param boxes the test boxes
 */
-__global__ void testCUDAMemoryAccessRun(double *boxes)
+__global__ void testCUDAMemoryAccessRunMultiThread(double *ar1, double *ar2)
 {
-	//code
+	int gridSizeX = blockDim.x * gridDim.x;
+	int gridSizeY = blockDim.y * gridDim.y;
+	int gridSizeZ = blockDim.z * gridDim.z;
+	int gridSizeAll = gridSizeX*gridSizeY*gridSizeZ;
+	
+	
+	int threadId = threadIdx.z*gridSizeY*gridSizeX + threadIdx.y*gridSizeX + threadIdx.x;
+	
+	ar2[threadId] = ar1[threadId];
+}
+
+/**
+*	Test CUDA kernel for GPU kernel runs
+*	@param boxes the test boxes
+*/
+__global__ void testCUDAMemoryAccessRunSingleThread(double *ar1, double *ar2)
+{
+	int gridSizeX = blockDim.x * gridDim.x;
+	int gridSizeY = blockDim.y * gridDim.y;
+	int gridSizeZ = blockDim.z * gridDim.z;
+	int gridSizeAll = gridSizeX*gridSizeY*gridSizeZ;
+	
+	
+	int threadId = threadIdx.z*gridSizeY*gridSizeX + threadIdx.y*gridSizeX + threadIdx.x;
+	
+	if (threadId == 0) {
+		for (int i = 0; i < gridSizeAll; i++) {
+			ar2[i] = ar1[i];
+		}
+	}
 }
 
 
