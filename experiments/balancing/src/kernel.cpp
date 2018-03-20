@@ -11,7 +11,7 @@ int main()
 		testGPUMemoryAccess(1, dim3(16,16,16), dim3(16,16,1), "./build/data/deviceMemoryAccessTest.txt", false);
 	//}
 	
-	
+/*	
 
 	double *boxes = new double[(2*dim+3) * numThreads*maxBoxesPerThread];
 	int *workLen = new int[numThreads];
@@ -63,7 +63,8 @@ int main()
 	}
 	printf("\n\n");
 */
-	
+
+/*	
 	
 	memcpy(tempBoxes,boxes,sizeof(double)*(2*dim+3) * numThreads*maxBoxesPerThread);
 	memcpy(tempWorkLen,workLen,sizeof(int)*numThreads);	
@@ -73,7 +74,8 @@ int main()
 	}
 	printf("\n\n");
 */	
-	
+
+/*	
 	printf("\nTesting balancing on GPU (version 1)\n");
 	balancingInfo = balancingOnGPU_v1(tempBoxes, tempWorkLen, numThreads, maxBoxesPerThread, dim);
 	printf("numberOfMemoryCopies = %d\n",balancingInfo.numberOfMemoryCopies);
@@ -97,6 +99,7 @@ int main()
 	printf("\n\n");
 */	
 
+/*
 	for (int i = 0; i < numThreads; i++) {
 			for (int j = i+1; j < numThreads; j++) {
 				if(tempWorkLen[i] > tempWorkLen[j]) {
@@ -128,6 +131,6 @@ int main()
 	delete [] tempWorkLen;
 	
 	printf("..........................\n");
-		
+	*/	
 	return 0;
 }
