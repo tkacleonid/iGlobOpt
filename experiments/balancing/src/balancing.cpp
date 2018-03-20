@@ -171,24 +171,24 @@ void testGPUMemoryAccess(const int numRuns, dim3 gridSize, dim3 blockSize, char*
 	cudaEvent_t startCuda, stopCuda;
 	float time;
 	
-	CHECKED_CALL(cudaEventCreate(&start));
-	CHECKED_CALL(cudaEventCreate(&stop));
+	CHECKED_CALL(cudaEventCreate(&startCuda));
+	CHECKED_CALL(cudaEventCreate(&stopCuda));
 
-	CHECKED_CALL(cudaEventRecord(start, 0));	
+	CHECKED_CALL(cudaEventRecord(startCuda, 0));	
 		
 	auto start = std::chrono::high_resolution_clock::now();
 	for (int i = 0; i < numRuns; i++) {
 		testCUDAMemoryAccessRunSingleThread<<<gridSize, blockSize>>>(dev_ar1,dev_ar2);
 	}
 	CHECKED_CALL(cudaGetLastError());
-	CHECKED_CALL(cudaEventRecord(stop, 0));
+	CHECKED_CALL(cudaEventRecord(stopCuda, 0));
 	CHECKED_CALL(cudaDeviceSynchronize());
 	
 	auto end = std::chrono::high_resolution_clock::now();
 	CHECKED_CALL(cudaMemcpy(ar2,dev_ar2, numThreads*sizeof(double), cudaMemcpyDeviceToHost));
-	CHECKED_CALL(cudaEventElapsedTime(&time, start, stop));
-	CHECKED_CALL(cudaEventDestroy(start));
-	CHECKED_CALL(cudaEventDestroy(stop));
+	CHECKED_CALL(cudaEventElapsedTime(&time, startCuda, stopCuda));
+	CHECKED_CALL(cudaEventDestroy(startCuda));
+	CHECKED_CALL(cudaEventDestroy(stopCuda));
 	
 	long long speed = (long long) ((std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count());
 	if (isToFile) {
