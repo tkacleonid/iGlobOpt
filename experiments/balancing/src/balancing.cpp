@@ -137,6 +137,84 @@ void testGPUTransferDataFromDevice(const int numRuns, dim3 gridSize, dim3 blockS
 
 
 
+/**
+*	Test time of GPU kernel runs
+*	@param numRuns the number of cuda testing calls
+*	@param gridSize CUDA grid's size
+*	@param blockSize CUDA block's size
+*/
+void testGPUMemoryAccess(const int numRuns, dim3 gridSize, dim3 blockSize, char* fileName, bool isToFile)
+{	
+	CHECKED_CALL(cudaSetDevice(DEVICE));
+	CHECKED_CALL(cudaDeviceReset());
+	
+	int numThreads = gridSize.x*gridSize.y*gridSize.x*blockSize.x*blockSize.y*blockSize.z;
+	double *ar1 = (double*) malloc(numThreads*sizeof(double));
+	double *ar2 = (double*) malloc(numThreads*sizeof(double));
+	double *dev_ar1;
+	double *dev_ar2;
+	
+	for (int i = 0 i < numThreads; i++) {
+		ar1[i] = (rand() % (rand()+1))/(double) numThreads;
+	}
+	
+	CHECKED_CALL(cudaMalloc((void **)&dev_ar1, numThreads*sizeof(double)));
+	CHECKED_CALL(cudaMalloc((void **)&dev_ar2, numThreads*sizeof(double)));
+	CHECKED_CALL(cudaMemcpy(dev_ar1, boxes, numThreads*sizeof(double), cudaMemcpyHostToDevice));
+	
+	
+	auto start = std::chrono::high_resolution_clock::now();
+	for (int i = 0; i < numRuns; i++) {
+		CHECKED_CALL(cudaMemcpy(boxes, dev_boxes, dataVolume, cudaMemcpyDeviceToHost));
+	}
+	auto end = std::chrono::high_resolution_clock::now();
+	
+	long long speed = (long long) dataVolume/((std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count()/(((double) numRuns)*1000000));
+	if (isToFile) {
+		std::ofstream outfile;
+		outfile.open(fileName, std::ios_base::app);
+		if (outfile.fail())
+			throw std::ios_base::failure(std::strerror(errno));
+		outfile << dataVolume << "\t" << speed << "\n";
+		outfile.close();
+	}
+	printf("Speed to transfer data from Device: %lld byte/s\n", speed);
+
+	CHECKED_CALL(cudaFree(dev_boxes));
+	free(boxes);
+	
+	auto start = std::chrono::high_resolution_clock::now();
+	for(int i = 0; i < numRuns; i++)
+	{
+		testCUDARun<<<gridSize, blockSize>>>(0);
+	}
+	auto end = std::chrono::high_resolution_clock::now();
+	printf("AverageTime without synchronize: %d microseconds\n", (std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count()/numRuns);
+
+	start = std::chrono::high_resolution_clock::now();
+	for(int i = 0; i < numRuns; i++)
+	{
+		CHECKED_CALL(cudaThreadSynchronize());
+		testCUDARun<<<gridSize, blockSize>>>(0);
+		CHECKED_CALL(cudaThreadSynchronize());
+	}
+	end = std::chrono::high_resolution_clock::now();
+	printf("AverageTime with synchronize: %d microseconds\n", (std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count()/numRuns);
+	
+	
+}
+
+/**
+*	Test CUDA kernel for GPU kernel runs
+*	@param boxes the test boxes
+*/
+__global__ void testCUDARun(double *boxes)
+{
+	//code
+}
+
+
+
 
 
 void sortQuickRecursive(int *indexes,int *ar,  const int n) {
@@ -239,9 +317,6 @@ void initializeBoxes(double* boxes, int *workLen, int n, int m, int dim)
 		}		
 	}
 }
-
-
-
 
 
 BalancingInfo balancingOnCPU_v2(double* boxes, int *workLen, int n, int m, int dim)
