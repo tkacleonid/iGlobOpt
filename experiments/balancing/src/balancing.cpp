@@ -173,7 +173,7 @@ void testGPUMemoryAccess(const int numRuns, dim3 gridSize, dim3 blockSize, char*
 	for (int i = 0; i < numRuns; i++) {
 		testCUDAMemoryAccessRunSingleThread<<<gridSize, blockSize>>>(dev_ar1,dev_ar2);
 	}
-	CHECKED_CALL(cudaThreadSynchronize());
+	CHECKED_CALL(cudaGetLastError());
 	auto end = std::chrono::high_resolution_clock::now();
 	CHECKED_CALL(cudaMemcpy(ar2,dev_ar2, numThreads*sizeof(double), cudaMemcpyDeviceToHost));
 	
@@ -209,7 +209,7 @@ __global__ void testCUDAMemoryAccessRunMultiThread(double *ar1, double *ar2)
 	
 	int threadId = threadIdx.z*gridSizeY*gridSizeX + threadIdx.y*gridSizeX + threadIdx.x;
 	
-	ar2[threadId] = ar1[threadId];
+	ar2[threadId] = ar1[threadId] +5.0;
 }
 
 /**
@@ -229,7 +229,7 @@ __global__ void testCUDAMemoryAccessRunSingleThread(double *ar1, double *ar2)
 	
 	if (threadId == 0) {
 		for (int i = 0; i < gridSizeAll; i++) {
-			ar2[i] = ar1[i];
+			ar2[i] = ar1[i]+5.0;
 		}
 	}
 }
