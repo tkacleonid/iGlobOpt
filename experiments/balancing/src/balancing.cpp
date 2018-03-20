@@ -160,7 +160,7 @@ void testGPUMemoryAccess(const int numRuns, dim3 gridSize, dim3 blockSize, char*
 	double *dev_ar1;
 	double *dev_ar2;
 	
-	for (int i = 0 i < numThreads; i++) {
+	for (int i = 0; i < numThreads; i++) {
 		ar1[i] = (rand() % (rand()+1))/(double) numThreads;
 	}
 	
