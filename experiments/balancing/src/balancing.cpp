@@ -170,7 +170,7 @@ void testGPUMemoryAccess(const int numRuns, dim3 gridSize, dim3 blockSize, char*
 		memcpy(ar2 + i, ar1 + i, sizeof(double)*partSize);
 	}
 	auto end = std::chrono::high_resolution_clock::now();
-	printf("Time assign array CPU:\t%d\t%f milliseconds\n", numThreads,time);
+	printf("Time assign array CPU:\t%d\t%lld milliseconds\n", numThreads,(long long)(std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count());
 	
 	CHECKED_CALL(cudaMalloc((void **)&dev_ar1, numThreads*sizeof(double)*partSize));
 	CHECKED_CALL(cudaMalloc((void **)&dev_ar2, numThreads*sizeof(double)*partSize));
