@@ -186,16 +186,15 @@ void testGPUMemoryAccess(const int numRuns, dim3 gridSize, dim3 blockSize, char*
 	CHECKED_CALL(cudaEventDestroy(startCuda));
 	CHECKED_CALL(cudaEventDestroy(stopCuda));
 	
-	long long speed = (long long) ((std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count());
 	if (isToFile) {
 		std::ofstream outfile;
 		outfile.open(fileName, std::ios_base::app);
 		if (outfile.fail())
 			throw std::ios_base::failure(std::strerror(errno));
-		outfile << numThreads << "\t" << partSize << "\t" << speed << "\n";
+		outfile << numThreads << "\t" << partSize << "\t" << time << "\n";
 		outfile.close();
 	}
-	printf("Time assign array: %lld microseconds \t%d\t%f milliseconds\n", speed,numThreads,time);
+	printf("Time assign array:\t%d\t%f milliseconds\n", numThreads,time);
 
 	CHECKED_CALL(cudaFree(dev_ar1));
 	CHECKED_CALL(cudaFree(dev_ar2));
