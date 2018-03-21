@@ -226,7 +226,7 @@ __global__ void testCUDAMemoryAccessRunMultiThread_v1(double *ar1, double *ar2, 
 	//ar2[threadId] = ar1[threadId] + 5.0;
 	//memcpy(ar2 + threadId, ar1 + threadId, sizeof(double)*partSize);
 	for (int i = 0; i < partSize; i++) {
-		ar2[threadId + i] = ar1[threadId + i]
+		ar2[threadId + i] = ar1[threadId + i];
 	}
 }
 
