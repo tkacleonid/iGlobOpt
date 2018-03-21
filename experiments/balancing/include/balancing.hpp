@@ -95,15 +95,17 @@ void testGPUTransferDataFromDevice(const int numRuns, dim3 gridSize, dim3 blockS
 *	@param blockSize CUDA block's size
 *	@param fileName file to save data
 *	@param isToFile if we should save data to file
+*	@param partSize the number of values to copy by one thread
 */
-void testGPUMemoryAccess(const int numRuns, dim3 gridSize, dim3 blockSize, char* fileName, bool isToFile);
+void testGPUMemoryAccess(const int numRuns, dim3 gridSize, dim3 blockSize, char* fileName, bool isToFile, int partSize);
 
 /**
 *	Test CUDA kernel for GPU multiple thread memory access
 *	@param ar1 the test array copy from
 *	@param ar2 the test array copy To
+*	@param partSize the number of values to copy by one thread
 */
-__global__ void testCUDAMemoryAccessRunMultiThread(double *ar1, double *ar2);
+__global__ void testCUDAMemoryAccessRunMultiThread_v1(double *ar1, double *ar2, int partSize);
 
 /**
 *	Test CUDA kernel for GPU single thread memory access
