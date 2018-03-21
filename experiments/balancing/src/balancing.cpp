@@ -290,7 +290,7 @@ __global__ void testCUDAMemoryAccessRunSingleThread_v2(double *ar1, double *ar2,
 	
 	if (threadId == 0) {
 		for (int i = 0; i < gridSizeAll; i++) {
-			for (int j = 0; j < gridSizeAll; j++) {
+			for (int j = 0; j < partSize; j++) {
 				ar2[i+j] = ar1[i+j];
 			}
 		}
