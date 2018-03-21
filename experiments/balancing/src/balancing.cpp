@@ -165,6 +165,13 @@ void testGPUMemoryAccess(const int numRuns, dim3 gridSize, dim3 blockSize, char*
 		ar1[i] = (rand() % (rand()+1))/(double) numThreads;
 	}
 	
+	auto start = std::chrono::high_resolution_clock::now();
+	for (int i = 0; i < numThreads; i++) {
+		memcpy(ar2 + i, ar1 + i, sizeof(double)*partSize);
+	}
+	auto end = std::chrono::high_resolution_clock::now();
+	printf("Time assign array CPU:\t%d\t%f milliseconds\n", numThreads,time);
+	
 	CHECKED_CALL(cudaMalloc((void **)&dev_ar1, numThreads*sizeof(double)*partSize));
 	CHECKED_CALL(cudaMalloc((void **)&dev_ar2, numThreads*sizeof(double)*partSize));
 	CHECKED_CALL(cudaMemcpy(dev_ar1, ar1, numThreads*sizeof(double)*partSize, cudaMemcpyHostToDevice));
