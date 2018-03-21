@@ -167,10 +167,10 @@ void testGPUMemoryAccess(const int numRuns, dim3 gridSize, dim3 blockSize, char*
 	
 	auto start = std::chrono::high_resolution_clock::now();
 	for (int i = 0; i < numThreads; i++) {
-		//for (int j = 0; j < partSize; j++) {
-			//ar2[i*partSize + j] = ar1[i*partSize + j];
-			memcpy(ar2 + i*partSize, ar1 + i*partSize, sizeof(double)*partSize);
-		//}
+		for (int j = 0; j < partSize; j++) {
+			ar2[i*partSize + j] = ar1[i*partSize + j];
+			//memcpy(ar2 + i*partSize, ar1 + i*partSize, sizeof(double)*partSize);
+		}
 	}
 	auto end = std::chrono::high_resolution_clock::now();
 	printf("Time assign array CPU:\t%d\t%lld milliseconds\n", numThreads,(long long)(std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count());
