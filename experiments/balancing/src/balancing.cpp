@@ -233,7 +233,7 @@ __global__ void testCUDAMemoryAccessRunMultiThread_v1(double *ar1, double *ar2, 
 *	@param ar2 the test array copy To
 *	@param partSize the number of values to copy by one thread
 */
-__global__ void testCUDAMemoryAccessRunMultiThread_v1(double *ar1, double *ar2, int partSize)
+__global__ void testCUDAMemoryAccessRunMultiThread_v2(double *ar1, double *ar2, int partSize)
 {
 	int gridSizeX = blockDim.x * gridDim.x;
 	int gridSizeY = blockDim.y * gridDim.y;
