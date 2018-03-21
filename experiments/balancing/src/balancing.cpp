@@ -186,7 +186,7 @@ void testGPUMemoryAccess(const int numRuns, dim3 gridSize, dim3 blockSize, char*
 
 	CHECKED_CALL(cudaEventRecord(startCuda, 0));	
 	for (int i = 0; i < numRuns; i++) {
-		testCUDAMemoryAccessRunSingleThread_v2<<<gridSize, blockSize>>>(dev_ar1,dev_ar2,partSize);
+		testCUDAMemoryAccessRunMultiThread_v2<<<gridSize, blockSize>>>(dev_ar1,dev_ar2,partSize);
 	}
 	CHECKED_CALL(cudaEventRecord(stopCuda, 0));
 	CHECKED_CALL(cudaEventSynchronize(stopCuda));
