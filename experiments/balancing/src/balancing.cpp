@@ -223,19 +223,39 @@ __global__ void testCUDAMemoryAccessRunMultiThread_v1(double *ar1, double *ar2, 
 	
 	int threadId = threadIdx.z*gridSizeY*gridSizeX + threadIdx.y*gridSizeX + threadIdx.x;
 	
-	//ar2[threadId] = ar1[threadId] + 5.0;
-	//memcpy(ar2 + threadId, ar1 + threadId, sizeof(double)*partSize);
-	for (int i = 0; i < partSize; i++) {
-		ar2[threadId + i] = ar1[(threadId + i*32)%gridSizeAll];
-	}
+
+	memcpy(ar2 + threadId, ar1 + threadId, sizeof(double)*partSize);
 }
 
 /**
-*	Test CUDA kernel for GPU single thread memory access
+*	Test CUDA kernel for GPU multiple thread memory access with element copies
 *	@param ar1 the test array copy from
 *	@param ar2 the test array copy To
+*	@param partSize the number of values to copy by one thread
 */
-__global__ void testCUDAMemoryAccessRunSingleThread(double *ar1, double *ar2)
+__global__ void testCUDAMemoryAccessRunMultiThread_v1(double *ar1, double *ar2, int partSize)
+{
+	int gridSizeX = blockDim.x * gridDim.x;
+	int gridSizeY = blockDim.y * gridDim.y;
+	int gridSizeZ = blockDim.z * gridDim.z;
+	int gridSizeAll = gridSizeX*gridSizeY*gridSizeZ;
+	
+	
+	int threadId = threadIdx.z*gridSizeY*gridSizeX + threadIdx.y*gridSizeX + threadIdx.x;
+	
+	for (int i = 0; i < partSize; i++) {
+		ar2[threadId + i] = ar1[threadId + i];
+	}
+}
+
+
+/**
+*	Test CUDA kernel for GPU single thread memory access with memcpy
+*	@param ar1 the test array copy from
+*	@param ar2 the test array copy To
+*	@param partSize the number of values to copy by one thread
+*/
+__global__ void testCUDAMemoryAccessRunSingleThread_v1(double *ar1, double *ar2, int partSize)
 {
 	int gridSizeX = blockDim.x * gridDim.x;
 	int gridSizeY = blockDim.y * gridDim.y;
@@ -247,7 +267,32 @@ __global__ void testCUDAMemoryAccessRunSingleThread(double *ar1, double *ar2)
 	
 	if (threadId == 0) {
 		for (int i = 0; i < gridSizeAll; i++) {
-			ar2[i] = ar1[i]+5.0;
+			memcpy(ar2 + i, ar1 + i, sizeof(double)*partSize);
+		}
+	}
+}
+
+/**
+*	Test CUDA kernel for GPU single thread memory access without memcpy
+*	@param ar1 the test array copy from
+*	@param ar2 the test array copy To
+*	@param partSize the number of values to copy by one thread
+*/
+__global__ void testCUDAMemoryAccessRunSingleThread_v2(double *ar1, double *ar2, int partSize)
+{
+	int gridSizeX = blockDim.x * gridDim.x;
+	int gridSizeY = blockDim.y * gridDim.y;
+	int gridSizeZ = blockDim.z * gridDim.z;
+	int gridSizeAll = gridSizeX*gridSizeY*gridSizeZ;
+	
+	
+	int threadId = threadIdx.z*gridSizeY*gridSizeX + threadIdx.y*gridSizeX + threadIdx.x;
+	
+	if (threadId == 0) {
+		for (int i = 0; i < gridSizeAll; i++) {
+			for (int j = 0; j < gridSizeAll; j++) {
+				ar2[i+j] = ar1[i+j];
+			}
 		}
 	}
 }

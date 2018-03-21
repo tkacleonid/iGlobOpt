@@ -108,11 +108,20 @@ void testGPUMemoryAccess(const int numRuns, dim3 gridSize, dim3 blockSize, char*
 __global__ void testCUDAMemoryAccessRunMultiThread_v1(double *ar1, double *ar2, int partSize);
 
 /**
-*	Test CUDA kernel for GPU single thread memory access
+*	Test CUDA kernel for GPU single thread memory access with memcpy
 *	@param ar1 the test array copy from
 *	@param ar2 the test array copy To
+*	@param partSize the number of values to copy by one thread
 */
-__global__ void testCUDAMemoryAccessRunSingleThread(double *ar1, double *ar2);
+__global__ void testCUDAMemoryAccessRunSingleThread_v1(double *ar1, double *ar2, int partSize);
+
+/**
+*	Test CUDA kernel for GPU single thread memory access without memcpy
+*	@param ar1 the test array copy from
+*	@param ar2 the test array copy To
+*	@param partSize the number of values to copy by one thread
+*/
+__global__ void testCUDAMemoryAccessRunSingleThread_v2(double *ar1, double *ar2, int partSize);
 
 
 
