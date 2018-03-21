@@ -178,7 +178,7 @@ void testGPUMemoryAccess(const int numRuns, dim3 gridSize, dim3 blockSize, char*
 		
 	auto start = std::chrono::high_resolution_clock::now();
 	for (int i = 0; i < numRuns; i++) {
-		testCUDAMemoryAccessRunMultipleThread<<<gridSize, blockSize>>>(dev_ar1,dev_ar2);
+		testCUDAMemoryAccessRunMultiThread<<<gridSize, blockSize>>>(dev_ar1,dev_ar2);
 	}
 	CHECKED_CALL(cudaGetLastError());
 	CHECKED_CALL(cudaEventRecord(stopCuda, 0));
