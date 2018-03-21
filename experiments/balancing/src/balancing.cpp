@@ -175,16 +175,12 @@ void testGPUMemoryAccess(const int numRuns, dim3 gridSize, dim3 blockSize, char*
 	CHECKED_CALL(cudaEventCreate(&startCuda));
 	CHECKED_CALL(cudaEventCreate(&stopCuda));
 
-	auto start = std::chrono::high_resolution_clock::now();
 	CHECKED_CALL(cudaEventRecord(startCuda, 0));	
 	for (int i = 0; i < numRuns; i++) {
-		testCUDAMemoryAccessRunSingleThread_v1<<<gridSize, blockSize>>>(dev_ar1,dev_ar2,partSize);
+		testCUDAMemoryAccessRunMultiThread_v1<<<gridSize, blockSize>>>(dev_ar1,dev_ar2,partSize);
 	}
-	//CHECKED_CALL(cudaGetLastError());
 	CHECKED_CALL(cudaEventRecord(stopCuda, 0));
 	CHECKED_CALL(cudaEventSynchronize(stopCuda));
-	
-	auto end = std::chrono::high_resolution_clock::now();
 	CHECKED_CALL(cudaMemcpy(ar2,dev_ar2, numThreads*sizeof(double)*partSize, cudaMemcpyDeviceToHost));
 	CHECKED_CALL(cudaEventElapsedTime(&time, startCuda, stopCuda));
 	CHECKED_CALL(cudaEventDestroy(startCuda));
