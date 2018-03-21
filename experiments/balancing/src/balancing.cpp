@@ -167,7 +167,9 @@ void testGPUMemoryAccess(const int numRuns, dim3 gridSize, dim3 blockSize, char*
 	
 	auto start = std::chrono::high_resolution_clock::now();
 	for (int i = 0; i < numThreads; i++) {
-		memcpy(ar2 + i, ar1 + i, sizeof(double)*partSize);
+		for (int j = 0; j < partSize; j++) {
+			ar2[i*partSize + j] = ar1[i*partSize + j];
+		}
 	}
 	auto end = std::chrono::high_resolution_clock::now();
 	printf("Time assign array CPU:\t%d\t%lld milliseconds\n", numThreads,(long long)(std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count());
@@ -246,7 +248,7 @@ __global__ void testCUDAMemoryAccessRunMultiThread_v2(double *ar1, double *ar2, 
 	int threadId = threadIdx.z*gridSizeY*gridSizeX + threadIdx.y*gridSizeX + threadIdx.x;
 	
 	for (int i = 0; i < partSize; i++) {
-		ar2[threadId + i] = ar1[threadId + i];
+		ar2[threadId*partSize + i] = ar1[threadId*partSize + i];
 	}
 }
 
@@ -293,7 +295,7 @@ __global__ void testCUDAMemoryAccessRunSingleThread_v2(double *ar1, double *ar2,
 	if (threadId == 0) {
 		for (int i = 0; i < gridSizeAll; i++) {
 			for (int j = 0; j < partSize; j++) {
-				ar2[i+j] = ar1[i+j];
+				ar2[i*partSize + j] = ar1[i*partSize + j];
 			}
 		}
 	}
