@@ -168,7 +168,8 @@ void testGPUMemoryAccess(const int numRuns, dim3 gridSize, dim3 blockSize, char*
 	auto start = std::chrono::high_resolution_clock::now();
 	for (int i = 0; i < numThreads; i++) {
 		for (int j = 0; j < partSize; j++) {
-			ar2[i*partSize + j] = ar1[i*partSize + j];
+			//ar2[i*partSize + j] = ar1[i*partSize + j];
+			memcpy(ar2 + i*partSize, ar1 + i*partSize, sizeof(double)*partSize);
 		}
 	}
 	auto end = std::chrono::high_resolution_clock::now();
@@ -228,7 +229,7 @@ __global__ void testCUDAMemoryAccessRunMultiThread_v1(double *ar1, double *ar2, 
 	int threadId = threadIdx.z*gridSizeY*gridSizeX + threadIdx.y*gridSizeX + threadIdx.x;
 	
 
-	memcpy(ar2 + threadId, ar1 + threadId, sizeof(double)*partSize);
+	memcpy(ar2 + threadId*partSize, ar1 + threadId*partSize, sizeof(double)*partSize);
 }
 
 /**
@@ -271,7 +272,7 @@ __global__ void testCUDAMemoryAccessRunSingleThread_v1(double *ar1, double *ar2,
 	
 	if (threadId == 0) {
 		for (int i = 0; i < gridSizeAll; i++) {
-			memcpy(ar2 + i, ar1 + i, sizeof(double)*partSize);
+			memcpy(ar2 + i*partSize, ar1 + i*partSize, sizeof(double)*partSize);
 		}
 	}
 }
