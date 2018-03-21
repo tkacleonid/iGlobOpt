@@ -8,7 +8,7 @@ int main()
 	int maxBoxesPerThread = 10000;
 
 
-	testGPUMemoryAccess(1, dim3(2,2,2), dim3(8,8,8), "./build/data/deviceMemoryAccessTest.txt", false,16);
+	testGPUMemoryAccess(1, dim3(2,2,2), dim3(16,8,8), "./build/data/deviceMemoryAccessTest.txt", false,16);
 
 	
 /*	
