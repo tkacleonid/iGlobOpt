@@ -175,15 +175,14 @@ void testGPUMemoryAccess(const int numRuns, dim3 gridSize, dim3 blockSize, char*
 	CHECKED_CALL(cudaEventCreate(&startCuda));
 	CHECKED_CALL(cudaEventCreate(&stopCuda));
 
-	CHECKED_CALL(cudaEventRecord(startCuda, 0));	
-		
 	auto start = std::chrono::high_resolution_clock::now();
+	CHECKED_CALL(cudaEventRecord(startCuda, 0));	
 	for (int i = 0; i < numRuns; i++) {
 		testCUDAMemoryAccessRunMultiThread<<<gridSize, blockSize>>>(dev_ar1,dev_ar2,partSize);
 	}
-	CHECKED_CALL(cudaGetLastError());
+	//CHECKED_CALL(cudaGetLastError());
 	CHECKED_CALL(cudaEventRecord(stopCuda, 0));
-	CHECKED_CALL(cudaDeviceSynchronize());
+	CHECKED_CALL(cudaEventSynchronize(stop));
 	
 	auto end = std::chrono::high_resolution_clock::now();
 	CHECKED_CALL(cudaMemcpy(ar2,dev_ar2, numThreads*sizeof(double)*partSize, cudaMemcpyDeviceToHost));
@@ -212,6 +211,7 @@ void testGPUMemoryAccess(const int numRuns, dim3 gridSize, dim3 blockSize, char*
 *	Test CUDA kernel for GPU multiple thread memory access with memcpy
 *	@param ar1 the test array copy from
 *	@param ar2 the test array copy To
+*	@param partSize the number of values to copy by one thread
 */
 __global__ void testCUDAMemoryAccessRunMultiThread_v1(double *ar1, double *ar2, int partSize)
 {
@@ -223,7 +223,7 @@ __global__ void testCUDAMemoryAccessRunMultiThread_v1(double *ar1, double *ar2, 
 	
 	int threadId = threadIdx.z*gridSizeY*gridSizeX + threadIdx.y*gridSizeX + threadIdx.x;
 	
-	ar2[threadId] = ar1[threadId] + 5.0;
+	//ar2[threadId] = ar1[threadId] + 5.0;
 	memcpy(ar2 + threadId, ar1 + threadId, sizeof(double)*partSize);
 }
 
