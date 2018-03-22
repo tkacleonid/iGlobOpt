@@ -441,7 +441,7 @@ __global__ void globOptCUDA_1(double *inBox, double *droppedBoxes, int inRank, i
 		
 		bInd = threadId*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[threadIdx.x] - 1)*(2*inRank+3);
 		fnCalcFunLimitsStyblinski_CUDA(inBox + bInd, inRank);
-		memcpy(droppedBoxes+threadId*(2*inRank+3),inBox + bInd,(2*inRank+3)*sizeof(double));	
+		//memcpy(droppedBoxes+threadId*(2*inRank+3),inBox + bInd,(2*inRank+3)*sizeof(double));	
 		if(min_s[threadIdx.x] > inBox[bInd + 2*inRank + 2])
 		{
 			min_s[threadIdx.x] = inBox[bInd + 2*inRank + 2];
@@ -450,7 +450,7 @@ __global__ void globOptCUDA_1(double *inBox, double *droppedBoxes, int inRank, i
 		if(min_s[threadIdx.x] - inBox[bInd + 2*inRank] < inEps)
 		{
 			--workLen_s[threadIdx.x];
-			//memcpy(droppedBoxes+threadId*(2*inRank+3),inBox + bInd,(2*inRank+3)*sizeof(double));
+			memcpy(droppedBoxes+threadId*(2*inRank+3),inBox + bInd,(2*inRank+3)*sizeof(double));
 			n++;
 		}
 		else
