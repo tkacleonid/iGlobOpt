@@ -217,7 +217,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 				
 				
 			default:
-				globOptCUDA_1<<<GridSize, BLOCK_SIZE>>>(dev_inBox, inRank,dev_workLen,dev_mins,funcMin,inEps,dev_workCounts);
+				globOptCUDA_1<<<GridSize, BLOCK_SIZE>>>(dev_inBox, dev_droppedBoxes,inRank,dev_workLen,dev_mins,funcMin,inEps,dev_workCounts);
 				break;
 		}
 		
