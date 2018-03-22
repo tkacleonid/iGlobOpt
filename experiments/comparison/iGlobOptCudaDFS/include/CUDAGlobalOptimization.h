@@ -323,7 +323,6 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 		if(ls ==0) break;
 	}	
 	
-	myfile.close();
 	
 	std::cout << "free start\n";
 	
