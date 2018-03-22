@@ -1,5 +1,5 @@
 /*
- * CPUGlobOptBFSWithMmapAndOMP.cpp
+ * CPUGlobOptBFSWithMmap.cpp
  *
  *  Created on: 10 Aug 2017
  *  Author: Leonid Tkachenko
@@ -32,17 +32,14 @@
 */
 
 
-void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int _rank, int _splitCoeff, void (*_fun)(const double *, int, double *), double _eps, double *_min, GlobOptErrors *_status, double *_argmin)
+void calcOptValueOnCPUBFSWithMmap(const double *_boxes, int _numBoxes, int _rank, int _splitCoeff, void (*_fun)(const double *, int, double *), double _eps, double *_min, GlobOptErrors *_status, double *_argmin)
 {
 
-	int numThreads = omp_get_num_threads();
 	double *workBoxes = new double[_rank*MAX_BOXES_IN_BUFFER*2];
 	double *restBoxesToSplit = new double[_rank*MAX_BOXES_IN_BUFFER*2];
 	double *funBounds = new double[ARRAY_BOUNDS_LENGTH*MAX_BOXES_IN_BUFFER];
 
 
-	long long wc = 0;
-	
 	//copy Input Boxes in work set #1
 	try
 	{
@@ -69,9 +66,6 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 	double funLB;
 
 
-	funRecord = -39.1661657038*_rank;
-	
-	
 	int numWorkBoxes = _numBoxes;
 
 	int fd = open(FILEPATH,O_RDWR | O_CREAT | O_TRUNC, (mode_t)0600);
@@ -103,63 +97,10 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 	int s;
 	double *map;
 	off_t pa_offset,offset;
-	
-	
-	double h1 = _boxes[1] - _boxes[0];
-	double hInd1 = 0;
-	
-	for(int i = 0; i < _rank; i++)
-	{
-		if(h1 < _boxes[i*_rank + 1] - _boxes[i*_rank])
-		{
-			h1 = _boxes[i*_rank + 1] - _boxes[i*_rank];
-			hInd1 = i;
-		}
-	}
-	
-	for(int n = 0; n < numWorkBoxes*1024; n++)
-	{
-		for(int i = 0; i < _rank; i++)
-		{
-			if(i == hInd1)
-			{
-				restBoxesToSplit[n*2*_rank + i*2] = _boxes[i*2] + h1/1024.0*n;
-				restBoxesToSplit[n*2*_rank + i*2 + 1] = _boxes[i*2] + h1/1024.0*(n+1);
-			}
-			else
-			{
-				restBoxesToSplit[n*2*_rank + i*2] = _boxes[i*2];
-				restBoxesToSplit[n*2*_rank + i*2 + 1] = _boxes[i*2 + 1];
-			}
-		}
 
-	}
-	
-	numWorkBoxes = 1024;
-	
-	
-	auto start = std::chrono::high_resolution_clock::now();
-
-	char tp[100];
 	//While global optimum not found
 	while(true)
 	{
-		//scanf("%s",tp);
-		//std::cin.get();
-		std::cout << "\n\n-------------------------";
-		std::cout << "wc:  " << wc << "\n\n";
-		
-		/*
-		for(int i = 0; i < numWorkBoxes; i++)
-		{
-			for(int j = 0; j < _rank; j++)
-			{
-				std::cout << "[" << restBoxesToSplit[(i*_rank+j)*2] << ";" <<  restBoxesToSplit[(i*_rank+j)*2+1] << "]\t";
-			}
-			std::cout << ",";
-			
-		}
-		*/
 
 		//Workin with file
 		if(numWorkBoxes*_splitCoeff >= MAX_BOXES_IN_BUFFER)
@@ -197,6 +138,8 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 			s = MAX_BOXES_IN_BUFFER/PART_BUFFER_FROM_FILE;
 			if(numBoxesInFile <= s)  s = numBoxesInFile;
 
+			printf("\nssssssssssssssssss = %d\n",s);
+
 			offset = numBoxesInFile-s > 0? numBoxesInFile-s : 0;
 
 			offset = offset*_rank*2*sizeof(double);
@@ -221,7 +164,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 			}
 			numWorkBoxes += s;
 		}
-#pragma omp parallel for
+
 		//Splitting all work Boxes
 		for(int k = 0; k < numWorkBoxes; k++)
 		{
@@ -255,26 +198,21 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 						workBoxes[((k*_splitCoeff + n)*_rank+i)*2 + 1] = restBoxesToSplit[(k*_rank+i)*2 + 1];
 					}
 				}
-				
+
 				_fun(&workBoxes[((k*_splitCoeff + n)*_rank)*2],_rank,&funBounds[(k*_splitCoeff + n)*ARRAY_BOUNDS_LENGTH]);
-			}
-		}
 
-		funLB = funBounds[GO_POSITION_LB];
-#pragma omp parallel for reduction(min: funRecord) reduction(min: funLB)
-		for(int i = 0; i < numWorkBoxes*_splitCoeff; i++)
-		{
-			 if(funRecord > funBounds[i*ARRAY_BOUNDS_LENGTH + GO_POSITION_FUN_RECORD] )
-			{
-				funRecord = funBounds[i*ARRAY_BOUNDS_LENGTH+GO_POSITION_FUN_RECORD];
+				 if(funRecord > funBounds[(k*_splitCoeff + n)*ARRAY_BOUNDS_LENGTH + GO_POSITION_FUN_RECORD] )
+				{
+					funRecord = funBounds[(k*_splitCoeff + n)*3+2];
+					memcpy(_argmin,&workBoxes[((k*_splitCoeff + n)*_rank)*2],sizeof(double)*_rank*2);
+				}
+				if( k == 0 && n == 0) funLB = funBounds[(k*_splitCoeff + n)*ARRAY_BOUNDS_LENGTH + GO_POSITION_LB];
+				else if (funLB > funBounds[(k*_splitCoeff + n)*ARRAY_BOUNDS_LENGTH + GO_POSITION_LB]) funLB = funBounds[(k*_splitCoeff + n)*ARRAY_BOUNDS_LENGTH + GO_POSITION_LB];
 			}
-
-			if (funLB > funBounds[i*ARRAY_BOUNDS_LENGTH + GO_POSITION_LB]) funLB = funBounds[i*ARRAY_BOUNDS_LENGTH + GO_POSITION_LB];
 		}
 
 		//checking if the global minimum is found
 		double curEps = funRecord - funLB < 0 ? -(funRecord - funLB) : funRecord - funLB;
-		/*
 		if(curEps < _eps  && numBoxesInFile == 0)
 		{
 			*_min = funRecord;
@@ -283,10 +221,8 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 			delete [] workBoxes;
 			delete [] funBounds;
 			close(fd);
-			
 			return;
 		}
-		*/
 
 		//Saving appropriate boxes to split
 		int cnt = 0;
@@ -301,25 +237,8 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 				}
 				cnt++;
 			}
-			else 
-			{
-				wc++;
-				for(int j = 0; j < _rank; j++)
-				{
-					printf("[%f; %f]\t",workBoxes[(i*_rank+j)*2],workBoxes[(i*_rank+j)*2+1]);
-				}
-				printf("%f\t%f\t%f\n",funBounds[i*ARRAY_BOUNDS_LENGTH + GO_POSITION_RB],funBounds[i*ARRAY_BOUNDS_LENGTH + GO_POSITION_LB],funBounds[i*ARRAY_BOUNDS_LENGTH + GO_POSITION_FUN_RECORD]);
-				
-			}
-				
 		}
 		numWorkBoxes = cnt;
-		
-		//std::cout << "min = ";
-		//printf("%.7f",funRecord);
-		//std::cout << "\tfunLb = " << funLB << "\n";
-		
-		//std::cout << "\twc = " << wc << "\n";
 
 		if(numWorkBoxes == 0 && numBoxesInFile == 0)
 		{
@@ -328,10 +247,6 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 			delete [] workBoxes;
 			delete [] funBounds;
 			close(fd);
-			auto end = std::chrono::high_resolution_clock::now();
-			std::cout << "time in millisecs: " << ((std::chrono::duration_cast<std::chrono::milliseconds>(end - start)).count())/1 << "\t";
-			std::cout << "\twc = " << wc << "\n";
-			
 			return;
 		}
 
