@@ -133,7 +133,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 	}
 	
 	
-	for (int j = 0; j < numThreads; j++) {
+	for (int j = 0; j < numBoxes; j++) {
 		for (int k = 0; k < inRank; k++) {
 			droppedBoxes[j*(2*inRank+3)+2*k] = 0.0;
 			droppedBoxes[j*(2*inRank+3)+2*k +1] = 0.0;
@@ -323,7 +323,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 		}
 			
 
-		for(int m = 0; m < numBoxes; m++)
+		for(int m = 0; m < numThreads; m++)
 		{
 			if(workLen[m] == averageBoxesPerThread)
 			{
