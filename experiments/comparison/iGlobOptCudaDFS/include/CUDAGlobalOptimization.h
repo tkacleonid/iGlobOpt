@@ -288,7 +288,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 		
 		
 			
-	
+/*	
 		int numWorkBoxes = 0;
 		int averageBoxesPerThread = 0;
 		int curThreadWeTakeBoxesIndex = -1;
@@ -357,7 +357,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 			}
 		}
 		 
-
+*/
 
 		CHECKED_CALL(cudaEventDestroy(start));
 		CHECKED_CALL(cudaEventDestroy(stop));
@@ -409,7 +409,7 @@ __global__ void globOptCUDA_1(double *inBox, double *droppedBoxes, int inRank, i
 	
 	__syncthreads();	
 			
-		
+	/*	
 	n = 0;
 	if(threadId == 0)
 	{
@@ -432,8 +432,9 @@ __global__ void globOptCUDA_1(double *inBox, double *droppedBoxes, int inRank, i
 		}		
 	}	
 			
-
+*/
 	__syncthreads();
+
 	
 	while(workLen_s[threadIdx.x] > 0 && workLen_s[threadIdx.x] < SIZE_BUFFER_PER_THREAD && count[threadIdx.x] < MAX_GPU_ITER)
 	{
