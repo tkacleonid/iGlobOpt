@@ -28,10 +28,10 @@ set(SHARED_SOURCES
 
 include_directories(
 	${INCLUDE_ROOT} 
-	../../OPTITEST/
-	../../snowgoose/
-	../../NUC/
-	../../COMPI/
+	../../../../OPTITEST/
+	../../../../snowgoose/
+	../../../../NUC/
+	../../../../COMPI/
 )
 	
 
