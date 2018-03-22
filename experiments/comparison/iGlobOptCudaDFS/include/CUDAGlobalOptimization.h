@@ -12,7 +12,7 @@
 #include "interval.h"
 #include "CUDAFunctionIntervalEstimation.h"
 #include <stdio.h>
-#include <fsream>
+#include <fstream>
 #include <stdlib.h>
 #include <fstream>
 
