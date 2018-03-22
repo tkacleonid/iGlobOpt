@@ -16,7 +16,7 @@ OBJS = ${OBJ}/kernel.o
 ${BINDIR}/${PROGRAM}: crdir ${OBJS}
 	${CLINK} ${CLINKFLAGS} -o ${BINDIR}/${PROGRAM} ${OBJS} ${C_LIB}
 
-${OBJ}/kernel.o: ${SRC}/kernel.cpp ${INC}/interval.h ${INC}/CUDAGlobalOptimization.h
+${OBJ}/kernel.o: ${SRC}/kernel.cpp ${INC}/interval.h ${INC}/CUDAGlobalOptimization.h ${INC}/CUDAFunctionIntervalEstimation.h
 	$(CC) $(CFLAGS) -c ${SRC}/kernel.cpp -o ${OBJ}/kernel.o 
 
 crdir:
