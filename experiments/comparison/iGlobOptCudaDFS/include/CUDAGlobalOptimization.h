@@ -83,6 +83,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 {
 	int numBoxes = BLOCK_SIZE*NUM_BLOCKS;
 	double *boxes =  new double[numBoxes*(inRank*2+3)*SIZE_BUFFER_PER_THREAD];
+	double *droppedBoxes =  new double[numBoxes*(inRank*2+3)];
 	double h;
 	int hInd;
 	int *workLen;
@@ -134,6 +135,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 	
 
 	double *dev_inBox = 0;
+	double *dev_droppedBoxes = 0;
 	int *dev_workLen = 0;
 	long long *dev_workCounts = 0;
 	double *dev_mins = 0;
@@ -165,6 +167,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 	std::cout << "start CUDA malloc 1\n";
 		
     CHECKED_CALL(cudaMalloc((void **)&dev_inBox, sizeInBox));
+    CHECKED_CALL(cudaMalloc((void **)&dev_droppedBoxes, numThreads*(inRank*2+3)*sizeof(double)));
 	
 	std::cout << "start CUDA malloc 2\n";
 	
@@ -215,6 +218,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 		CHECKED_CALL(cudaDeviceSynchronize());
 
 		CHECKED_CALL(cudaMemcpy(boxes, dev_inBox, numBoxes*(2*inRank+3)*sizeof(double)*SIZE_BUFFER_PER_THREAD, cudaMemcpyDeviceToHost));
+		CHECKED_CALL(cudaMemcpy(droppedBoxes, dev_droppedBoxes, numBoxes*(2*inRank+3)*sizeof(double), cudaMemcpyDeviceToHost));
 		CHECKED_CALL(cudaMemcpy(workLen, dev_workLen, numThreads*sizeof(int), cudaMemcpyDeviceToHost));
 		CHECKED_CALL(cudaMemcpy(mins, dev_mins, numThreads*sizeof(double), cudaMemcpyDeviceToHost));
 		CHECKED_CALL(cudaMemcpy(workCounts, dev_workCounts, numThreads*sizeof(long long), cudaMemcpyDeviceToHost));
@@ -244,6 +248,19 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 		
 		printf("mins: %.10f\n",funcMin);
 		printf("\n\n\n");
+		
+		for (int j = 0; j < numThreads; j++) {
+			for (int k = 0; k < inRank; k++) {
+				printf("[%f; %f]\t",droppedBoxes[j*(2*inRank+3)+2*k], droppedBoxes[j*(2*inRank+3)+2*k + 1])
+			}
+			printf("%f\t%f\t%f",droppedBoxes[j*(2*inRank+3)+2*inRank], droppedBoxes[j*(2*inRank+3)+2*inRank + 1], droppedBoxes[j*(2*inRank+3)+2*inRank+2]);
+		}
+			
+		
+		
+		printf("\n\n\n");
+		
+		
 			
 	
 		int numWorkBoxes = 0;
