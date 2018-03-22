@@ -133,6 +133,17 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 	}
 	
 	
+	for (int j = 0; j < numThreads; j++) {
+		for (int k = 0; k < inRank; k++) {
+			droppedBoxes[j*(2*inRank+3)+2*k] = 0.0;
+			droppedBoxes[j*(2*inRank+3)+2*k +1] = 0.0;
+				
+		}
+		droppedBoxes[j*(2*inRank+3)+2*inRank] = 0.0;
+		droppedBoxes[j*(2*inRank+3)+2*inRank+1] = 0.0;
+		droppedBoxes[j*(2*inRank+3)+2*inRank+2] = 0.0;
+	}
+	
 
 	double *dev_inBox = 0;
 	double *dev_droppedBoxes = 0;
@@ -251,9 +262,15 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 		
 		for (int j = 0; j < numThreads; j++) {
 			for (int k = 0; k < inRank; k++) {
-				printf("[%f; %f]\t",droppedBoxes[j*(2*inRank+3)+2*k], droppedBoxes[j*(2*inRank+3)+2*k + 1])
+				printf("[%f; %f]\t",droppedBoxes[j*(2*inRank+3)+2*k], droppedBoxes[j*(2*inRank+3)+2*k + 1]);
+				droppedBoxes[j*(2*inRank+3)+2*k] = 0.0;
+				droppedBoxes[j*(2*inRank+3)+2*k +1] = 0.0;
+				
 			}
 			printf("%f\t%f\t%f",droppedBoxes[j*(2*inRank+3)+2*inRank], droppedBoxes[j*(2*inRank+3)+2*inRank + 1], droppedBoxes[j*(2*inRank+3)+2*inRank+2]);
+			droppedBoxes[j*(2*inRank+3)+2*inRank] = 0.0;
+			droppedBoxes[j*(2*inRank+3)+2*inRank+1] = 0.0;
+			droppedBoxes[j*(2*inRank+3)+2*inRank+2] = 0.0;
 		}
 			
 		
