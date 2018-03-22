@@ -323,7 +323,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 		}
 			
 
-		for(int m = 0; m < numThreads; m++)
+		for(int m = 0; m < numBoxes; m++)
 		{
 			if(workLen[m] == averageBoxesPerThread)
 			{
