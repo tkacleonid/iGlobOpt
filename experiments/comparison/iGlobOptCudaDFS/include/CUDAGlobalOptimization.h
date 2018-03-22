@@ -12,6 +12,7 @@
 #include "interval.h"
 #include "CUDAFunctionIntervalEstimation.h"
 #include <stdio.h>
+#include <ofsream>
 #include <stdlib.h>
 #include <fstream>
 
@@ -102,6 +103,10 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 
 	h = inBox[1] - inBox[0];
 	hInd = 0;
+	
+	std::ofstream outfile;
+	outfile.open("droppedBoxesCPU", std::ios_base::app);
+
 	
 	
 	
@@ -262,13 +267,13 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 		printf("\n\n\n");
 		
 		for (int j = 0; j < numThreads; j++) {
+			if(droppedBoxes[j*(2*inRank+3)] == droppedBoxes[j*(2*inRank+3)+1]) continue;
 			for (int k = 0; k < inRank; k++) {
-				printf("[%f; %f]\t",droppedBoxes[j*(2*inRank+3)+2*k], droppedBoxes[j*(2*inRank+3)+2*k + 1]);
+				outfile << droppedBoxes[j*(2*inRank+3)+2*k] << "\t" << droppedBoxes[j*(2*inRank+3)+2*k+1] << "\t";
 				droppedBoxes[j*(2*inRank+3)+2*k] = 0.0;
 				droppedBoxes[j*(2*inRank+3)+2*k +1] = 0.0;
-				
 			}
-			printf("%f\t%f\t%f\n",droppedBoxes[j*(2*inRank+3)+2*inRank], droppedBoxes[j*(2*inRank+3)+2*inRank + 1], droppedBoxes[j*(2*inRank+3)+2*inRank+2]);
+			outfile << droppedBoxes[j*(2*inRank+3)+2*inRank] << "\t" << droppedBoxes[j*(2*inRank+3)+2*inRank+1] << "\t" << droppedBoxes[j*(2*inRank+3)+2*inRank+2] << "\n";
 			droppedBoxes[j*(2*inRank+3)+2*inRank] = 0.0;
 			droppedBoxes[j*(2*inRank+3)+2*inRank+1] = 0.0;
 			droppedBoxes[j*(2*inRank+3)+2*inRank+2] = 0.0;
