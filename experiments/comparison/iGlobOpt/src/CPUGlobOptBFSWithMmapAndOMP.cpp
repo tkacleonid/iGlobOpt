@@ -42,7 +42,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 	
 
 	std::ofstream outfile;
-	outfile.open("droppedBoxesCPU, std::ios_base::app);
+	outfile.open("droppedBoxesCPU", std::ios_base::app);
 	if (outfile.fail())
 		throw std::ios_base::failure(std::strerror(errno));
 
