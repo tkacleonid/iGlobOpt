@@ -8,8 +8,9 @@
 #include <cuda_fp16.h>
 #include <cuda_device_runtime_api.h>
 
-//#include <math_functions_dbl_ptx3.h>
+
 #include "interval.h"
+#include "CUDAFunctionIntervalEstimation.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <fstream>

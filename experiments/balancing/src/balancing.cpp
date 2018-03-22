@@ -51,7 +51,6 @@ __global__ void testCUDARun(double *boxes)
 	//code
 }
 
-
 /**
 *	Test Transfer data to device
 *	@param numRuns the number of cuda testing calls
@@ -139,8 +138,6 @@ void testGPUTransferDataFromDevice(const int numRuns, dim3 gridSize, dim3 blockS
 	free(boxes);	
 }
 
-
-
 /**
 *	Test GPU inner memory access
 *	@param numRuns the number of cuda testing calls
@@ -165,16 +162,7 @@ void testGPUMemoryAccess(const int numRuns, dim3 gridSize, dim3 blockSize, char*
 		ar1[i] = (rand() % (rand()+1))/(double) numThreads;
 	}
 	
-	auto start = std::chrono::high_resolution_clock::now();
-	for (int i = 0; i < numThreads; i++) {
-		for (int j = 0; j < partSize; j++) {
-			ar2[i*partSize + j] = ar1[i*partSize + j];
-			//memcpy(ar2 + i*partSize, ar1 + i*partSize, sizeof(double)*partSize);
-		}
-	}
-	auto end = std::chrono::high_resolution_clock::now();
-	printf("Time assign array CPU:\t%d\t%lld milliseconds\n", numThreads,(long long)(std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count());
-	
+
 	CHECKED_CALL(cudaMalloc((void **)&dev_ar1, numThreads*sizeof(double)*partSize));
 	CHECKED_CALL(cudaMalloc((void **)&dev_ar2, numThreads*sizeof(double)*partSize));
 	CHECKED_CALL(cudaMemcpy(dev_ar1, ar1, numThreads*sizeof(double)*partSize, cudaMemcpyHostToDevice));
@@ -253,7 +241,6 @@ __global__ void testCUDAMemoryAccessRunMultiThread_v2(double *ar1, double *ar2, 
 	}
 }
 
-
 /**
 *	Test CUDA kernel for GPU single thread memory access with memcpy
 *	@param ar1 the test array copy from
@@ -302,15 +289,23 @@ __global__ void testCUDAMemoryAccessRunSingleThread_v2(double *ar1, double *ar2,
 	}
 }
 
-
-
-
-
+/**
+*	Quick sort algorithm for balancing
+*	@param indexes the array of boxes' indexes before sorting
+*	@param ar the array of work boxes numbers
+*	@param n the number of elements in array
+*/
 void sortQuickRecursive(int *indexes,int *ar,  const int n) {
    quickSortBase(indexes,ar,0,n-1);
 }
 
-
+/**
+*	Quick sort algorithm for balancing
+*	@param indexes the array of boxes' indexes before sorting
+*	@param ar the array of work boxes numbers
+*	@param l left index of array
+*	@param r right index of array
+*/
 void quickSortBase (int *indexes,int *ar, const int l, const int r) {
     int i = l, j = r;
     int pp[3] = { ar[l], ar[r], ar[(l+r)>>1]};
@@ -345,13 +340,23 @@ void quickSortBase (int *indexes,int *ar, const int l, const int r) {
        quickSortBase(indexes,ar,i, r);
 }
 
-
-
-
+/**
+*	Quick sort algorithm for balancing on GPU
+*	@param indexes the array of boxes' indexes before sorting
+*	@param ar the array of work boxes numbers
+*	@param n the number of elements in array
+*/
 __device__ void sortQuickRecursiveGPU(int *indexes,int *ar,  const int n) {
    quickSortBaseGPU(indexes,ar,0,n-1);
 }
 
+/**
+*	Quick sort algorithm for balancing
+*	@param indexes the array of boxes' indexes before sorting
+*	@param ar the array of work boxes numbers
+*	@param l left index of array
+*	@param r right index of array
+*/
 __device__ void quickSortBaseGPU (int *indexes,int *ar, const int l, const int r) {
     int i = l, j = r;
     int pp[3] = { ar[l], ar[r], ar[(l+r)>>1]};
@@ -387,8 +392,15 @@ __device__ void quickSortBaseGPU (int *indexes,int *ar, const int l, const int r
 }
 
 
-
-void initializeBoxes(double* boxes, int *workLen, int n, int m, int dim)
+/**
+*	Initialize boxes to test balancing procedure
+*	@param boxes the array of boxes
+*	@param workLen the array of numbers of boxes
+*	@param n the number of threads
+*	@param m the maximum number of boxes per thread
+*	@param dim the function dimension
+*/
+void initializeBoxes_v1(double* boxes, int *workLen, int n, int m, int dim)
 {
 	//Initialize random seed
 	srand(time(NULL));
@@ -408,7 +420,7 @@ void initializeBoxes(double* boxes, int *workLen, int n, int m, int dim)
 }
 
 
-BalancingInfo balancingOnCPU_v2(double* boxes, int *workLen, int n, int m, int dim)
+BalancingInfo balancingOnCPU_v1(double* boxes, int *workLen, int n, int m, int dim)
 {
 				
 	int numWorkBoxes = 0;
