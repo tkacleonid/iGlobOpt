@@ -137,7 +137,11 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 				restBoxesToSplit[n*2*_rank + i*2] = _boxes[i*2];
 				restBoxesToSplit[n*2*_rank + i*2 + 1] = _boxes[i*2 + 1];
 			}
+			printf("[%f; %f]\t",restBoxesToSplit[n*2*_rank + i*2],restBoxesToSplit[n*2*_rank + i*2 + 1]);
 		}
+		_fun(&restBoxesToSplit[(n*_rank)*2],_rank,&funBounds[n*ARRAY_BOUNDS_LENGTH]);
+		printf("%f\t%f\t%f\n",funBounds[n*ARRAY_BOUNDS_LENGTH] ,funBounds[n*ARRAY_BOUNDS_LENGTH] + 1, funBounds[n*ARRAY_BOUNDS_LENGTH] + 2);
+		
 
 	}
 	
