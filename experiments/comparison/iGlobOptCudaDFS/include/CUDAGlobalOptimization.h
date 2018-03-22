@@ -459,22 +459,22 @@ __global__ void globOptCUDA_1(double *inBox, double *droppedBoxes, int inRank, i
 			for(int k = 0; k < 2; k++)
 			{
 				bInd = threadId*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[threadIdx.x] - 1)*(2*inRank+3);
-			hInd = 0;
-			h = inBox[bInd + 1] - inBox[bInd];
-			for(i = 0; i < inRank; i++)
-			{
-				if( h < inBox[bInd + i*2 + 1] - inBox[bInd + i*2]) 
+				hInd = 0;
+				h = inBox[bInd + 1] - inBox[bInd];
+				for(i = 0; i < inRank; i++)
 				{
-					h = inBox[bInd + i*2 + 1] - inBox[bInd + i*2];
-					hInd = i;
+					if( h < inBox[bInd + i*2 + 1] - inBox[bInd + i*2]) 
+					{
+						h = inBox[bInd + i*2 + 1] - inBox[bInd + i*2];
+						hInd = i;
+					}
 				}
-			}
-			for(i = 0; i < inRank; i++)
-			{
-				if(i == hInd) 
+				for(i = 0; i < inRank; i++)
 				{
-					inBox[bInd + i*2 + 1] = inBox[bInd + i*2] + h/2.0;
-					inBox[bInd + 2*inRank + 3 + i*2] = inBox[bInd + i*2] + h/2.0;
+					if(i == hInd) 
+					{
+						inBox[bInd + i*2 + 1] = inBox[bInd + i*2] + h/2.0;
+						inBox[bInd + 2*inRank + 3 + i*2] = inBox[bInd + i*2] + h/2.0;
 					inBox[bInd + 2*inRank + 3 + i*2 + 1] = inBox[bInd + i*2] + h;
 				}
 				else
