@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <fstream>
 
-__global__ void globOptCUDA_1(double *inBox, int inRank, int *workLen, double *min, double inRec, double inEps, long long *workCounts);
+__global__ void globOptCUDA_1(double *inBox, double *droppedBoxes, int inRank, int *workLen, double *min, double inRec, double inEps, long long *workCounts);
 
 
 __global__ void globOptCUDA_2(double *inBox, int inRank, int *workLen, double *min, double inRec, double inEps, long long *workCounts);
@@ -209,7 +209,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 		switch(TYPE_CUDA_OPTIMIZATION)
 		{
 			case 1:
-				globOptCUDA_1<<<GridSize, BLOCK_SIZE>>>(dev_inBox, inRank,dev_workLen,dev_mins,funcMin,inEps,dev_workCounts);
+				globOptCUDA_1<<<GridSize, BLOCK_SIZE>>>(dev_inBox, dev_droppedBoxes,inRank,dev_workLen,dev_mins,funcMin,inEps,dev_workCounts);
 				break;
 			case 2:
 				globOptCUDA_2<<<GridSize, BLOCK_SIZE>>>(dev_inBox, inRank,dev_workLen,dev_mins,funcMin,inEps,dev_workCounts);
@@ -267,7 +267,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 				droppedBoxes[j*(2*inRank+3)+2*k +1] = 0.0;
 				
 			}
-			printf("%f\t%f\t%f",droppedBoxes[j*(2*inRank+3)+2*inRank], droppedBoxes[j*(2*inRank+3)+2*inRank + 1], droppedBoxes[j*(2*inRank+3)+2*inRank+2]);
+			printf("%f\t%f\t%f\n",droppedBoxes[j*(2*inRank+3)+2*inRank], droppedBoxes[j*(2*inRank+3)+2*inRank + 1], droppedBoxes[j*(2*inRank+3)+2*inRank+2]);
 			droppedBoxes[j*(2*inRank+3)+2*inRank] = 0.0;
 			droppedBoxes[j*(2*inRank+3)+2*inRank+1] = 0.0;
 			droppedBoxes[j*(2*inRank+3)+2*inRank+2] = 0.0;
@@ -378,7 +378,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 
 
 
-__global__ void globOptCUDA_1(double *inBox, int inRank, int *workLen, double *min, double inRec, double inEps, long long *workCounts)
+__global__ void globOptCUDA_1(double *inBox, double *droppedBoxes, int inRank, int *workLen, double *min, double inRec, double inEps, long long *workCounts)
 
 {
 	__shared__ double min_s[BLOCK_SIZE];
@@ -440,6 +440,7 @@ __global__ void globOptCUDA_1(double *inBox, int inRank, int *workLen, double *m
 		if(min_s[threadIdx.x] - inBox[bInd + 2*inRank] < inEps)
 		{
 			--workLen_s[threadIdx.x];
+			memcpy(droppedBoxes+threadId*(2*inRank+3),inBox + bInd,(2*inRank+3)*sizeof(double));
 			n++;
 		}
 		else
