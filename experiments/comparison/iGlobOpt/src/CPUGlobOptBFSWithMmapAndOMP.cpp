@@ -231,7 +231,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 			}
 			numWorkBoxes += s;
 		}
-#pragma omp parallel for
+#pragma omp parallel for private(maxDimensionIndex,h,maxDimension)
 		//Splitting all work Boxes
 		for(int k = 0; k < numWorkBoxes; k++)
 		{
