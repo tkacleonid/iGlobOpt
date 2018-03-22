@@ -202,6 +202,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 		CHECKED_CALL(cudaEventCreate(&start));
 		CHECKED_CALL(cudaEventCreate(&stop));
 		CHECKED_CALL(cudaMemcpy(dev_inBox, boxes, numBoxes*(2*inRank+3)*sizeof(double)*SIZE_BUFFER_PER_THREAD, cudaMemcpyHostToDevice));
+		CHECKED_CALL(cudaMemcpy(dev_droppedBoxes, droppedBoxes, numBoxes*(2*inRank+3)*sizeof(double), cudaMemcpyHostToDevice));
 		CHECKED_CALL(cudaMemcpy(dev_workLen, workLen, numThreads*sizeof(int), cudaMemcpyHostToDevice));
 		CHECKED_CALL(cudaMemcpy(dev_workCounts, workCounts, numThreads*sizeof(int), cudaMemcpyHostToDevice));
 		CHECKED_CALL(cudaEventRecord(start, 0));
