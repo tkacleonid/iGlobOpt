@@ -269,10 +269,13 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 		for (int j = 0; j < numThreads; j++) {
 			if(droppedBoxes[j*(2*inRank+3)] == droppedBoxes[j*(2*inRank+3)+1]) continue;
 			for (int k = 0; k < inRank; k++) {
-				outfile << droppedBoxes[j*(2*inRank+3)+2*k] << "\t" << droppedBoxes[j*(2*inRank+3)+2*k+1] << "\t";
+				std::cout << droppedBoxes[j*(2*inRank+3)+2*k] << "\t" << droppedBoxes[j*(2*inRank+3)+2*k+1] << "\t";std::cout
+				outfile << droppedBoxes[j*(2*inRank+3)+2*k] << "\t" << droppedBoxes[j*(2*inRank+3)+2*k+1] << "\t";std::cout
 				droppedBoxes[j*(2*inRank+3)+2*k] = 0.0;
 				droppedBoxes[j*(2*inRank+3)+2*k +1] = 0.0;
 			}
+			std::cout << droppedBoxes[j*(2*inRank+3)+2*inRank] << "\t" << droppedBoxes[j*(2*inRank+3)+2*inRank+1] << "\t" << droppedBoxes[j*(2*inRank+3)+2*inRank+2] << "\n";
+
 			outfile << droppedBoxes[j*(2*inRank+3)+2*inRank] << "\t" << droppedBoxes[j*(2*inRank+3)+2*inRank+1] << "\t" << droppedBoxes[j*(2*inRank+3)+2*inRank+2] << "\n";
 			droppedBoxes[j*(2*inRank+3)+2*inRank] = 0.0;
 			droppedBoxes[j*(2*inRank+3)+2*inRank+1] = 0.0;
