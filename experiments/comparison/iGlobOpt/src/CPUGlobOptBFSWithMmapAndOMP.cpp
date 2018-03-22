@@ -335,6 +335,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 			return;
 		}
 
+		std::cin.get();
 	}
 }
 
