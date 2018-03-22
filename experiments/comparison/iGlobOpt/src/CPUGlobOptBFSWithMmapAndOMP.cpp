@@ -39,6 +39,14 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 	double *workBoxes = new double[_rank*MAX_BOXES_IN_BUFFER*2];
 	double *restBoxesToSplit = new double[_rank*MAX_BOXES_IN_BUFFER*2];
 	double *funBounds = new double[ARRAY_BOUNDS_LENGTH*MAX_BOXES_IN_BUFFER];
+	
+
+	std::ofstream outfile;
+	outfile.open("droppedBoxesCPU, std::ios_base::app);
+	if (outfile.fail())
+		throw std::ios_base::failure(std::strerror(errno));
+
+	
 
 
 	long long wc = 0;
@@ -306,10 +314,9 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 				wc++;
 				for(int j = 0; j < _rank; j++)
 				{
-					printf("[%f; %f]\t",workBoxes[(i*_rank+j)*2],workBoxes[(i*_rank+j)*2+1]);
+					outfile << workBoxes[(i*_rank+j)*2] << "\t" << workBoxes[(i*_rank+j)*2+1]) << "\t";
 				}
-				printf("%f\t%f\t%f\n",funBounds[i*ARRAY_BOUNDS_LENGTH + GO_POSITION_RB],funBounds[i*ARRAY_BOUNDS_LENGTH + GO_POSITION_LB],funBounds[i*ARRAY_BOUNDS_LENGTH + GO_POSITION_FUN_RECORD]);
-				
+				outfile << funBounds[i*ARRAY_BOUNDS_LENGTH + GO_POSITION_RB] << "\t" << funBounds[i*ARRAY_BOUNDS_LENGTH + GO_POSITION_LB] << "\t" << funBounds[i*ARRAY_BOUNDS_LENGTH + GO_POSITION_FUN_RECORD] << "\n";	
 			}
 				
 		}
@@ -328,6 +335,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 			delete [] workBoxes;
 			delete [] funBounds;
 			close(fd);
+			outfile.close();
 			auto end = std::chrono::high_resolution_clock::now();
 			std::cout << "time in millisecs: " << ((std::chrono::duration_cast<std::chrono::milliseconds>(end - start)).count())/1 << "\t";
 			std::cout << "\twc = " << wc << "\n";
@@ -337,6 +345,8 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 
 		std::cin.get();
 	}
+	
+	outfile.close();
 }
 
 
