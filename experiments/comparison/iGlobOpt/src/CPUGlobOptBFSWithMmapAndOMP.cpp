@@ -40,6 +40,10 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 	double *restBoxesToSplit = new double[_rank*MAX_BOXES_IN_BUFFER*2];
 	double *funBounds = new double[ARRAY_BOUNDS_LENGTH*MAX_BOXES_IN_BUFFER];
 	
+	double h = 0; 
+	int maxDimensionIndex = 0;
+	double maxDimension = 0;
+	
 
 	std::ofstream outfile;
 	outfile.open("droppedBoxesCPU", std::ios_base::app);
@@ -236,9 +240,8 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 		for(int k = 0; k < numWorkBoxes; k++)
 		{
 			//Searching max dimension to split
-			int maxDimensionIndex = 0;
-			double maxDimension = restBoxesToSplit[(k*_rank)*2 + 1] - restBoxesToSplit[(k*_rank)*2];
-			double h; //?ToDO : is it correct to declare variables here
+			maxDimensionIndex = 0;
+			maxDimension = restBoxesToSplit[(k*_rank)*2 + 1] - restBoxesToSplit[(k*_rank)*2];
 			for(int i = 0; i < _rank; i++)
 			{
 				h = (restBoxesToSplit[(k*_rank+i)*2 + 1] - restBoxesToSplit[(k*_rank+i)*2]);
