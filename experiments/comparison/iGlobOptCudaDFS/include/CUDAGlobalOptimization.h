@@ -289,7 +289,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 		
 		
 			
-/*	
+	
 		int numWorkBoxes = 0;
 		int averageBoxesPerThread = 0;
 		int curThreadWeTakeBoxesIndex = -1;
@@ -358,7 +358,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 			}
 		}
 		 
-*/
+
 
 		CHECKED_CALL(cudaEventDestroy(start));
 		CHECKED_CALL(cudaEventDestroy(stop));
