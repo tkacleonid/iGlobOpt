@@ -15,6 +15,12 @@
 #include <stdlib.h>
 #include <fstream>
 
+__global__ void globOptCUDA_1(double *inBox, int inRank, int *workLen, double *min, double inRec, double inEps, long long *workCounts);
+
+
+__global__ void globOptCUDA_2(double *inBox, int inRank, int *workLen, double *min, double inRec, double inEps, long long *workCounts);
+
+
 
 /**
 *	Calculus Interval for Rozenbroke function
