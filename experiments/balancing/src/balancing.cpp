@@ -1281,7 +1281,7 @@ __global__ void balancingCUDA_v3(double *boxes, const int dim, int *workLen, int
 		
 		curThreadWeTakeBoxesIndex = blockDim.x-1;
 		curThreadWeGiveBoxesIndex = 0;
-						
+/*						
 		for (i = 0; i < blockDim.x; i++) {
 			for (j = i+1; j < blockDim.x; j++) {
 				if(workLen_s[i] > workLen_s[j]) {
@@ -1295,8 +1295,8 @@ __global__ void balancingCUDA_v3(double *boxes, const int dim, int *workLen, int
 				}
 			}
 		}		
-	
-		//sortQuickRecursiveGPU(workLenIndexes,workLen_s,n);
+*/	
+		sortQuickRecursiveGPU(workLenIndexes,workLen_s,n);
 		
 		while (curThreadWeTakeBoxesIndex > curThreadWeGiveBoxesIndex) {
 			if (workLen_s[curThreadWeTakeBoxesIndex] == averageBoxesPerThread) {
