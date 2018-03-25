@@ -7,11 +7,11 @@ int main()
 	int numThreads = BLOCK_SIZE;
 	int maxBoxesPerThread = 8;	
 
-	double *boxes = new double[(2*dim+3) * numThreads*maxBoxesPerThread];
-	int *workLen = new int[numThreads];
+	double *boxes;
+	int *workLen;
 	
-	double *tempBoxes = new double[(2*dim+3) * numThreads*maxBoxesPerThread];
-	int *tempWorkLen = new int[numThreads];
+	double *tempBoxes;
+	int *tempWorkLen;
 	
 	BalancingInfo balancingInfo;
 	
@@ -21,6 +21,12 @@ int main()
 			throw std::ios_base::failure(std::strerror(errno));
 	for (int i = 2; i < 4096; i*=2) {
 		maxBoxesPerThread = i;
+		
+		double *boxes = new double[(2*dim+3) * numThreads*maxBoxesPerThread];
+		int *workLen = new int[numThreads];
+	
+		double *tempBoxes = new double[(2*dim+3) * numThreads*maxBoxesPerThread];
+		int *tempWorkLen = new int[numThreads];
 		
 		outfile << maxBoxesPerThread << "\t";
 		
@@ -145,15 +151,16 @@ int main()
 	
 		outfile << "\n"; 
 		
+		delete [] boxes;
+		delete [] workLen;
+		delete [] tempBoxes;
+		delete [] tempWorkLen;
+		
 	}
 	
 
 	outfile.close();
 	
-	delete [] boxes;
-	delete [] workLen;
-	delete [] tempBoxes;
-	delete [] tempWorkLen;
 	
 	printf("..........................\n");
 
