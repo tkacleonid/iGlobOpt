@@ -1048,7 +1048,7 @@ __global__ void balancingCUDA_v1(double *boxes, const int dim, int *workLen, int
 */
 __global__ void balancingCUDA_v2(double *boxes, const int dim, int *workLen, int *countMemoryCopies, const int m)
 {
-	__shared__ int workLen_s[blockDim.x];
+	__shared__ int workLen_s[BLOCK_SIZE];
 	
 	int i, j;	
 	int threadId = blockIdx.x * blockDim.x + threadIdx.x;
@@ -1169,7 +1169,7 @@ __global__ void balancingCUDA_v2(double *boxes, const int dim, int *workLen, int
 */
 __global__ void balancingCUDA_v3(double *boxes, const int dim, int *workLen, int *countMemoryCopies, const int m)
 {
-	__shared__ int workLen_s[blockDim.x];
+	__shared__ int workLen_s[BLOCK_SIZE];
 	
 	int i, j;	
 	int threadId = blockIdx.x * blockDim.x + threadIdx.x;
@@ -1177,7 +1177,7 @@ __global__ void balancingCUDA_v3(double *boxes, const int dim, int *workLen, int
 	workLen_s[threadIdx.x] = workLen[threadId];	
 	countMemoryCopies[threadIdx.x] = 0;
 	
-	__shared__ int workLenIndexes[blockDim.x];
+	__shared__ int workLenIndexes[BLOCK_SIZE];
 
 	workLenIndexes[i] = threadId;
 	
