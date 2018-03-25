@@ -184,7 +184,7 @@ BalancingInfo balancingOnCPU(double* boxes, int *workLen,int n, int m, int dim);
 BalancingInfo balancingOnCPU2(int n, int m, int dim);
 
 
-BalancingInfo balancingOnCPU_v3(double* boxes, int *workLen, int n, int m, int dim);
+BalancingInfo balancingOnCPU_v1(double* boxes, int *workLen, int n, int m, int dim);
 BalancingInfo balancingOnCPU_v2(double* boxes, int *workLen, int n, int m, int dim);
 
 
