@@ -30,7 +30,7 @@ int main()
 	printf("Testing balancing on CPU (version 1)\n");
 	balancingInfo = balancingOnCPU_v1(tempBoxes, tempWorkLen, numThreads, maxBoxesPerThread, dim);
 	printf("numberOfMemoryCopies = %d\n",balancingInfo.numberOfMemoryCopies);
-	printf("time = %f milliseconds\n",balancingInfo.time);
+	printf("time = %f microseconds\n",balancingInfo.time);
 	printf("numAllBoxes = %d\n",balancingInfo.numAllBoxes);
 	printf("numAverageBoxes = %d\n",balancingInfo.numAverageBoxes);
 	
@@ -46,7 +46,7 @@ int main()
 	printf("\nTesting balancing on CPU (version 2)\n");
 	balancingInfo = balancingOnCPU_v2(tempBoxes, tempWorkLen, numThreads, maxBoxesPerThread, dim);
 	printf("numberOfMemoryCopies = %d\n",balancingInfo.numberOfMemoryCopies);
-	printf("time = %f milliseconds\n",balancingInfo.time);
+	printf("time = %f microseconds\n",balancingInfo.time);
 	printf("numAllBoxes = %d\n",balancingInfo.numAllBoxes);
 	printf("numAverageBoxes = %d\n",balancingInfo.numAverageBoxes);
 
@@ -58,7 +58,7 @@ int main()
 	printf("\nTesting balancing on GPU (version 1)\n");
 	balancingInfo = balancingOnGPU_v1(tempBoxes, tempWorkLen, numThreads, maxBoxesPerThread, dim);
 	printf("numberOfMemoryCopies = %d\n",balancingInfo.numberOfMemoryCopies);
-	printf("time = %f microseconds\n",balancingInfo.time);
+	printf("time = %f milliseconds\n",balancingInfo.time);
 	printf("numAllBoxes = %d\n",balancingInfo.numAllBoxes);
 	printf("numAverageBoxes = %d\n",balancingInfo.numAverageBoxes);
 	
@@ -73,7 +73,7 @@ int main()
 	printf("\nTesting balancing on GPU (version 2)\n");
 	balancingInfo = balancingOnGPU_v2(tempBoxes, tempWorkLen, numThreads, maxBoxesPerThread, dim);
 	printf("numberOfMemoryCopies = %d\n",balancingInfo.numberOfMemoryCopies);
-	printf("time = %f microseconds\n",balancingInfo.time);
+	printf("time = %f milliseconds\n",balancingInfo.time);
 	printf("numAllBoxes = %d\n",balancingInfo.numAllBoxes);
 	printf("numAverageBoxes = %d\n",balancingInfo.numAverageBoxes);
 	
@@ -114,7 +114,7 @@ int main()
 	printf("Testing balancing on CPU (version 3)\n");
 	balancingInfo = balancingOnCPU_v3(tempBoxes, tempWorkLen, numThreads, maxBoxesPerThread, dim);
 	printf("numberOfMemoryCopies = %d\n",balancingInfo.numberOfMemoryCopies);
-	printf("time = %f milliseconds\n",balancingInfo.time);
+	printf("time = %f microseconds\n",balancingInfo.time);
 	printf("numAllBoxes = %d\n",balancingInfo.numAllBoxes);
 	printf("numAverageBoxes = %d\n",balancingInfo.numAverageBoxes);
 	
@@ -127,7 +127,7 @@ int main()
 	printf("\nTesting balancing on GPU (version 3)\n");
 	balancingInfo = balancingOnGPU_v3(tempBoxes, tempWorkLen, numThreads, maxBoxesPerThread, dim);
 	printf("numberOfMemoryCopies = %d\n",balancingInfo.numberOfMemoryCopies);
-	printf("time = %f microseconds\n",balancingInfo.time);
+	printf("time = %f milliseconds\n",balancingInfo.time);
 	printf("numAllBoxes = %d\n",balancingInfo.numAllBoxes);
 	printf("numAverageBoxes = %d\n",balancingInfo.numAverageBoxes);
 	
