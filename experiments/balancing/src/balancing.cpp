@@ -1169,7 +1169,7 @@ __global__ void balancingCUDA_v3(double *boxes, const int dim, int *workLen, int
 	
 	__shared__ int workLenIndexes[BLOCK_SIZE];
 
-	workLenIndexes[i] = threadId;
+	workLenIndexes[threadIdx.x] = threadIdx.x;
 	
 	__syncthreads();	
 	
