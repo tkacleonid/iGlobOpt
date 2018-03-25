@@ -925,7 +925,94 @@ BalancingInfo balancingOnGPU_v2(double* boxes, int *workLen, int n, int m, int d
 				
 }
 
+/**
+*	Balancing on GPU version 3 (with sort)
+*	@param boxes the array of boxes
+*	@param workLen the array of numbers of boxes
+*	@param n the number of threads
+*	@param m the maximum number of boxes per thread
+*	@param dim the function dimension
+*/
+BalancingInfo balancingOnGPU_v3(double* boxes, int *workLen, int n, int m, int dim)
+{
+				
+	int numWorkBoxes = 0;
+	int averageBoxesPerThread = 0;
+	int i;
+	int countAverageBoxesPerThreadMore = 0;
+	
+	BalancingInfo balancingInfo;
+	balancingInfo.numThreads = n;
+	balancingInfo.maxNumberOfBoxesPerThread = m;
+	balancingInfo.version = WITHOUT_SORT_ON_GPU;
+	
+	double *dev_boxes = 0;
+	int *dev_workLen = 0;
+	int *dev_countMemoryCopies = 0;
 
+
+	int GridSize = 1;
+	int sizeInBox = n*(dim*2+3)*sizeof(double)*m;
+	
+	float time;
+	
+	int *countMemoryCopies = new int[n*sizeof(int)];
+	
+	for (i = 0; i < n; i++) {
+		countMemoryCopies[i] = 0;
+	}
+
+	cudaEvent_t startCuda, stopCuda;
+	
+	for (i = 0; i < n; i++) {
+		numWorkBoxes += workLen[i]; 	
+	}
+		
+	averageBoxesPerThread = numWorkBoxes / n;	
+	countAverageBoxesPerThreadMore = numWorkBoxes - averageBoxesPerThread*n;
+	
+	balancingInfo.numAllBoxes = numWorkBoxes;
+	balancingInfo.numAverageBoxes = countAverageBoxesPerThreadMore;
+	
+	CHECKED_CALL(cudaSetDevice(0));
+	CHECKED_CALL(cudaDeviceReset());
+    CHECKED_CALL(cudaMalloc((void **)&dev_boxes, sizeInBox));
+	CHECKED_CALL(cudaMalloc((void **)&dev_workLen, n*sizeof(int)));	
+	CHECKED_CALL(cudaMalloc((void **)&dev_countMemoryCopies, n*sizeof(int)));
+	
+	
+	CHECKED_CALL(cudaEventCreate(&startCuda));
+	CHECKED_CALL(cudaEventCreate(&stopCuda));
+	CHECKED_CALL(cudaMemcpy(dev_boxes, boxes, n*(2*dim+3)*sizeof(double)*m, cudaMemcpyHostToDevice));
+	CHECKED_CALL(cudaMemcpy(dev_workLen, workLen, n*sizeof(int), cudaMemcpyHostToDevice));
+	CHECKED_CALL(cudaMemcpy(dev_countMemoryCopies, countMemoryCopies, n*sizeof(int), cudaMemcpyHostToDevice));
+	CHECKED_CALL(cudaEventRecord(startCuda, 0));
+
+	balancingCUDA_v3<<<GridSize, n>>>(dev_boxes, dim, dev_workLen, dev_countMemoryCopies, m);
+			
+	CHECKED_CALL(cudaGetLastError());
+	CHECKED_CALL(cudaEventRecord(stopCuda, 0));
+	CHECKED_CALL(cudaDeviceSynchronize());
+
+	CHECKED_CALL(cudaMemcpy(boxes, dev_boxes, n*(2*dim+3)*sizeof(double)*m, cudaMemcpyDeviceToHost));
+	CHECKED_CALL(cudaMemcpy(workLen, dev_workLen, n*sizeof(int), cudaMemcpyDeviceToHost));
+	CHECKED_CALL(cudaMemcpy(countMemoryCopies, dev_countMemoryCopies, n*sizeof(int), cudaMemcpyDeviceToHost));
+
+	CHECKED_CALL(cudaEventElapsedTime(&time, startCuda, stopCuda));
+	
+	CHECKED_CALL(cudaEventDestroy(startCuda));
+	CHECKED_CALL(cudaEventDestroy(stopCuda));
+		
+	CHECKED_CALL(cudaFree(dev_boxes));
+    CHECKED_CALL(cudaFree(dev_workLen));
+	CHECKED_CALL(cudaFree(dev_countMemoryCopies));
+	
+	balancingInfo.time = time;
+	balancingInfo.numberOfMemoryCopies = countMemoryCopies[0];
+	
+	return balancingInfo;
+				
+}
 
 /**
 *	Balancing on GPU version 1 CUDA kernel(without sort)
