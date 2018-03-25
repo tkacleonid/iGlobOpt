@@ -19,7 +19,7 @@ int main()
 	outfile.open("balancingTime",std::ios_base::app);
 	if (outfile.fail())
 			throw std::ios_base::failure(std::strerror(errno));
-	for (int i = 2; i < 4096; i*=2) {
+	for (int i = 2; i < 16384; i*=2) {
 		maxBoxesPerThread = i;
 		
 		double *boxes = new double[(2*dim+3) * numThreads*maxBoxesPerThread];
