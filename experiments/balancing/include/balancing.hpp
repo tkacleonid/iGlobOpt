@@ -197,7 +197,7 @@ BalancingInfo balancingOnCPU_v1(double* boxes, int *workLen, int n, int m, int d
 BalancingInfo balancingOnCPU_v2(double* boxes, int *workLen, int n, int m, int dim);
 
 /**
-*	Balancing on GPU version 1 (with sort)
+*	Balancing on GPU version 1 (without sort)
 *	@param boxes the array of boxes
 *	@param workLen the array of numbers of boxes
 *	@param n the number of threads
@@ -205,6 +205,15 @@ BalancingInfo balancingOnCPU_v2(double* boxes, int *workLen, int n, int m, int d
 *	@param dim the function dimension
 */
 BalancingInfo balancingOnGPU_v1(double* boxes, int *workLen, int n, int m, int dim);
+
+/**
+*	Balancing on GPU version 2 (with sort)
+*	@param boxes the array of boxes
+*	@param workLen the array of numbers of boxes
+*	@param n the number of threads
+*	@param m the maximum number of boxes per thread
+*	@param dim the function dimension
+*/
 BalancingInfo balancingOnGPU_v2(double* boxes, int *workLen, int n, int m, int dim);
 
 
