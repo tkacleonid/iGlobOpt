@@ -778,13 +778,12 @@ BalancingInfo balancingOnGPU_v1(double* boxes, int *workLen, int n, int m, int d
 
 
 	int GridSize = 1;
-	int numThreads = n;
-	int sizeInBox = numThreads*(dim*2+3)*sizeof(double)*m;
+	int sizeInBox = n*(dim*2+3)*sizeof(double)*m;
 	
 	float time, timeAll;
 	
 	int *countMemoryCopies = new int[numThreads*sizeof(int)];	
-	for (i = 0; i < numThreads; i++){
+	for (i = 0; i < n; i++) {
 		countMemoryCopies[i] = 0;
 	}
 
@@ -808,13 +807,12 @@ BalancingInfo balancingOnGPU_v1(double* boxes, int *workLen, int n, int m, int d
 	CHECKED_CALL(cudaMalloc((void **)&dev_workLen, numThreads*sizeof(int)));	
 	CHECKED_CALL(cudaMalloc((void **)&dev_countMemoryCopies, numThreads*sizeof(int)));
 	
-	
 	CHECKED_CALL(cudaEventCreate(&startCuda));
 	CHECKED_CALL(cudaEventCreate(&stopCuda));
 	CHECKED_CALL(cudaMemcpy(dev_boxes, boxes, n*(2*dim+3)*sizeof(double)*m, cudaMemcpyHostToDevice));
 	CHECKED_CALL(cudaMemcpy(dev_workLen, workLen, numThreads*sizeof(int), cudaMemcpyHostToDevice));
 	CHECKED_CALL(cudaMemcpy(dev_countMemoryCopies, countMemoryCopies, numThreads*sizeof(int), cudaMemcpyHostToDevice));
-	CHECKED_CALL(cudaEventRecord(start, 0));
+	CHECKED_CALL(cudaEventRecord(startCuda, 0));
 
 	balancingCUDA_v1<<<GridSize, n>>>(dev_boxes, dim, dev_workLen, dev_countMemoryCopies, m);
 			
