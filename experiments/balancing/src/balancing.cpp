@@ -420,6 +420,16 @@ void initializeBoxes_v1(double* boxes, int *workLen, int n, int m, int dim)
 }
 
 
+
+
+/**
+*	Balancing on CPU version 1
+*	@param boxes the array of boxes
+*	@param workLen the array of numbers of boxes
+*	@param n the number of threads
+*	@param m the maximum number of boxes per thread
+*	@param dim the function dimension
+*/
 BalancingInfo balancingOnCPU_v1(double* boxes, int *workLen, int n, int m, int dim)
 {
 				
