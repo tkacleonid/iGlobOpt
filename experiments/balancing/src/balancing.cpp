@@ -945,7 +945,7 @@ BalancingInfo balancingOnGPU_v2(double* boxes, int *workLen, int n, int m, int d
 */
 __global__ void balancingCUDA_v1(double *boxes, const int dim, int *workLen, int *countMemoryCopies, const int m)
 {
-	__shared__ int workLen_s[blockDim.x];
+	__shared__ int workLen_s[BLOCK_SIZE];
 	
 	int i, j;
 	
