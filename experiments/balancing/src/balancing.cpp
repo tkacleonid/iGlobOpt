@@ -785,7 +785,7 @@ BalancingInfo balancingOnGPU_v1(double* boxes, int *workLen, int n, int m, int d
 	
 	float time;
 	
-	int *countMemoryCopies = new int[numThreads*sizeof(int)];	
+	int *countMemoryCopies = new int[n*sizeof(int)];	
 	for (i = 0; i < n; i++) {
 		countMemoryCopies[i] = 0;
 	}
