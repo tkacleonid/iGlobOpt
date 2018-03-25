@@ -5,13 +5,7 @@ int main()
 {	
 	int dim = 2;
 	int numThreads = 512;
-	int maxBoxesPerThread = 10000;
-
-
-	testGPUMemoryAccess(1, dim3(16,16,16), dim3(512,1,1), "./build/data/deviceMemoryAccessTest.txt", false,16);
-
-	
-/*	
+	int maxBoxesPerThread = 10000;	
 
 	double *boxes = new double[(2*dim+3) * numThreads*maxBoxesPerThread];
 	int *workLen = new int[numThreads];
