@@ -732,7 +732,7 @@ BalancingInfo balancingOnCPU_v3(double* boxes, int *workLen, int n, int m, int d
 		giveIndex = workLenIndexes[curThreadWeGiveBoxesIndex];
 		for (int i = 0; i < numBoxesWeTake; i++) {
 			for (int j = 0; j < (2*dim+3); j++) {
-				boxes[(workLen[curThreadWeGiveBoxesIndex] + i)*n*(2*dim+3) + giveIndex*(2*dim+3) + j] = boxes[(workLen[curThreadWeTakeBoxesIndex] + i)*n*(2*dim+3) + takeIndex*(2*dim+3) + j]
+				boxes[(workLen[curThreadWeGiveBoxesIndex] + i)*n*(2*dim+3) + giveIndex*(2*dim+3) + j] = boxes[(workLen[curThreadWeTakeBoxesIndex] + i)*n*(2*dim+3) + takeIndex*(2*dim+3) + j];
 			}
 		}
 		workLen[curThreadWeGiveBoxesIndex] += numBoxesWeTake;
