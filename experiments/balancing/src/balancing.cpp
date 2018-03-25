@@ -428,7 +428,7 @@ void initializeBoxes_v1(double* boxes, int *workLen, int n, int m, int dim)
 *	@param m the maximum number of boxes per thread
 *	@param dim the function dimension
 */
-void initializeBoxes_v1(double* boxes, int *workLen, int n, int m, int dim)
+void initializeBoxes_v2(double* boxes, int *workLen, int n, int m, int dim)
 {
 	//Initialize random seed
 	srand(time(NULL));

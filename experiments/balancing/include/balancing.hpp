@@ -143,6 +143,16 @@ __global__ void testCUDAMemoryAccessRunSingleThread_v2(double *ar1, double *ar2,
 void initializeBoxes(double* boxes, int *workLen, int n, int m, int dim);
 
 /**
+*	Initialize boxes to test balancing procedure version 2
+*	@param boxes the array of boxes
+*	@param workLen the array of numbers of boxes
+*	@param n the number of threads
+*	@param m the maximum number of boxes per thread
+*	@param dim the function dimension
+*/
+void initializeBoxes_v2(double* boxes, int *workLen, int n, int m, int dim);
+
+/**
 *	Quick sort algorithm for balancing
 *	@param indexes the array of boxes' indexes before sorting
 *	@param ar the array of work boxes numbers
