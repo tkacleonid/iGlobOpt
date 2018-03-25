@@ -22,11 +22,11 @@ int main()
 	for (int i = 2; i < 16384; i*=2) {
 		maxBoxesPerThread = i;
 		
-		double *boxes = new double[(2*dim+3) * numThreads*maxBoxesPerThread];
-		int *workLen = new int[numThreads];
+		boxes = new double[(2*dim+3) * numThreads*maxBoxesPerThread];
+		workLen = new int[numThreads];
 	
-		double *tempBoxes = new double[(2*dim+3) * numThreads*maxBoxesPerThread];
-		int *tempWorkLen = new int[numThreads];
+		tempBoxes = new double[(2*dim+3) * numThreads*maxBoxesPerThread];
+		tempWorkLen = new int[numThreads];
 		
 		outfile << maxBoxesPerThread << "\t";
 		
