@@ -757,7 +757,11 @@ BalancingInfo balancingOnCPU_v3(double* boxes, int *workLen, int n, int m, int d
 BalancingInfo balancingOnGPU_v1(double* boxes, int *workLen, int n, int m, int dim)
 {
 				
+	int numWorkBoxes = 0;
+	int averageBoxesPerThread = 0;
+	int numBoxesWeTake = 0;
 	int i,j;
+	int countAverageBoxesPerThreadMore = 0;
 	
 	BalancingInfo balancingInfo;
 	balancingInfo.numThreads = n;
