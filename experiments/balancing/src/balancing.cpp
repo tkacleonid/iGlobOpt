@@ -474,8 +474,7 @@ BalancingInfo balancingOnCPU_v1(double* boxes, int *workLen, int n, int m, int d
 			curThreadWeTakeBoxesIndex = j;
 		}
 				
-	}
-						
+	}						
 	
 	for (i = 0; i < n; i++) {
 		if (workLen[i] == averageBoxesPerThread) {
@@ -494,10 +493,7 @@ BalancingInfo balancingOnCPU_v1(double* boxes, int *workLen, int n, int m, int d
 		}
 		if (curThreadWeTakeBoxesIndex == n - 1 && workLen[curThreadWeTakeBoxesIndex] <= averageBoxesPerThread + 1) break;
 
-	}
-	
-	
-	
+	}		
 	auto end = std::chrono::high_resolution_clock::now();
 	
 	balancingInfo.time = (std::chrono::duration_cast<std::chrono::microseconds>(end - start)).count();
@@ -507,7 +503,7 @@ BalancingInfo balancingOnCPU_v1(double* boxes, int *workLen, int n, int m, int d
 				
 }
 
-BalancingInfo balancingOnCPU_v3(double* boxes, int *workLen, int n, int m, int dim)
+BalancingInfo balancingOnCPU_v2(double* boxes, int *workLen, int n, int m, int dim)
 {	
 	int *workLenIndexes = new int[n];
 	for (int i = 0; i < n; i++) {
