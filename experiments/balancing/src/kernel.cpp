@@ -23,7 +23,7 @@ int main()
 	
 	
 	printf("Initializing boxes\n");
-	initializeBoxes(boxes, workLen, numThreads, maxBoxesPerThread, dim);
+	initializeBoxes_v1(boxes, workLen, numThreads, maxBoxesPerThread, dim);
 	
 	memcpy(tempBoxes,boxes,sizeof(double)*(2*dim+3) * numThreads*maxBoxesPerThread);
 	memcpy(tempWorkLen,workLen,sizeof(int)*numThreads);	
