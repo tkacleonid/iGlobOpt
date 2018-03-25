@@ -814,7 +814,14 @@ BalancingInfo balancingOnGPU_v2(double* boxes, int *workLen, int n, int m, int d
 
 
 
-
+/**
+*	Balancing on GPU version 1 CUDA kernel(without sort)
+*	@param boxes the array of boxes
+*	@param workLen the array of numbers of boxes
+*	@param n the number of threads
+*	@param m the maximum number of boxes per thread
+*	@param dim the function dimension
+*/
 __global__ void balancingCUDA_v1(double *boxes, const int dim, int *workLen, int *countMemoryCopies, const int m)
 {
 	__shared__ int workLen_s[1024];
