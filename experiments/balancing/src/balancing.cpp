@@ -763,7 +763,6 @@ BalancingInfo balancingOnGPU_v1(double* boxes, int *workLen, int n, int m, int d
 	int curThreadWeTakeBoxesIndex = 0;
 	int numBoxesWeTake = 0;
 	int i,j;
-	//int countMemoryCopies = 0;
 	int countAverageBoxesPerThreadMore = 0;
 	
 	BalancingInfo balancingInfo;
@@ -784,10 +783,8 @@ BalancingInfo balancingOnGPU_v1(double* boxes, int *workLen, int n, int m, int d
 	
 	float time, timeAll;
 	
-	int *countMemoryCopies = new int[numThreads*sizeof(int)];
-	
-	for(i = 0; i < numThreads; i++)
-	{
+	int *countMemoryCopies = new int[numThreads*sizeof(int)];	
+	for (i = 0; i < numThreads; i++){
 		countMemoryCopies[i] = 0;
 	}
 
