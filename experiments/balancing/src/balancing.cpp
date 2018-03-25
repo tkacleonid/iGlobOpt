@@ -951,9 +951,7 @@ __global__ void balancingCUDA_v1(double *boxes, const int dim, int *workLen, int
     int numWorkBoxes = 0;
 	int averageBoxesPerThread = 0;
 	int curThreadWeTakeBoxesIndex = -1;
-	int curThreadWeTakeBoxesCount = 0;
 	int numBoxesWeTake = 0;
-	int boxIndex = 0;
 	if (threadIdx.x == 0) {
 		for (i = 0; i < blockDim.x; i++) {
 			numWorkBoxes += workLen_s[i]; 	
@@ -1050,7 +1048,7 @@ __global__ void balancingCUDA_v2(double *boxes, const int dim, int *workLen, int
 	
 	__shared__ int workLenIndexes[BLOCK_SIZE];
 
-	workLenIndexes[i] = threadId;
+	workLenIndexes[threadIdx.x] = threadIdx.x;
 	
 	__syncthreads();	
 	
