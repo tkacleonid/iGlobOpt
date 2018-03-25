@@ -18,7 +18,7 @@
 
 #define DEVICE 0
 
-
+const int BLOCK_SIZE = 1024;
 
 enum BalancingVersion
 {

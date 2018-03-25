@@ -4,7 +4,7 @@
 int main()
 {	
 	int dim = 2;
-	int numThreads = 1024;
+	int numThreads = BLOCK_SIZE;
 	int maxBoxesPerThread = 1000;	
 
 	double *boxes = new double[(2*dim+3) * numThreads*maxBoxesPerThread];
