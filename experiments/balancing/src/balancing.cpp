@@ -550,6 +550,8 @@ BalancingInfo balancingOnCPU_v2(double* boxes, int *workLen, int n, int m, int d
 	int numBoxesWeTake  = 0;
 	int countAverageBoxesPerThreadMore = 0;
 	int curThreadWeGiveBoxesIndex = 0;
+	int giveIndex = 0;
+	int takeIndex = 0;
 	int i = 0;
 	int countMemoryCopies = 0;
 	
@@ -617,7 +619,9 @@ BalancingInfo balancingOnCPU_v2(double* boxes, int *workLen, int n, int m, int d
 		workLen[curThreadWeTakeBoxesIndex] -= numBoxesWeTake;
 		
 		//поменять curThreadWeGiveBoxesIndex на workLenIndexes
-		memcpy(boxes + curThreadWeGiveBoxesIndex*m*(2*dim+3) + (workLen[curThreadWeGiveBoxesIndex])*(2*dim+3), boxes + curThreadWeTakeBoxesIndex*m*(2*dim+3) + (workLen[curThreadWeTakeBoxesIndex])*(2*dim+3), sizeof(double)*(2*dim+3)*numBoxesWeTake);
+		giveIndex = workLenIndexes[curThreadWeGiveBoxesIndex];
+		takeIndex = workLenIndexes[curThreadWeTakeBoxesIndex];
+		memcpy(boxes + giveIndex*m*(2*dim+3) + (workLen[curThreadWeGiveBoxesIndex])*(2*dim+3), boxes + takeIndex*m*(2*dim+3) + (workLen[curThreadWeTakeBoxesIndex])*(2*dim+3), sizeof(double)*(2*dim+3)*numBoxesWeTake);
 		workLen[curThreadWeGiveBoxesIndex] += numBoxesWeTake;
 		countMemoryCopies++;
 			
@@ -652,9 +656,10 @@ BalancingInfo balancingOnCPU_v3(double* boxes, int *workLen, int n, int m, int d
 	int numWorkBoxes = 0;
 	int averageBoxesPerThread = 0;
 	int curThreadWeTakeBoxesIndex = 0;
+	int takeIndex = 0;
 	int numBoxesWeTake  = 0;
 	int countAverageBoxesPerThreadMore = 0;
-	int curThreadWeGiveBoxesIndex = 0;
+	int giveIndex = 0;
 	int i = 0;
 	int countMemoryCopies = 0;
 	
@@ -722,8 +727,10 @@ BalancingInfo balancingOnCPU_v3(double* boxes, int *workLen, int n, int m, int d
 		workLen[curThreadWeTakeBoxesIndex] -= numBoxesWeTake;
 		
 		//поменять curThreadWeGiveBoxesIndex на workLenIndexes
+		takeIndex = workLenIndexes[curThreadWeTakeBoxesIndex];
+		giveIndex = workLenIndexes[curThreadWeGiveBoxesIndex];
 		for (int i = 0; i < numBoxesWeTake; i++) {
-			boxes[(workLen[curThreadWeGiveBoxesIndex] + i)*n*(2*dim+3)] = boxes[(workLen[curThreadWeTakeBoxesIndex] + i)*n*(2*dim+3)]
+			boxes[(workLen[curThreadWeGiveBoxesIndex] + i)*n*(2*dim+3) + giveIndex*(2*dim+3)] = boxes[(workLen[curThreadWeTakeBoxesIndex] + i)*n*(2*dim+3) + takeIndex*(2*dim+3)]
 		}
 		workLen[curThreadWeGiveBoxesIndex] += numBoxesWeTake;
 		countMemoryCopies++;
