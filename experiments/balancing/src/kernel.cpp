@@ -52,10 +52,6 @@ int main()
 		outfile << balancingInfo.time << "\t";
 		
 		printf("\n\n");
-		for (int i = 0; i < numThreads; i++) {
-			//printf("%d\t", tempWorkLen[i]);
-		}
-		printf("\n\n");
 		
 		
 		memcpy(tempBoxes,boxes,sizeof(double)*(2*dim+3) * numThreads*maxBoxesPerThread);
