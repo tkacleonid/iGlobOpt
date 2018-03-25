@@ -160,7 +160,7 @@ void quickSortBase(int *indexes,int *ar, const int l, const int r);
 void sortQuickRecursive(int *indexes,int *ar,  const int n);
 
 /**
-*	Quick sort algorithm for balancing
+*	Quick sort algorithm for balancing on GPU
 *	@param indexes the array of boxes' indexes before sorting
 *	@param ar the array of work boxes numbers
 *	@param l left index of array
@@ -169,7 +169,7 @@ void sortQuickRecursive(int *indexes,int *ar,  const int n);
 __device__ void quickSortBaseGPU(int *indexes,int *ar, const int l, const int r);
 
 /**
-*	Quick sort algorithm for balancing
+*	Quick sort algorithm for balancing on GPU
 *	@param indexes the array of boxes' indexes before sorting
 *	@param ar the array of work boxes numbers
 *	@param n the number of elements in array
