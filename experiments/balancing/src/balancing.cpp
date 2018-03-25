@@ -855,7 +855,6 @@ BalancingInfo balancingOnGPU_v2(double* boxes, int *workLen, int n, int m, int d
 	int curThreadWeTakeBoxesIndex = 0;
 	int numBoxesWeTake = 0;
 	int i,j;
-	//int countMemoryCopies = 0;
 	int countAverageBoxesPerThreadMore = 0;
 	
 	BalancingInfo balancingInfo;
@@ -863,27 +862,23 @@ BalancingInfo balancingOnGPU_v2(double* boxes, int *workLen, int n, int m, int d
 	balancingInfo.maxNumberOfBoxesPerThread = m;
 	balancingInfo.version = WITHOUT_SORT_ON_GPU;
 	
-	
-	
 	double *dev_boxes = 0;
 	int *dev_workLen = 0;
 	int *dev_countMemoryCopies = 0;
 
 
 	int GridSize = 1;
-	int numThreads = n;
-	int sizeInBox = numThreads*(dim*2+3)*sizeof(double)*m;
+	int sizeInBox = n*(dim*2+3)*sizeof(double)*m;
 	
-	float time, timeAll;
+	float time;
 	
-	int *countMemoryCopies = new int[numThreads*sizeof(int)];
+	int *countMemoryCopies = new int[n*sizeof(int)];
 	
-	for(i = 0; i < numThreads; i++)
-	{
+	for (i = 0; i < n; i++) {
 		countMemoryCopies[i] = 0;
 	}
 
-	cudaEvent_t start, stop;
+	cudaEvent_t startCuda, stopCuda;
 	
 	for (i = 0; i < n; i++) {
 		numWorkBoxes += workLen[i]; 	
@@ -894,47 +889,41 @@ BalancingInfo balancingOnGPU_v2(double* boxes, int *workLen, int n, int m, int d
 	
 	balancingInfo.numAllBoxes = numWorkBoxes;
 	balancingInfo.numAverageBoxes = countAverageBoxesPerThreadMore;
-
-	auto start1 = std::chrono::high_resolution_clock::now();
 	
 	CHECKED_CALL(cudaSetDevice(0));
 	CHECKED_CALL(cudaDeviceReset());
     CHECKED_CALL(cudaMalloc((void **)&dev_boxes, sizeInBox));
-	CHECKED_CALL(cudaMalloc((void **)&dev_workLen, numThreads*sizeof(int)));	
-	CHECKED_CALL(cudaMalloc((void **)&dev_countMemoryCopies, numThreads*sizeof(int)));
+	CHECKED_CALL(cudaMalloc((void **)&dev_workLen, n*sizeof(int)));	
+	CHECKED_CALL(cudaMalloc((void **)&dev_countMemoryCopies, n*sizeof(int)));
 	
 	
-	CHECKED_CALL(cudaEventCreate(&start));
-	CHECKED_CALL(cudaEventCreate(&stop));
+	CHECKED_CALL(cudaEventCreate(&startCuda));
+	CHECKED_CALL(cudaEventCreate(&stopCuda));
 	CHECKED_CALL(cudaMemcpy(dev_boxes, boxes, n*(2*dim+3)*sizeof(double)*m, cudaMemcpyHostToDevice));
-	CHECKED_CALL(cudaMemcpy(dev_workLen, workLen, numThreads*sizeof(int), cudaMemcpyHostToDevice));
-	CHECKED_CALL(cudaMemcpy(dev_countMemoryCopies, countMemoryCopies, numThreads*sizeof(int), cudaMemcpyHostToDevice));
-	CHECKED_CALL(cudaEventRecord(start, 0));
+	CHECKED_CALL(cudaMemcpy(dev_workLen, workLen, n*sizeof(int), cudaMemcpyHostToDevice));
+	CHECKED_CALL(cudaMemcpy(dev_countMemoryCopies, countMemoryCopies, n*sizeof(int), cudaMemcpyHostToDevice));
+	CHECKED_CALL(cudaEventRecord(startCuda, 0));
 
 	balancingCUDA_v2<<<GridSize, n>>>(dev_boxes, dim, dev_workLen, dev_countMemoryCopies, m);
 			
 	CHECKED_CALL(cudaGetLastError());
-
-	CHECKED_CALL(cudaEventRecord(stop, 0));
+	CHECKED_CALL(cudaEventRecord(stopCuda, 0));
 	CHECKED_CALL(cudaDeviceSynchronize());
 
 	CHECKED_CALL(cudaMemcpy(boxes, dev_boxes, n*(2*dim+3)*sizeof(double)*m, cudaMemcpyDeviceToHost));
-	CHECKED_CALL(cudaMemcpy(workLen, dev_workLen, numThreads*sizeof(int), cudaMemcpyDeviceToHost));
-	CHECKED_CALL(cudaMemcpy(countMemoryCopies, dev_countMemoryCopies, numThreads*sizeof(int), cudaMemcpyDeviceToHost));
+	CHECKED_CALL(cudaMemcpy(workLen, dev_workLen, n*sizeof(int), cudaMemcpyDeviceToHost));
+	CHECKED_CALL(cudaMemcpy(countMemoryCopies, dev_countMemoryCopies, n*sizeof(int), cudaMemcpyDeviceToHost));
 
-	CHECKED_CALL(cudaEventElapsedTime(&time, start, stop));
-
-	CHECKED_CALL(cudaEventDestroy(start));
-	CHECKED_CALL(cudaEventDestroy(stop));
+	CHECKED_CALL(cudaEventElapsedTime(&time, startCuda, stopCuda));
+	
+	CHECKED_CALL(cudaEventDestroy(startCuda));
+	CHECKED_CALL(cudaEventDestroy(stopCuda));
 		
 	CHECKED_CALL(cudaFree(dev_boxes));
     CHECKED_CALL(cudaFree(dev_workLen));
 	CHECKED_CALL(cudaFree(dev_countMemoryCopies));
 	
-
-	auto end = std::chrono::high_resolution_clock::now();
-	
-	balancingInfo.time = time;//(std::chrono::duration_cast<std::chrono::microseconds>(end - start1)).count();
+	balancingInfo.time = time;
 	balancingInfo.numberOfMemoryCopies = countMemoryCopies[0];
 	
 	return balancingInfo;
@@ -953,11 +942,9 @@ BalancingInfo balancingOnGPU_v2(double* boxes, int *workLen, int n, int m, int d
 */
 __global__ void balancingCUDA_v1(double *boxes, const int dim, int *workLen, int *countMemoryCopies, const int m)
 {
-	__shared__ int workLen_s[1024];
-	//__shared__ int countMemoryCopies[1024];
+	__shared__ int workLen_s[blockDim.x];
 	
 	int i, j;
-
 	
 	int threadId = blockIdx.x * blockDim.x + threadIdx.x;
 	
@@ -965,8 +952,6 @@ __global__ void balancingCUDA_v1(double *boxes, const int dim, int *workLen, int
 	countMemoryCopies[threadIdx.x] = 0;
 	
 	__syncthreads();	
-
-
 		
     int numWorkBoxes = 0;
 	int averageBoxesPerThread = 0;
@@ -974,10 +959,8 @@ __global__ void balancingCUDA_v1(double *boxes, const int dim, int *workLen, int
 	int curThreadWeTakeBoxesCount = 0;
 	int numBoxesWeTake = 0;
 	int boxIndex = 0;
-	if(threadIdx.x == 0)
-	{
-		for(i = 0; i < blockDim.x; i++)
-		{
+	if (threadIdx.x == 0) {
+		for (i = 0; i < blockDim.x; i++) {
 			numWorkBoxes += workLen_s[i]; 	
 		}
 		averageBoxesPerThread = numWorkBoxes / blockDim.x;
@@ -985,14 +968,10 @@ __global__ void balancingCUDA_v1(double *boxes, const int dim, int *workLen, int
 		if(averageBoxesPerThread == 0) averageBoxesPerThread = averageBoxesPerThread + 1;
 			
 		curThreadWeTakeBoxesIndex = 0;
-		for(i = 0; i < blockDim.x; i++)
-		{
-			if(workLen_s[i] < averageBoxesPerThread)
-			{
-				for(j = curThreadWeTakeBoxesIndex; j < blockDim.x; j++)
-				{
-					if(workLen_s[j] > averageBoxesPerThread)
-					{
+		for (i = 0; i < blockDim.x; i++) {
+			if (workLen_s[i] < averageBoxesPerThread) {
+				for (j = curThreadWeTakeBoxesIndex; j < blockDim.x; j++) {
+					if (workLen_s[j] > averageBoxesPerThread) {
 							
 						numBoxesWeTake = averageBoxesPerThread - workLen_s[i] <= workLen_s[j] - averageBoxesPerThread ? averageBoxesPerThread - workLen_s[i] : workLen_s[j] - averageBoxesPerThread;
 						workLen_s[j] -= numBoxesWeTake;
@@ -1000,14 +979,13 @@ __global__ void balancingCUDA_v1(double *boxes, const int dim, int *workLen, int
 						int indTo = (i+blockIdx.x * blockDim.x)*m*(2*dim+3) + (workLen_s[i])*(2*dim+3);
 						int indFrom = (j+blockIdx.x * blockDim.x)*m*(2*dim+3) + (workLen_s[j])*(2*dim+3);
 						for (int d = 0; d < numBoxesWeTake*(2*dim+3); d++) {			
-							//boxes[indTo+d] = boxes[indFrom+d];
+							boxes[indTo+d] = boxes[indFrom+d];
 						}
 						
 						//memcpy(boxes + (i+blockIdx.x * blockDim.x)*m*(2*dim+3) + (workLen_s[i])*(2*dim+3), boxes + (j+blockIdx.x * blockDim.x)*m*(2*dim+3) + (workLen_s[j])*(2*dim+3), sizeof(double)*(2*dim+3)*numBoxesWeTake);
 						countMemoryCopies[threadIdx.x] = countMemoryCopies[threadIdx.x] + 1;
 						workLen_s[i] += numBoxesWeTake;	
-						if(workLen_s[i] == averageBoxesPerThread) 
-						{
+						if (workLen_s[i] == averageBoxesPerThread) {
 							break;	
 						}
 					}
@@ -1019,21 +997,17 @@ __global__ void balancingCUDA_v1(double *boxes, const int dim, int *workLen, int
 		}
 			
 			
-		for(i = 0; i < blockDim.x; i++)
-		{
-			if(workLen_s[i] == averageBoxesPerThread)
-			{
-				for(j = curThreadWeTakeBoxesIndex; j < blockDim.x; j++)
-				{
-					if(workLen_s[j] > averageBoxesPerThread + 1)
-					{
+		for (i = 0; i < blockDim.x; i++) {
+			if (workLen_s[i] == averageBoxesPerThread) {
+				for (j = curThreadWeTakeBoxesIndex; j < blockDim.x; j++) {
+					if (workLen_s[j] > averageBoxesPerThread + 1) {
 						numBoxesWeTake = 1;
 						workLen_s[j] -= numBoxesWeTake;
 						
 						int indTo = (i+blockIdx.x * blockDim.x)*m*(2*dim+3) + (workLen_s[i])*(2*dim+3);
 						int indFrom = (j+blockIdx.x * dim)*m*(2*dim+3) + (workLen_s[j])*(2*dim+3);
 						for (int d = 0; d < numBoxesWeTake*(2*dim+3); d++) {			
-							//boxes[indTo+d] = boxes[indFrom+d];
+							boxes[indTo+d] = boxes[indFrom+d];
 						}
 						
 						//memcpy(boxes + (i+blockIdx.x * blockDim.x)*m*(2*dim+3) + (workLen_s[i])*(2*dim+3), boxes + (j+blockIdx.x * dim)*m*(2*dim+3) + (workLen_s[j])*(2*dim+3), sizeof(double)*(2*dim+3)*numBoxesWeTake);
@@ -1045,14 +1019,10 @@ __global__ void balancingCUDA_v1(double *boxes, const int dim, int *workLen, int
 				}
 				curThreadWeTakeBoxesIndex = j;
 			}
-			if(curThreadWeTakeBoxesIndex == blockDim.x - 1 && workLen_s[curThreadWeTakeBoxesIndex] <= averageBoxesPerThread + 1)
-			{
+			if (curThreadWeTakeBoxesIndex == blockDim.x - 1 && workLen_s[curThreadWeTakeBoxesIndex] <= averageBoxesPerThread + 1) {
 				break;
 			}
-		}
-			
-			
-			
+		}		
 	}
 			
 				
@@ -1075,39 +1045,28 @@ __global__ void balancingCUDA_v1(double *boxes, const int dim, int *workLen, int
 */
 __global__ void balancingCUDA_v2(double *boxes, const int dim, int *workLen, int *countMemoryCopies, const int m)
 {
-	__shared__ int workLen_s[1024];
-	//__shared__ int countMemoryCopies[1024];
+	__shared__ int workLen_s[blockDim.x];
 	
-	int i, j;
-
-	
+	int i, j;	
 	int threadId = blockIdx.x * blockDim.x + threadIdx.x;
 	
 	workLen_s[threadIdx.x] = workLen[threadId];	
 	countMemoryCopies[threadIdx.x] = 0;
 	
-	__shared__ int workLenIndexes[1024];
+	__shared__ int workLenIndexes[blockDim.x];
 
 	workLenIndexes[i] = threadId;
 	
 	__syncthreads();	
-
-
 	
-	int n = 1024;
-	
-	
-
-
-	
-	
-		
     int numWorkBoxes = 0;
 	int averageBoxesPerThread = 0;
 	int curThreadWeTakeBoxesIndex = 0;
 	int numBoxesWeTake  = 0;
 	int countAverageBoxesPerThreadMore = 0;
 	int curThreadWeGiveBoxesIndex = 0;
+	int giveIndex = 0;
+	int takeIndex = 0;
 	if(threadIdx.x == 0)
 	{
 			for (i = 0; i < blockDim.x; i++) {
@@ -1120,9 +1079,7 @@ __global__ void balancingCUDA_v2(double *boxes, const int dim, int *workLen, int
 		
 		curThreadWeTakeBoxesIndex = blockDim.x-1;
 		curThreadWeGiveBoxesIndex = 0;
-		
-		
-/*				
+						
 		for (i = 0; i < n; i++) {
 			for (j = i+1; j < n; j++) {
 				if(workLen_s[i] > workLen_s[j]) {
@@ -1134,16 +1091,10 @@ __global__ void balancingCUDA_v2(double *boxes, const int dim, int *workLen, int
 					workLenIndexes[i] = workLenIndexes[j];
 					workLenIndexes[j] = temp;
 				}
-
 			}
 		}		
-
-
-*/		
+	
 		//sortQuickRecursiveGPU(workLenIndexes,workLen_s,n);
-		
-		//countMemoryCopies = 0;
-		
 		
 		while (curThreadWeTakeBoxesIndex > curThreadWeGiveBoxesIndex) {
 			if (workLen_s[curThreadWeTakeBoxesIndex] == averageBoxesPerThread) {
@@ -1183,9 +1134,10 @@ __global__ void balancingCUDA_v2(double *boxes, const int dim, int *workLen, int
 			
 			workLen_s[curThreadWeTakeBoxesIndex] -= numBoxesWeTake;
 			
-			
-			int indTo = (curThreadWeGiveBoxesIndex+blockIdx.x * blockDim.x)*m*(2*dim+3) + (workLen_s[curThreadWeGiveBoxesIndex])*(2*dim+3);
-			int indFrom = (curThreadWeTakeBoxesIndex+blockIdx.x * blockDim.x)*m*(2*dim+3) + (workLen_s[curThreadWeTakeBoxesIndex])*(2*dim+3);
+			giveIndex = workLenIndexes[curThreadWeGiveBoxesIndex];
+			takeIndex = workLenIndexes[curThreadWeTakeBoxesIndex];
+			int indTo = (giveIndex+blockIdx.x * blockDim.x)*m*(2*dim+3) + (workLen_s[curThreadWeGiveBoxesIndex])*(2*dim+3);
+			int indFrom = (takeIndex+blockIdx.x * blockDim.x)*m*(2*dim+3) + (workLen_s[curThreadWeTakeBoxesIndex])*(2*dim+3);
 			for (int d = 0; d < numBoxesWeTake*(2*dim+3); d++) {
 				double f = boxes[indFrom + d];
 				if(f == 8.999) break;
