@@ -140,7 +140,7 @@ __global__ void testCUDAMemoryAccessRunSingleThread_v2(double *ar1, double *ar2,
 *	@param m max number of boxes per thread
 *	@param dim max number of boxes per thread
 */
-void initializeBoxes(double* boxes, int *workLen, int n, int m, int dim);
+void initializeBoxes_v1(double* boxes, int *workLen, int n, int m, int dim);
 
 /**
 *	Initialize boxes to test balancing procedure version 2
