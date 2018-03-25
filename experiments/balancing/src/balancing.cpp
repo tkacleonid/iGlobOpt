@@ -788,7 +788,7 @@ BalancingInfo balancingOnGPU_v1(double* boxes, int *workLen, int n, int m, int d
 		countMemoryCopies[i] = 0;
 	}
 
-	cudaEvent_t start, stop;
+	cudaEvent_t startCuda, stopCuda;
 	
 	for (i = 0; i < n; i++) {
 		numWorkBoxes += workLen[i]; 	
@@ -800,7 +800,7 @@ BalancingInfo balancingOnGPU_v1(double* boxes, int *workLen, int n, int m, int d
 	balancingInfo.numAllBoxes = numWorkBoxes;
 	balancingInfo.numAverageBoxes = countAverageBoxesPerThreadMore;
 
-	auto start1 = std::chrono::high_resolution_clock::now();
+	auto start = std::chrono::high_resolution_clock::now();
 	
 	CHECKED_CALL(cudaSetDevice(0));
 	CHECKED_CALL(cudaDeviceReset());
@@ -809,8 +809,8 @@ BalancingInfo balancingOnGPU_v1(double* boxes, int *workLen, int n, int m, int d
 	CHECKED_CALL(cudaMalloc((void **)&dev_countMemoryCopies, numThreads*sizeof(int)));
 	
 	
-	CHECKED_CALL(cudaEventCreate(&start));
-	CHECKED_CALL(cudaEventCreate(&stop));
+	CHECKED_CALL(cudaEventCreate(&startCuda));
+	CHECKED_CALL(cudaEventCreate(&stopCuda));
 	CHECKED_CALL(cudaMemcpy(dev_boxes, boxes, n*(2*dim+3)*sizeof(double)*m, cudaMemcpyHostToDevice));
 	CHECKED_CALL(cudaMemcpy(dev_workLen, workLen, numThreads*sizeof(int), cudaMemcpyHostToDevice));
 	CHECKED_CALL(cudaMemcpy(dev_countMemoryCopies, countMemoryCopies, numThreads*sizeof(int), cudaMemcpyHostToDevice));
