@@ -5,7 +5,7 @@ int main()
 {	
 	int dim = 2;
 	int numThreads = BLOCK_SIZE;
-	int maxBoxesPerThread = 2;	
+	int maxBoxesPerThread = 4;	
 
 	double *boxes = new double[(2*dim+3) * numThreads*maxBoxesPerThread];
 	int *workLen = new int[numThreads];
