@@ -19,7 +19,7 @@ int main()
 	outfile.open("balancingTime",std::ios_base::app);
 	if (outfile.fail())
 			throw std::ios_base::failure(std::strerror(errno));
-	for (i = 2; i < 4096; i*=2) {
+	for (int i = 2; i < 4096; i*=2) {
 		maxBoxesPerThread = i;
 		
 		outfile << maxBoxesPerThread << "\t";
