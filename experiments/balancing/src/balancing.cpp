@@ -1204,8 +1204,8 @@ __global__ void balancingCUDA_v3(double *boxes, const int dim, int *workLen, int
 		curThreadWeTakeBoxesIndex = blockDim.x-1;
 		curThreadWeGiveBoxesIndex = 0;
 						
-		for (i = 0; i < n; i++) {
-			for (j = i+1; j < n; j++) {
+		for (i = 0; i < blockDim.x; i++) {
+			for (j = i+1; j < blockDim.x; j++) {
 				if(workLen_s[i] > workLen_s[j]) {
 					int temp = workLen_s[i];
 					workLen_s[i] = workLen_s[j];
