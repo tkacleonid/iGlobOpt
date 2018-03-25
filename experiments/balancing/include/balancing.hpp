@@ -178,12 +178,6 @@ __device__ void sortQuickRecursiveGPU(int *indexes,int *ar,  const int n);
 
 
 
-
-
-BalancingInfo balancingOnCPU(double* boxes, int *workLen,int n, int m, int dim);
-BalancingInfo balancingOnCPU2(int n, int m, int dim);
-
-
 BalancingInfo balancingOnCPU_v1(double* boxes, int *workLen, int n, int m, int dim);
 BalancingInfo balancingOnCPU_v2(double* boxes, int *workLen, int n, int m, int dim);
 
