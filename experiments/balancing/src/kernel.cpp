@@ -89,12 +89,6 @@ int main()
 	printf("..........................\n");
 	
 	
-	boxes = new double[(2*dim+3) * numThreads*maxBoxesPerThread];
-	workLen = new int[numThreads];
-	
-	tempBoxes = new double[(2*dim+3) * numThreads*maxBoxesPerThread];
-	tempWorkLen = new int[numThreads];
-	
 	
 	printf("..........................\n");
 	printf("Stage 2: \n");
