@@ -351,7 +351,7 @@ __device__ void sortQuickRecursiveGPU(int *indexes,int *ar,  const int n) {
 }
 
 /**
-*	Quick sort algorithm for balancing
+*	Quick sort algorithm for balancing on GPU
 *	@param indexes the array of boxes' indexes before sorting
 *	@param ar the array of work boxes numbers
 *	@param l left index of array

@@ -132,16 +132,61 @@ __global__ void testCUDAMemoryAccessRunSingleThread_v1(double *ar1, double *ar2,
 */
 __global__ void testCUDAMemoryAccessRunSingleThread_v2(double *ar1, double *ar2, int partSize);
 
+/**
+*	Initialize test boxes for balancing
+*	@param boxes array for test boxes
+*	@param workLen array for numbers of boxes per thread
+*	@param n the number of threads
+*	@param m max number of boxes per thread
+*	@param dim max number of boxes per thread
+*/
+void initializeBoxes(double* boxes, int *workLen, int n, int m, int dim);
+
+/**
+*	Quick sort algorithm for balancing
+*	@param indexes the array of boxes' indexes before sorting
+*	@param ar the array of work boxes numbers
+*	@param l left index of array
+*	@param r right index of array
+*/
+void quickSortBase(int *indexes,int *ar, const int l, const int r);
+
+/**
+*	Quick sort algorithm for balancing
+*	@param indexes the array of boxes' indexes before sorting
+*	@param ar the array of work boxes numbers
+*	@param n the number of elements in array
+*/
+void sortQuickRecursive(int *indexes,int *ar,  const int n);
+
+/**
+*	Quick sort algorithm for balancing
+*	@param indexes the array of boxes' indexes before sorting
+*	@param ar the array of work boxes numbers
+*	@param l left index of array
+*	@param r right index of array
+*/
+__device__ void quickSortBaseGPU(int *indexes,int *ar, const int l, const int r);
+
+/**
+*	Quick sort algorithm for balancing
+*	@param indexes the array of boxes' indexes before sorting
+*	@param ar the array of work boxes numbers
+*	@param n the number of elements in array
+*/
+__device__ void sortQuickRecursiveGPU(int *indexes,int *ar,  const int n);
+
+
 
 
 
 BalancingInfo balancingOnCPU(double* boxes, int *workLen,int n, int m, int dim);
 BalancingInfo balancingOnCPU2(int n, int m, int dim);
-void sortQuickRecursive(int *indexes,int *ar,  const int n);
-void quickSortBase(int *indexes,int *ar, const int l, const int r);
+
+
 BalancingInfo balancingOnCPU_v3(double* boxes, int *workLen, int n, int m, int dim);
 BalancingInfo balancingOnCPU_v2(double* boxes, int *workLen, int n, int m, int dim);
-void initializeBoxes(double* boxes, int *workLen, int n, int m, int dim);
+
 
 BalancingInfo balancingOnGPU_v1(double* boxes, int *workLen, int n, int m, int dim);
 BalancingInfo balancingOnGPU_v2(double* boxes, int *workLen, int n, int m, int dim);
