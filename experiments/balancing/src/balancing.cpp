@@ -1139,98 +1139,14 @@ __global__ void balancingCUDA_v2(double *boxes, const int dim, int *workLen, int
 			int indTo = (giveIndex+blockIdx.x * blockDim.x)*m*(2*dim+3) + (workLen_s[curThreadWeGiveBoxesIndex])*(2*dim+3);
 			int indFrom = (takeIndex+blockIdx.x * blockDim.x)*m*(2*dim+3) + (workLen_s[curThreadWeTakeBoxesIndex])*(2*dim+3);
 			for (int d = 0; d < numBoxesWeTake*(2*dim+3); d++) {
-				double f = boxes[indFrom + d];
-				if(f == 8.999) break;
-				//boxes[indTo + d] = d;
-				workLen[d] = workLen_s[d%512];
-				
-				
+				boxes[indTo + d] = boxes[indFrom + d];
 			}
 			
 			//memcpy(boxes + (curThreadWeGiveBoxesIndex+blockIdx.x * blockDim.x)*m*(2*dim+3) + (workLen_s[curThreadWeGiveBoxesIndex])*(2*dim+3), boxes + (curThreadWeTakeBoxesIndex+blockIdx.x * blockDim.x)*m*(2*dim+3) + (workLen_s[curThreadWeTakeBoxesIndex])*(2*dim+3), sizeof(double)*(2*dim+3)*numBoxesWeTake);
 			workLen_s[curThreadWeGiveBoxesIndex] += numBoxesWeTake;
 			countMemoryCopies[threadIdx.x]++;
 				
-		}
-		
-		for (int t = 0; t < blockDim.x; t++) {
-			boxes[t] = 1;
-		}
-			
-		
-		
-	
-	
-	
-	
-		
-		
-	/*	
-		
-		
-		
-		for(i = 0; i < blockDim.x; i++)
-		{
-			numWorkBoxes += workLen_s[i]; 	
-		}
-		averageBoxesPerThread = numWorkBoxes / blockDim.x;
-			
-		if(averageBoxesPerThread == 0) averageBoxesPerThread = averageBoxesPerThread + 1;
-			
-		curThreadWeTakeBoxesIndex = 0;
-		for(i = 0; i < blockDim.x; i++)
-		{
-			if(workLen_s[i] < averageBoxesPerThread)
-			{
-				for(j = curThreadWeTakeBoxesIndex; j < blockDim.x; j++)
-				{
-					if(workLen_s[j] > averageBoxesPerThread)
-					{
-							
-						numBoxesWeTake = averageBoxesPerThread - workLen_s[i] <= workLen_s[j] - averageBoxesPerThread ? averageBoxesPerThread - workLen_s[i] : workLen_s[j] - averageBoxesPerThread;
-						workLen_s[j] -= numBoxesWeTake;
-						memcpy(boxes + (i+blockIdx.x * blockDim.x)*m*(2*dim+3) + (workLen_s[i])*(2*dim+3), boxes + (j+blockIdx.x * blockDim.x)*m*(2*dim+3) + (workLen_s[j])*(2*dim+3), sizeof(double)*(2*dim+3)*numBoxesWeTake);
-						countMemoryCopies[threadIdx.x] = countMemoryCopies[threadIdx.x] + 1;
-						workLen_s[i] += numBoxesWeTake;	
-						if(workLen_s[i] == averageBoxesPerThread) 
-						{
-							break;	
-						}
-					}
-						
-				}
-				curThreadWeTakeBoxesIndex = j;
-			}
-				
-		}
-			
-			
-		for(i = 0; i < blockDim.x; i++)
-		{
-			if(workLen_s[i] == averageBoxesPerThread)
-			{
-				for(j = curThreadWeTakeBoxesIndex; j < blockDim.x; j++)
-				{
-					if(workLen_s[j] > averageBoxesPerThread + 1)
-					{
-						numBoxesWeTake = 1;
-						workLen_s[j] -= numBoxesWeTake;
-						memcpy(boxes + (i+blockIdx.x * blockDim.x)*m*(2*dim+3) + (workLen_s[i])*(2*dim+3), boxes + (j+blockIdx.x * dim)*m*(2*dim+3) + (workLen_s[j])*(2*dim+3), sizeof(double)*(2*dim+3)*numBoxesWeTake);
-						workLen_s[i] += numBoxesWeTake;	
-						break;
-					}
-						
-				}
-				curThreadWeTakeBoxesIndex = j;
-			}
-			if(curThreadWeTakeBoxesIndex == blockDim.x - 1 && workLen_s[curThreadWeTakeBoxesIndex] <= averageBoxesPerThread + 1)
-			{
-				break;
-			}
-		}
-	*/		
-			
-			
+		}		
 	}
 			
 				
