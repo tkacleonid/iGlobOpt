@@ -106,8 +106,15 @@ int main()
 	printf("Initializing boxes version 2\n");
 	initializeBoxes_v2(boxes, workLen, numThreads, maxBoxesPerThread, dim);
 	
+	
 	memcpy(tempBoxes,boxes,sizeof(double)*(2*dim+3) * numThreads*maxBoxesPerThread);
 	memcpy(tempWorkLen,workLen,sizeof(int)*numThreads);	
+	
+	for (int i = 0; i < numThreads; i++) {
+		printf("%d\t", tempWorkLen[i]);
+	}
+	printf("\n\n");
+	
 	printf("Testing balancing on CPU (version 1)\n");
 	balancingInfo = balancingOnCPU_v3(tempBoxes, tempWorkLen, numThreads, maxBoxesPerThread, dim);
 	printf("numberOfMemoryCopies = %d\n",balancingInfo.numberOfMemoryCopies);
@@ -115,6 +122,11 @@ int main()
 	printf("numAllBoxes = %d\n",balancingInfo.numAllBoxes);
 	printf("numAverageBoxes = %d\n",balancingInfo.numAverageBoxes);
 	
+	printf("\n\n");
+	
+	for (int i = 0; i < numThreads; i++) {
+		printf("%d\t", tempWorkLen[i]);
+	}
 	printf("\n\n");
 	
 	memcpy(tempBoxes,boxes,sizeof(double)*(2*dim+3) * numThreads*maxBoxesPerThread);
