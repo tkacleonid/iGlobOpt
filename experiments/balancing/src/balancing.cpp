@@ -208,7 +208,7 @@ __global__ void testCUDAMemoryAccessRunMultiThread_v1(double *ar1, double *ar2, 
 {
 	int gridSizeX = blockDim.x * gridDim.x;
 	int gridSizeY = blockDim.y * gridDim.y;
-	int gridSizeZ = blockDim.z * gridDim.z;
+
 	
 	
 	int threadId = threadIdx.z*gridSizeY*gridSizeX + threadIdx.y*gridSizeX + threadIdx.x;
