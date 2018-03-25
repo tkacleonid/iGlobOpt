@@ -176,9 +176,24 @@ __device__ void quickSortBaseGPU(int *indexes,int *ar, const int l, const int r)
 */
 __device__ void sortQuickRecursiveGPU(int *indexes,int *ar,  const int n);
 
-
-
+/**
+*	Balancing on CPU version 1
+*	@param boxes the array of boxes
+*	@param workLen the array of numbers of boxes
+*	@param n the number of threads
+*	@param m the maximum number of boxes per thread
+*	@param dim the function dimension
+*/
 BalancingInfo balancingOnCPU_v1(double* boxes, int *workLen, int n, int m, int dim);
+
+/**
+*	Balancing on CPU version 2 (with sort)
+*	@param boxes the array of boxes
+*	@param workLen the array of numbers of boxes
+*	@param n the number of threads
+*	@param m the maximum number of boxes per thread
+*	@param dim the function dimension
+*/
 BalancingInfo balancingOnCPU_v2(double* boxes, int *workLen, int n, int m, int dim);
 
 
