@@ -1342,7 +1342,7 @@ __global__ void balancingCUDA_v3(double *boxes, const int dim, int *workLen, int
 			int indFrom = (takeIndex+blockIdx.x * blockDim.x)*m*(2*dim+3) + (workLen_s[curThreadWeTakeBoxesIndex])*(2*dim+3);
 			for (j = 0; j < numBoxesWeTake; j++) {
 				for (i = 0; i < 2*dim +3; i++) {
-					boxes[indTo + j*blockDim.x*(2*dim+3) + i] = boxes[indFrom + j*blockDim.x*(2*dim+3) + i];
+					//boxes[indTo + j*blockDim.x*(2*dim+3) + i] = boxes[indFrom + j*blockDim.x*(2*dim+3) + i];
 				}
 			}
 			
