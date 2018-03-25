@@ -1088,7 +1088,7 @@ __global__ void balancingCUDA_v2(double *boxes, const int dim, int *workLen, int
 			}
 		}		
 */	
-		sortQuickRecursiveGPU(workLenIndexes,workLen_s,n);
+		sortQuickRecursiveGPU(workLenIndexes,workLen_s,blockDim.x);
 		
 		while (curThreadWeTakeBoxesIndex > curThreadWeGiveBoxesIndex) {
 			if (workLen_s[curThreadWeTakeBoxesIndex] == averageBoxesPerThread) {
