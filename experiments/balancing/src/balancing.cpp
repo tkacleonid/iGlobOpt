@@ -66,7 +66,6 @@ void testGPUTransferDataToDevice(const int numRuns, dim3 gridSize, dim3 blockSiz
 	CHECKED_CALL(cudaSetDevice(DEVICE));
 	CHECKED_CALL(cudaDeviceReset());
 	
-	int numThreads = gridSize.x*gridSize.y*gridSize.x*blockSize.x*blockSize.y*blockSize.z;
 	double *boxes = (double*) malloc(dataVolume);
 	double *dev_boxes;
 	
@@ -109,7 +108,6 @@ void testGPUTransferDataFromDevice(const int numRuns, dim3 gridSize, dim3 blockS
 	CHECKED_CALL(cudaSetDevice(DEVICE));
 	CHECKED_CALL(cudaDeviceReset());
 	
-	int numThreads = gridSize.x*gridSize.y*gridSize.x*blockSize.x*blockSize.y*blockSize.z;
 	double *boxes = (double*) malloc(dataVolume);
 	double *dev_boxes;
 	
@@ -211,7 +209,6 @@ __global__ void testCUDAMemoryAccessRunMultiThread_v1(double *ar1, double *ar2, 
 	int gridSizeX = blockDim.x * gridDim.x;
 	int gridSizeY = blockDim.y * gridDim.y;
 	int gridSizeZ = blockDim.z * gridDim.z;
-	int gridSizeAll = gridSizeX*gridSizeY*gridSizeZ;
 	
 	
 	int threadId = threadIdx.z*gridSizeY*gridSizeX + threadIdx.y*gridSizeX + threadIdx.x;
