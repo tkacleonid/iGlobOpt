@@ -81,11 +81,6 @@ int main()
 
 	
 	
-	delete [] boxes;
-	delete [] workLen;
-	delete [] tempBoxes;
-	delete [] tempWorkLen;
-	
 	printf("..........................\n");
 	
 	
