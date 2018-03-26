@@ -60,7 +60,7 @@ void calcOptValueOnCPUBFSWithMmap(const double *_boxes, int _numBoxes,int _rank,
 
 void calcOptValueOnCPUBFSWithOMP(const double *_boxes, int _numBoxes,int _rank, int _splitCoeff, void (*_fun)(const double *, int, double *), double _eps, double *_min, GlobOptErrors *_status, double *_argmin);
 
-void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int _rank, int _splitCoeff, void (*_fun)(const double *, int, double *), double _eps, double *_min, GlobOptErrors *_status, double *_argmin, initFunRecord);
+void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int _rank, int _splitCoeff, void (*_fun)(const double *, int, double *), double _eps, double *_min, GlobOptErrors *_status, double *_argmin, double _initFunRecord);
 
 
 
