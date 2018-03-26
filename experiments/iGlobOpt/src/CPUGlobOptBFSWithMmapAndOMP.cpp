@@ -142,24 +142,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 	//While global optimum not found
 	while(true)
 	{
-		//scanf("%s",tp);
-		//std::cin.get();
-		std::cout << "\n\n-------------------------";
-		std::cout << "wc:  " << wc << "\n\n";
-		
-		/*
-		for(int i = 0; i < numWorkBoxes; i++)
-		{
-			for(int j = 0; j < _rank; j++)
-			{
-				std::cout << "[" << restBoxesToSplit[(i*_rank+j)*2] << ";" <<  restBoxesToSplit[(i*_rank+j)*2+1] << "]\t";
-			}
-			std::cout << ",";
-			
-		}
-		*/
-
-		//Workin with file
+		//Working with file
 		if(numWorkBoxes*_splitCoeff >= MAX_BOXES_IN_BUFFER)
 		{
 
@@ -270,22 +253,6 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 			if (funLB > funBounds[i*ARRAY_BOUNDS_LENGTH + GO_POSITION_LB]) funLB = funBounds[i*ARRAY_BOUNDS_LENGTH + GO_POSITION_LB];
 		}
 
-		//checking if the global minimum is found
-		double curEps = funRecord - funLB < 0 ? -(funRecord - funLB) : funRecord - funLB;
-		/*
-		if(curEps < _eps  && numBoxesInFile == 0)
-		{
-			*_min = funRecord;
-			*_status = GO_SUCCESS;
-			delete [] restBoxesToSplit;
-			delete [] workBoxes;
-			delete [] funBounds;
-			close(fd);
-			
-			return;
-		}
-		*/
-
 		//Saving appropriate boxes to split
 		int cnt = 0;
 		for(int i = 0; i < numWorkBoxes*_splitCoeff; i++)
@@ -312,13 +279,6 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 				
 		}
 		numWorkBoxes = cnt;
-		
-		//std::cout << "min = ";
-		//printf("%.7f",funRecord);
-		//std::cout << "\tfunLb = " << funLB << "\n";
-		
-		//std::cout << "\twc = " << wc << "\n";
-
 		if(numWorkBoxes == 0 && numBoxesInFile == 0)
 		{
 			*_status = GO_WORKBUFFER_IS_EMPTY;
