@@ -575,7 +575,7 @@ int main() {
     argMin = new double[inRank * 2];
 	if(!isConfirm) {
 		inFun(inBox,inDim,outFunBounds);
-		initFunRecord = outFunBounds[2];
+		initFunRecord = outFunBounds[GO_POSITION_FUN_RECORD];
 	}
 	
 
