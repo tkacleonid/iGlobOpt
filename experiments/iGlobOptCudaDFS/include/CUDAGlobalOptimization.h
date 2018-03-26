@@ -301,7 +301,7 @@ __global__ void globOptCUDA_1(double *inBox,  int inRank, int *workLen, double *
 	__shared__ int count[BLOCK_SIZE];
 	
 	double minRec = inRec;
-	int i, j,bInd, hInd, n;
+	int i,bInd, hInd, n;
 	double  h;
 	
 	int threadId = blockIdx.x * BLOCK_SIZE + threadIdx.x;
