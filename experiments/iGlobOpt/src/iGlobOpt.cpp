@@ -37,10 +37,10 @@ int main() {
     scanf("%d %d",&type_opt,&type_test_fun);
     printf("\nВведите точность оценивания: ");
     scanf("%lf",&inEps);
-	inEps = 1;
-	for(int j = 1; j < 10000000; j*=10) {
-		inEps /= j;
-for (int ki = 0; k < 5; k++) {
+	inEps = 10;
+	for(int j = 1; j < 7; j++) {
+		inEps /= 10;
+for (int k = 0; k < 5; k++) {
     switch (type_test_fun)
     {
         case 1:
