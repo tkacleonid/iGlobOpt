@@ -85,7 +85,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 	if(result == -1)
 	{
 		close(fd);
-		perror("Error calling lseel");
+		perror("Error calling lseek");
 		exit(EXIT_FAILURE);
 	}
 
