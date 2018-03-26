@@ -16,27 +16,27 @@
 #include <stdlib.h>
 #include <fstream>
 
-__global__ void globOptCUDA_1(double *inBox, double *droppedBoxes, int inRank, int *workLen, double *min, double inRec, double inEps, long long *workCounts);
+__global__ void globOptCUDA_1(double *inBox, double *droppedBoxes, int inDim, int *workLen, double *min, double inRec, double inEps, long long *workCounts);
 
 
-__global__ void globOptCUDA_2(double *inBox, int inRank, int *workLen, double *min, double inRec, double inEps, long long *workCounts);
+__global__ void globOptCUDA_2(double *inBox, int inDim, int *workLen, double *min, double inRec, double inEps, long long *workCounts);
 
 
 
 /**
 *	Calculus Interval for Rozenbroke function
 *	@param inbox pointer to Box
-*	@param inRank number of variables
+*	@param inDim number of variables
 *	@param outlimits pointer to estimated function limits
 */
-__device__ void fnCalcFunLimitsStyblinski_CUDA(double *inBox, int inRank)
+__device__ void fnCalcFunLimitsStyblinski_CUDA(double *inBox, int inDim)
 {
 	double sup = 0;
 	double sub = 0;
 	double sup1,sub1,sup2,sub2,val = 0,var1,var2,var3,x;
 	int i;
 
-	for(i = 0; i < inRank; i++)
+	for(i = 0; i < inDim; i++)
 	{
 			
 		var1 = inBox[i*2 + 1]*inBox[i*2 + 1];
@@ -72,19 +72,19 @@ __device__ void fnCalcFunLimitsStyblinski_CUDA(double *inBox, int inRank)
 	}
 	
 
-	inBox[2*inRank + 0] = sub;
-	inBox[2*inRank + 1] = sup;
-	inBox[2*inRank+2] = val;
+	inBox[2*inDim + 0] = sub;
+	inBox[2*inDim + 1] = sup;
+	inBox[2*inDim+2] = val;
 	
 }
 
 
 
-void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, double *outBox, double*outMin, int *status)
+void fnGetOptValueWithCUDA(double *inBox, const int inDim, const double inEps, double *outBox, double*outMin, int *status)
 {
 	int numBoxes = BLOCK_SIZE*NUM_BLOCKS;
-	double *boxes =  new double[numBoxes*(inRank*2+3)*SIZE_BUFFER_PER_THREAD];
-	double *droppedBoxes =  new double[numBoxes*(inRank*2+3)];
+	double *boxes =  new double[numBoxes*(inDim*2+3)*SIZE_BUFFER_PER_THREAD];
+	double *droppedBoxes =  new double[numBoxes*(inDim*2+3)];
 	double h;
 	int hInd;
 	int *workLen;
@@ -95,7 +95,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 	double funcMin = 0;
 
 	
-	funcMin = -39.1661657038*inRank;
+	funcMin = -39.1661657038*inDim;
 
 	*status = 1;
 
@@ -111,28 +111,28 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 	
 	
 	
-	for(i = 0; i < inRank; i++)
+	for(i = 0; i < inDim; i++)
 	{
-		if(h < inBox[i*inRank + 1] - inBox[i*inRank])
+		if(h < inBox[i*inDim + 1] - inBox[i*inDim])
 		{
-			h = inBox[i*inRank + 1] - inBox[i*inRank];
+			h = inBox[i*inDim + 1] - inBox[i*inDim];
 			hInd = i;
 		}
 	}
 
 	for(n = 0; n < numBoxes; n++)
 	{
-		for(i = 0; i < inRank; i++)
+		for(i = 0; i < inDim; i++)
 		{
 			if(i == hInd)
 			{
-				boxes[n*(2*inRank + 3)*SIZE_BUFFER_PER_THREAD + i*2] = inBox[i*2] + h/numBoxes*n;
-				boxes[n*(2*inRank + 3)*SIZE_BUFFER_PER_THREAD + i*2 + 1] = inBox[i*2] + h/numBoxes*(n+1);
+				boxes[n*(2*inDim + 3)*SIZE_BUFFER_PER_THREAD + i*2] = inBox[i*2] + h/numBoxes*n;
+				boxes[n*(2*inDim + 3)*SIZE_BUFFER_PER_THREAD + i*2 + 1] = inBox[i*2] + h/numBoxes*(n+1);
 			}
 			else
 			{
-				boxes[n*(2*inRank + 3)*SIZE_BUFFER_PER_THREAD + i*2] = inBox[i*2];
-				boxes[n*(2*inRank + 3)*SIZE_BUFFER_PER_THREAD + i*2 + 1] = inBox[i*2 + 1];
+				boxes[n*(2*inDim + 3)*SIZE_BUFFER_PER_THREAD + i*2] = inBox[i*2];
+				boxes[n*(2*inDim + 3)*SIZE_BUFFER_PER_THREAD + i*2 + 1] = inBox[i*2 + 1];
 			}
 		}
 
@@ -140,14 +140,14 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 	
 	
 	for (int j = 0; j < numBoxes; j++) {
-		for (int k = 0; k < inRank; k++) {
-			droppedBoxes[j*(2*inRank+3)+2*k] = 0.0;
-			droppedBoxes[j*(2*inRank+3)+2*k +1] = 0.0;
+		for (int k = 0; k < inDim; k++) {
+			droppedBoxes[j*(2*inDim+3)+2*k] = 0.0;
+			droppedBoxes[j*(2*inDim+3)+2*k +1] = 0.0;
 				
 		}
-		droppedBoxes[j*(2*inRank+3)+2*inRank] = 0.0;
-		droppedBoxes[j*(2*inRank+3)+2*inRank+1] = 0.0;
-		droppedBoxes[j*(2*inRank+3)+2*inRank+2] = 0.0;
+		droppedBoxes[j*(2*inDim+3)+2*inDim] = 0.0;
+		droppedBoxes[j*(2*inDim+3)+2*inDim+1] = 0.0;
+		droppedBoxes[j*(2*inDim+3)+2*inDim+2] = 0.0;
 	}
 	
 
@@ -159,7 +159,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 
 	int GridSize = NUM_BLOCKS;
 	int numThreads = numBoxes;
-	int sizeInBox = numThreads*(inRank*2+3)*sizeof(double)*SIZE_BUFFER_PER_THREAD;
+	int sizeInBox = numThreads*(inDim*2+3)*sizeof(double)*SIZE_BUFFER_PER_THREAD;
 	
 	float time, timeAll;
 	
@@ -184,7 +184,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 	std::cout << "start CUDA malloc 1\n";
 		
     CHECKED_CALL(cudaMalloc((void **)&dev_inBox, sizeInBox));
-    CHECKED_CALL(cudaMalloc((void **)&dev_droppedBoxes, numThreads*(inRank*2+3)*sizeof(double)));
+    CHECKED_CALL(cudaMalloc((void **)&dev_droppedBoxes, numThreads*(inDim*2+3)*sizeof(double)));
 	
 	std::cout << "start CUDA malloc 2\n";
 	
@@ -207,8 +207,8 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 		
 		CHECKED_CALL(cudaEventCreate(&start));
 		CHECKED_CALL(cudaEventCreate(&stop));
-		CHECKED_CALL(cudaMemcpy(dev_inBox, boxes, numBoxes*(2*inRank+3)*sizeof(double)*SIZE_BUFFER_PER_THREAD, cudaMemcpyHostToDevice));
-		CHECKED_CALL(cudaMemcpy(dev_droppedBoxes, droppedBoxes, numBoxes*(2*inRank+3)*sizeof(double), cudaMemcpyHostToDevice));
+		CHECKED_CALL(cudaMemcpy(dev_inBox, boxes, numBoxes*(2*inDim+3)*sizeof(double)*SIZE_BUFFER_PER_THREAD, cudaMemcpyHostToDevice));
+		CHECKED_CALL(cudaMemcpy(dev_droppedBoxes, droppedBoxes, numBoxes*(2*inDim+3)*sizeof(double), cudaMemcpyHostToDevice));
 		CHECKED_CALL(cudaMemcpy(dev_workLen, workLen, numThreads*sizeof(int), cudaMemcpyHostToDevice));
 		CHECKED_CALL(cudaMemcpy(dev_workCounts, workCounts, numThreads*sizeof(int), cudaMemcpyHostToDevice));
 		CHECKED_CALL(cudaEventRecord(start, 0));
@@ -216,15 +216,15 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 		switch(TYPE_CUDA_OPTIMIZATION)
 		{
 			case 1:
-				globOptCUDA_1<<<GridSize, BLOCK_SIZE>>>(dev_inBox, dev_droppedBoxes,inRank,dev_workLen,dev_mins,funcMin,inEps,dev_workCounts);
+				globOptCUDA_1<<<GridSize, BLOCK_SIZE>>>(dev_inBox, dev_droppedBoxes,inDim,dev_workLen,dev_mins,funcMin,inEps,dev_workCounts);
 				break;
 			case 2:
-				globOptCUDA_2<<<GridSize, BLOCK_SIZE>>>(dev_inBox, inRank,dev_workLen,dev_mins,funcMin,inEps,dev_workCounts);
+				globOptCUDA_2<<<GridSize, BLOCK_SIZE>>>(dev_inBox, inDim,dev_workLen,dev_mins,funcMin,inEps,dev_workCounts);
 				break;
 				
 				
 			default:
-				globOptCUDA_1<<<GridSize, BLOCK_SIZE>>>(dev_inBox, dev_droppedBoxes,inRank,dev_workLen,dev_mins,funcMin,inEps,dev_workCounts);
+				globOptCUDA_1<<<GridSize, BLOCK_SIZE>>>(dev_inBox, dev_droppedBoxes,inDim,dev_workLen,dev_mins,funcMin,inEps,dev_workCounts);
 				break;
 		}
 		
@@ -235,8 +235,8 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 		CHECKED_CALL(cudaEventSynchronize(stop));
 		CHECKED_CALL(cudaDeviceSynchronize());
 
-		CHECKED_CALL(cudaMemcpy(boxes, dev_inBox, numBoxes*(2*inRank+3)*sizeof(double)*SIZE_BUFFER_PER_THREAD, cudaMemcpyDeviceToHost));
-		CHECKED_CALL(cudaMemcpy(droppedBoxes, dev_droppedBoxes, numBoxes*(2*inRank+3)*sizeof(double), cudaMemcpyDeviceToHost));
+		CHECKED_CALL(cudaMemcpy(boxes, dev_inBox, numBoxes*(2*inDim+3)*sizeof(double)*SIZE_BUFFER_PER_THREAD, cudaMemcpyDeviceToHost));
+		CHECKED_CALL(cudaMemcpy(droppedBoxes, dev_droppedBoxes, numBoxes*(2*inDim+3)*sizeof(double), cudaMemcpyDeviceToHost));
 		CHECKED_CALL(cudaMemcpy(workLen, dev_workLen, numThreads*sizeof(int), cudaMemcpyDeviceToHost));
 		CHECKED_CALL(cudaMemcpy(mins, dev_mins, numThreads*sizeof(double), cudaMemcpyDeviceToHost));
 		CHECKED_CALL(cudaMemcpy(workCounts, dev_workCounts, numThreads*sizeof(long long), cudaMemcpyDeviceToHost));
@@ -268,19 +268,19 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 		printf("\n\n\n");
 		
 		for (int j = 0; j < numThreads; j++) {
-			if(droppedBoxes[j*(2*inRank+3)] == droppedBoxes[j*(2*inRank+3)+1]) continue;
-			for (int k = 0; k < inRank; k++) {
-				std::cout << droppedBoxes[j*(2*inRank+3)+2*k] << "\t" << droppedBoxes[j*(2*inRank+3)+2*k+1] << "\t";
-				outfile << droppedBoxes[j*(2*inRank+3)+2*k] << "\t" << droppedBoxes[j*(2*inRank+3)+2*k+1] << "\t";
-				droppedBoxes[j*(2*inRank+3)+2*k] = 0.0;
-				droppedBoxes[j*(2*inRank+3)+2*k +1] = 0.0;
+			if(droppedBoxes[j*(2*inDim+3)] == droppedBoxes[j*(2*inDim+3)+1]) continue;
+			for (int k = 0; k < inDim; k++) {
+				std::cout << droppedBoxes[j*(2*inDim+3)+2*k] << "\t" << droppedBoxes[j*(2*inDim+3)+2*k+1] << "\t";
+				outfile << droppedBoxes[j*(2*inDim+3)+2*k] << "\t" << droppedBoxes[j*(2*inDim+3)+2*k+1] << "\t";
+				droppedBoxes[j*(2*inDim+3)+2*k] = 0.0;
+				droppedBoxes[j*(2*inDim+3)+2*k +1] = 0.0;
 			}
-			std::cout << droppedBoxes[j*(2*inRank+3)+2*inRank] << "\t" << droppedBoxes[j*(2*inRank+3)+2*inRank+1] << "\t" << droppedBoxes[j*(2*inRank+3)+2*inRank+2] << "\n";
+			std::cout << droppedBoxes[j*(2*inDim+3)+2*inDim] << "\t" << droppedBoxes[j*(2*inDim+3)+2*inDim+1] << "\t" << droppedBoxes[j*(2*inDim+3)+2*inDim+2] << "\n";
 
-			outfile << droppedBoxes[j*(2*inRank+3)+2*inRank] << "\t" << droppedBoxes[j*(2*inRank+3)+2*inRank+1] << "\t" << droppedBoxes[j*(2*inRank+3)+2*inRank+2] << "\n";
-			droppedBoxes[j*(2*inRank+3)+2*inRank] = 0.0;
-			droppedBoxes[j*(2*inRank+3)+2*inRank+1] = 0.0;
-			droppedBoxes[j*(2*inRank+3)+2*inRank+2] = 0.0;
+			outfile << droppedBoxes[j*(2*inDim+3)+2*inDim] << "\t" << droppedBoxes[j*(2*inDim+3)+2*inDim+1] << "\t" << droppedBoxes[j*(2*inDim+3)+2*inDim+2] << "\n";
+			droppedBoxes[j*(2*inDim+3)+2*inDim] = 0.0;
+			droppedBoxes[j*(2*inDim+3)+2*inDim+1] = 0.0;
+			droppedBoxes[j*(2*inDim+3)+2*inDim+2] = 0.0;
 		}
 			
 		
@@ -317,7 +317,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 							
 						numBoxesWeTake = averageBoxesPerThread - workLen[m] <= workLen[n] - averageBoxesPerThread ? averageBoxesPerThread - workLen[m] : workLen[n] - averageBoxesPerThread;
 						workLen[n] -= numBoxesWeTake;
-						memcpy(boxes + m*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen[m])*(2*inRank+3), boxes + n*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen[n])*(2*inRank+3), sizeof(double)*(2*inRank+3)*numBoxesWeTake);
+						memcpy(boxes + m*SIZE_BUFFER_PER_THREAD*(2*inDim+3) + (workLen[m])*(2*inDim+3), boxes + n*SIZE_BUFFER_PER_THREAD*(2*inDim+3) + (workLen[n])*(2*inDim+3), sizeof(double)*(2*inDim+3)*numBoxesWeTake);
 						workLen[m] += numBoxesWeTake;	
 						if(workLen[m] == averageBoxesPerThread) 
 						{
@@ -343,7 +343,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 					{
 						numBoxesWeTake = 1;
 						workLen[n] -= numBoxesWeTake;
-						memcpy(boxes + m*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen[m])*(2*inRank+3), boxes + n*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen[n])*(2*inRank+3), sizeof(double)*(2*inRank+3)*numBoxesWeTake);
+						memcpy(boxes + m*SIZE_BUFFER_PER_THREAD*(2*inDim+3) + (workLen[m])*(2*inDim+3), boxes + n*SIZE_BUFFER_PER_THREAD*(2*inDim+3) + (workLen[n])*(2*inDim+3), sizeof(double)*(2*inDim+3)*numBoxesWeTake);
 						workLen[m] += numBoxesWeTake;
 						curThreadWeTakeBoxesIndex = n;						
 						break;
@@ -388,7 +388,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 
 
 
-__global__ void globOptCUDA_1(double *inBox, double *droppedBoxes, int inRank, int *workLen, double *min, double inRec, double inEps, long long *workCounts)
+__global__ void globOptCUDA_1(double *inBox, double *droppedBoxes, int inDim, int *workLen, double *min, double inRec, double inEps, long long *workCounts)
 
 {
 	__shared__ double min_s[BLOCK_SIZE];
@@ -424,7 +424,7 @@ __global__ void globOptCUDA_1(double *inBox, double *droppedBoxes, int inRank, i
 					{
 						half = workLen_s[j]/2;
 						workLen_s[j] -= half;
-							memcpy(inBox + (i+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3), inBox + (j+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[j])*(2*inRank+3), sizeof(double)*(2*inRank+3)*half);
+							memcpy(inBox + (i+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inDim+3), inBox + (j+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inDim+3) + (workLen_s[j])*(2*inDim+3), sizeof(double)*(2*inDim+3)*half);
 							workLen_s[i] += half;
 							break;
 					}
@@ -440,27 +440,27 @@ __global__ void globOptCUDA_1(double *inBox, double *droppedBoxes, int inRank, i
 	while(workLen_s[threadIdx.x] > 0 && workLen_s[threadIdx.x] < SIZE_BUFFER_PER_THREAD && count[threadIdx.x] < MAX_GPU_ITER)
 	{
 		
-		bInd = threadId*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[threadIdx.x] - 1)*(2*inRank+3);
-		fnCalcFunLimitsStyblinski_CUDA(inBox + bInd, inRank);
-		//memcpy(droppedBoxes+threadId*(2*inRank+3),inBox + bInd,(2*inRank+3)*sizeof(double));	
-		if(min_s[threadIdx.x] > inBox[bInd + 2*inRank + 2])
+		bInd = threadId*SIZE_BUFFER_PER_THREAD*(2*inDim+3) + (workLen_s[threadIdx.x] - 1)*(2*inDim+3);
+		fnCalcFunLimitsStyblinski_CUDA(inBox + bInd, inDim);
+		//memcpy(droppedBoxes+threadId*(2*inDim+3),inBox + bInd,(2*inDim+3)*sizeof(double));	
+		if(min_s[threadIdx.x] > inBox[bInd + 2*inDim + 2])
 		{
-			min_s[threadIdx.x] = inBox[bInd + 2*inRank + 2];
+			min_s[threadIdx.x] = inBox[bInd + 2*inDim + 2];
 		}
 			
-		if(min_s[threadIdx.x] - inBox[bInd + 2*inRank] < inEps)
+		if(min_s[threadIdx.x] - inBox[bInd + 2*inDim] < inEps)
 		{
 			--workLen_s[threadIdx.x];
-			memcpy(droppedBoxes+threadId*(2*inRank+3),inBox + bInd,(2*inRank+3)*sizeof(double));
+			memcpy(droppedBoxes+threadId*(2*inDim+3),inBox + bInd,(2*inDim+3)*sizeof(double));
 			n++;
 		}
 		else
 		{	
 
-			bInd = threadId*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[threadIdx.x] - 1)*(2*inRank+3);
+			bInd = threadId*SIZE_BUFFER_PER_THREAD*(2*inDim+3) + (workLen_s[threadIdx.x] - 1)*(2*inDim+3);
 			hInd = 0;
 			h = inBox[bInd + 1] - inBox[bInd];
-			for(i = 0; i < inRank; i++)
+			for(i = 0; i < inDim; i++)
 			{
 				if( h < inBox[bInd + i*2 + 1] - inBox[bInd + i*2]) 
 				{
@@ -468,18 +468,18 @@ __global__ void globOptCUDA_1(double *inBox, double *droppedBoxes, int inRank, i
 					hInd = i;
 				}
 			}
-			for(i = 0; i < inRank; i++)
+			for(i = 0; i < inDim; i++)
 			{
 				if(i == hInd) 
 				{
 					inBox[bInd + i*2 + 1] = inBox[bInd + i*2] + h/2.0;
-					inBox[bInd + 2*inRank + 3 + i*2] = inBox[bInd + i*2] + h/2.0;
-					inBox[bInd + 2*inRank + 3 + i*2 + 1] = inBox[bInd + i*2] + h;
+					inBox[bInd + 2*inDim + 3 + i*2] = inBox[bInd + i*2] + h/2.0;
+					inBox[bInd + 2*inDim + 3 + i*2 + 1] = inBox[bInd + i*2] + h;
 				}
 				else
 				{
-					inBox[bInd + 2*inRank + 3 + i*2] = inBox[bInd + i*2];
-					inBox[bInd + 2*inRank + 3 + i*2 + 1] = inBox[bInd + i*2 + 1];
+					inBox[bInd + 2*inDim + 3 + i*2] = inBox[bInd + i*2];
+					inBox[bInd + 2*inDim + 3 + i*2 + 1] = inBox[bInd + i*2 + 1];
 				}
 			}
 			++workLen_s[threadIdx.x];
@@ -495,7 +495,7 @@ __global__ void globOptCUDA_1(double *inBox, double *droppedBoxes, int inRank, i
 }
 
 
-__global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, double *min, const double inRec, const double inEps, long long *workCounts)
+__global__ void globOptCUDA_2(double *inBox, const int inDim, int *workLen, double *min, const double inRec, const double inEps, long long *workCounts)
 {
 	__shared__ double min_s[BLOCK_SIZE];
 	__shared__ int workLen_s[BLOCK_SIZE];
@@ -526,15 +526,15 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 		if(workLen_s[threadIdx.x] > 0)
 		{
 			
-			bInd = threadId*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[threadIdx.x] - 1)*(2*inRank+3);
-			fnCalcFunLimitsStyblinski_CUDA(inBox + bInd, inRank);
+			bInd = threadId*SIZE_BUFFER_PER_THREAD*(2*inDim+3) + (workLen_s[threadIdx.x] - 1)*(2*inDim+3);
+			fnCalcFunLimitsStyblinski_CUDA(inBox + bInd, inDim);
 			
-			if(min_s[threadIdx.x] > inBox[bInd + 2*inRank + 2])
+			if(min_s[threadIdx.x] > inBox[bInd + 2*inDim + 2])
 			{
-				min_s[threadIdx.x] = inBox[bInd + 2*inRank + 2];
+				min_s[threadIdx.x] = inBox[bInd + 2*inDim + 2];
 			}
 	
-			if(min_s[threadIdx.x] - inBox[bInd + 2*inRank] < inEps)
+			if(min_s[threadIdx.x] - inBox[bInd + 2*inDim] < inEps)
 			{
 				--workLen_s[threadIdx.x];
 				n++;
@@ -545,12 +545,12 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 
 				for(int j = 0; j < 16; j++)
 				{
-				bInd = threadId*1024*(2*inRank+3) + (workLen_s[threadIdx.x] - 1)*(2*inRank+3);
+				bInd = threadId*1024*(2*inDim+3) + (workLen_s[threadIdx.x] - 1)*(2*inDim+3);
 					
 				hInd = 0;
 				h = inBox[bInd + 1] - inBox[bInd];
 				
-				for(i = 0; i < inRank; i++)
+				for(i = 0; i < inDim; i++)
 				{
 					if( h < inBox[bInd + i*2 + 1] - inBox[bInd + i*2]) 
 					{
@@ -558,18 +558,18 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 						hInd = i;
 					}
 				}
-				for(i = 0; i < inRank; i++)
+				for(i = 0; i < inDim; i++)
 				{
 					if(i == hInd) 
 					{
 						inBox[bInd + i*2 + 1] = inBox[bInd + i*2] + h/2.0;
-						inBox[bInd + 2*inRank + 3 + i*2] = inBox[bInd + i*2] + h/2.0;
-						inBox[bInd + 2*inRank + 3 + i*2 + 1] = inBox[bInd + i*2] + h;
+						inBox[bInd + 2*inDim + 3 + i*2] = inBox[bInd + i*2] + h/2.0;
+						inBox[bInd + 2*inDim + 3 + i*2 + 1] = inBox[bInd + i*2] + h;
 					}
 					else
 					{
-						inBox[bInd + 2*inRank + 3 + i*2] = inBox[bInd + i*2];
-						inBox[bInd + 2*inRank + 3 + i*2 + 1] = inBox[bInd + i*2 + 1];
+						inBox[bInd + 2*inDim + 3 + i*2] = inBox[bInd + i*2];
+						inBox[bInd + 2*inDim + 3 + i*2 + 1] = inBox[bInd + i*2 + 1];
 					}
 				}
 				++workLen_s[threadIdx.x];
@@ -614,7 +614,7 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 				if(workLen_s_temp[i] > 6 && workLen_s_temp[threadId] == 0)
 				{
 					atomicAdd(workLen_s_temp + i, -3);
-					memcpy(inBox + bInd, inBox + i*1024*(2*inRank+3) + (workLen_s_temp[i] - 1)*(2*inRank+3), sizeof(double)*(2*inRank+3)*3);
+					memcpy(inBox + bInd, inBox + i*1024*(2*inDim+3) + (workLen_s_temp[i] - 1)*(2*inDim+3), sizeof(double)*(2*inDim+3)*3);
 					workLen_s_temp[threadId] += 3;
 					break;
 				}
@@ -645,7 +645,7 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 						{
 							half = workLen_s[j]/2;
 							workLen_s[j] -= half;
-								memcpy(inBox + (i+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3), inBox + (j+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[j])*(2*inRank+3), sizeof(double)*(2*inRank+3)*half);
+								memcpy(inBox + (i+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inDim+3), inBox + (j+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inDim+3) + (workLen_s[j])*(2*inDim+3), sizeof(double)*(2*inDim+3)*half);
 								workLen_s[i] += half;
 								break;
 						}
@@ -689,7 +689,7 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 							
 							numBoxesWeTake = averageBoxesPerThread - workLen_s[i] <= workLen_s[j] - averageBoxesPerThread ? averageBoxesPerThread - workLen_s[i] : workLen_s[j] - averageBoxesPerThread;
 							workLen_s[j] -= numBoxesWeTake;
-							memcpy(inBox + (i+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[i])*(2*inRank+3), inBox + (j+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[j])*(2*inRank+3), sizeof(double)*(2*inRank+3)*numBoxesWeTake);
+							memcpy(inBox + (i+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inDim+3) + (workLen_s[i])*(2*inDim+3), inBox + (j+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inDim+3) + (workLen_s[j])*(2*inDim+3), sizeof(double)*(2*inDim+3)*numBoxesWeTake);
 							workLen_s[i] += numBoxesWeTake;	
 							if(workLen_s[i] == averageBoxesPerThread) 
 							{
@@ -715,7 +715,7 @@ __global__ void globOptCUDA_2(double *inBox, const int inRank, int *workLen, dou
 						{
 							numBoxesWeTake = 1;
 							workLen_s[j] -= numBoxesWeTake;
-							memcpy(inBox + (i+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[i])*(2*inRank+3), inBox + (j+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inRank+3) + (workLen_s[j])*(2*inRank+3), sizeof(double)*(2*inRank+3)*numBoxesWeTake);
+							memcpy(inBox + (i+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inDim+3) + (workLen_s[i])*(2*inDim+3), inBox + (j+blockIdx.x * BLOCK_SIZE)*SIZE_BUFFER_PER_THREAD*(2*inDim+3) + (workLen_s[j])*(2*inDim+3), sizeof(double)*(2*inDim+3)*numBoxesWeTake);
 							workLen_s[i] += numBoxesWeTake;	
 							break;
 						}

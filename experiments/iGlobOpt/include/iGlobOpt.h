@@ -54,13 +54,13 @@ enum GlobOptErrors
 };
 
 
-void calcOptValueOnCPUBFS(const double *_boxes, int _numBoxes,int _rank, int _splitCoeff, void (*_fun)(const double *, int, double *), double _eps, double *_min, GlobOptErrors *_status, double *_argmin);
+void calcOptValueOnCPUBFS(const double *_boxes, int _numBoxes,int _dim, int _splitCoeff, void (*_fun)(const double *, int, double *), double _eps, double *_min, GlobOptErrors *_status, double *_argmin);
 
-void calcOptValueOnCPUBFSWithMmap(const double *_boxes, int _numBoxes,int _rank, int _splitCoeff, void (*_fun)(const double *, int, double *), double _eps, double *_min, GlobOptErrors *_status, double *_argmin);
+void calcOptValueOnCPUBFSWithMmap(const double *_boxes, int _numBoxes,int _dim, int _splitCoeff, void (*_fun)(const double *, int, double *), double _eps, double *_min, GlobOptErrors *_status, double *_argmin);
 
-void calcOptValueOnCPUBFSWithOMP(const double *_boxes, int _numBoxes,int _rank, int _splitCoeff, void (*_fun)(const double *, int, double *), double _eps, double *_min, GlobOptErrors *_status, double *_argmin);
+void calcOptValueOnCPUBFSWithOMP(const double *_boxes, int _numBoxes,int _dim, int _splitCoeff, void (*_fun)(const double *, int, double *), double _eps, double *_min, GlobOptErrors *_status, double *_argmin);
 
-void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int _rank, int _splitCoeff, void (*_fun)(const double *, int, double *), double _eps, double *_min, GlobOptErrors *_status, double *_argmin, double _initFunRecord);
+void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int _dim, int _splitCoeff, void (*_fun)(const double *, int, double *), double _eps, double *_min, GlobOptErrors *_status, double *_argmin, double _initFunRecord);
 
 
 

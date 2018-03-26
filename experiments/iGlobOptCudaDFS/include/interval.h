@@ -2,6 +2,7 @@
 #define INTERVAL_H
 
 #include <iostream>
+#include <fstream>
 #include <stdio.h>
 #include <chrono>
 
