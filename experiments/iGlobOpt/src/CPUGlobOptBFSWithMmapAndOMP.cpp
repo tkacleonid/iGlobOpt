@@ -139,7 +139,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 	
 	auto start = std::chrono::high_resolution_clock::now();
 
-	char tp[100];
+
 	//While global optimum not found
 	while(true)
 	{
