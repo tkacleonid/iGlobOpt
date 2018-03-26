@@ -270,12 +270,6 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 			else 
 			{
 				wc++;
-				for(int j = 0; j < _rank; j++)
-				{
-					printf("[%f; %f]\t",workBoxes[(i*_rank+j)*2],workBoxes[(i*_rank+j)*2+1]);
-				}
-				printf("%f\t%f\t%f\n",funBounds[i*ARRAY_BOUNDS_LENGTH + GO_POSITION_RB],funBounds[i*ARRAY_BOUNDS_LENGTH + GO_POSITION_LB],funBounds[i*ARRAY_BOUNDS_LENGTH + GO_POSITION_FUN_RECORD]);
-				
 			}
 				
 		}
