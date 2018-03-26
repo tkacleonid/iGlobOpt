@@ -42,8 +42,8 @@ int main() {
     {
         case 1:
             inFun = calcFunBoundsAckley1WithLib;
-            inRank = 2;
-            inBox = new double[inRank * 2];
+            inDim = 2;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -32; inBox[1] = 32;
             inBox[2] = -32; inBox[3] = 32;
@@ -52,8 +52,8 @@ int main() {
             break;
         case 2:
             inFun = calcFunBoundsAckley2WithLib;
-            inRank = 2;
-            inBox = new double[inRank * 2];
+            inDim = 2;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -32; inBox[1] = 32;
             inBox[2] = -32; inBox[3] = 32;
@@ -61,8 +61,8 @@ int main() {
             break;
         case 3:
             inFun = calcFunBoundsAckley3WithLib;
-            inRank = 2;
-            inBox = new double[inRank * 2];
+            inDim = 2;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -32; inBox[1] = 32;
             inBox[2] = -32; inBox[3] = 32;
@@ -70,8 +70,8 @@ int main() {
             break;
         case 4:
             inFun = calcFunBoundsAckley4WithLib;
-            inRank = 2;
-            inBox = new double[inRank * 2];
+            inDim = 2;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -32; inBox[1] = 32;
             inBox[2] = -32; inBox[3] = 32;
@@ -79,8 +79,8 @@ int main() {
             break;
         case 5:
             inFun = calcFunBoundsAdjimanWithLib;
-            inRank = 2;
-            inBox = new double[inRank * 2];
+            inDim = 2;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -1; inBox[1] = 2;
             inBox[2] = -1; inBox[3] = 1;
@@ -88,8 +88,8 @@ int main() {
             break;
         case 6:
             inFun = calcFunBoundsAlpine1WithLib;
-            inRank = 2;
-            inBox = new double[inRank * 2];
+            inDim = 2;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -10; inBox[1] = 10;
             inBox[2] = -10; inBox[3] = 10;
@@ -97,8 +97,8 @@ int main() {
             break;
         case 7:
             inFun = calcFunBoundsAlpine2WithLib;
-            inRank = 3;
-            inBox = new double[inRank * 2];
+            inDim = 3;
+            inBox = new double[inDim * 2];
 
             inBox[0] = 0; inBox[1] = 10;
             inBox[2] = 0; inBox[3] = 10;
@@ -107,8 +107,8 @@ int main() {
             break;
         case 8:
             inFun = calcFunBoundsBradWithLib;
-            inRank = 3;
-            inBox = new double[inRank * 2];
+            inDim = 3;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -0.25; inBox[1] = 0.25;
             inBox[2] = -0.01; inBox[3] = 2.5;
@@ -117,8 +117,8 @@ int main() {
             break;
         case 9:
             inFun = calcFunBoundsBartelsConnWithLib;
-            inRank = 2;
-            inBox = new double[inRank * 2];
+            inDim = 2;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -10; inBox[1] = 10;
             inBox[2] = -10; inBox[3] = 10;
@@ -126,8 +126,8 @@ int main() {
             break;
         case 10:
             inFun = calcFunBoundsBealeWithLib;
-            inRank = 2;
-            inBox = new double[inRank * 2];
+            inDim = 2;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -4.5; inBox[1] = 4.5;
             inBox[2] = -4.5; inBox[3] = 4.5;
@@ -135,8 +135,8 @@ int main() {
             break;
         case 11:
             inFun = calcFunBoundsBiggsExpr2WithLib;
-            inRank = 2;
-            inBox = new double[inRank * 2];
+            inDim = 2;
+            inBox = new double[inDim * 2];
 
             inBox[0] = 0; inBox[1] = 20;
             inBox[2] = 0; inBox[3] = 20;
@@ -144,8 +144,8 @@ int main() {
             break;
         case 12:
             inFun = calcFunBoundsBiggsExpr3WithLib;
-            inRank = 3;
-            inBox = new double[inRank * 2];
+            inDim = 3;
+            inBox = new double[inDim * 2];
 
             inBox[0] = 0; inBox[1] = 20;
             inBox[2] = 0; inBox[3] = 20;
@@ -154,8 +154,8 @@ int main() {
             break;
         case 13:
             inFun = calcFunBoundsBiggsExpr4WithLib;
-            inRank = 4;
-            inBox = new double[inRank * 2];
+            inDim = 4;
+            inBox = new double[inDim * 2];
 
             inBox[0] = 0; inBox[1] = 20;
             inBox[2] = 0; inBox[3] = 20;
@@ -165,8 +165,8 @@ int main() {
             break;
         case 14:
             inFun = calcFunBoundsBiggsExpr5WithLib;
-            inRank = 5;
-            inBox = new double[inRank * 2];
+            inDim = 5;
+            inBox = new double[inDim * 2];
 
             inBox[0] = 0; inBox[1] = 20;
             inBox[2] = 0; inBox[3] = 20;
@@ -177,8 +177,8 @@ int main() {
             break;
         case 15:
             inFun = calcFunBoundsBiggsExpr6WithLib;
-            inRank = 6;
-            inBox = new double[inRank * 2];
+            inDim = 6;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -20; inBox[1] = 20;
             inBox[2] = -20; inBox[3] = 20;
@@ -190,8 +190,8 @@ int main() {
             break;
         case 16:
             inFun = calcFunBoundsBirdWithLib;
-            inRank = 2;
-            inBox = new double[inRank * 2];
+            inDim = 2;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -6.283185307179586476925286766559; inBox[1] = 6.283185307179586476925286766559;
             inBox[2] = -6.283185307179586476925286766559; inBox[3] = 6.283185307179586476925286766559;
@@ -199,8 +199,8 @@ int main() {
             break;
         case 17:
             inFun = calcFunBoundsBohachevsky1WithLib;
-            inRank = 2;
-            inBox = new double[inRank * 2];
+            inDim = 2;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -100; inBox[1] = 100;
             inBox[2] = -100; inBox[3] = 100;
@@ -208,8 +208,8 @@ int main() {
             break;
         case 18:
             inFun = calcFunBoundsBohachevsky2WithLib;
-            inRank = 2;
-            inBox = new double[inRank * 2];
+            inDim = 2;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -100; inBox[1] = 100;
             inBox[2] = -100; inBox[3] = 100;
@@ -217,8 +217,8 @@ int main() {
             break;
         case 19:
             inFun = calcFunBoundsBoothWithLib;
-            inRank = 2;
-            inBox = new double[inRank * 2];
+            inDim = 2;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -10; inBox[1] = 10;
             inBox[2] = -10; inBox[3] = 10;
@@ -226,8 +226,8 @@ int main() {
             break;
         case 20:
             inFun = calcFunBoundsBohachevsky3WithLib;
-            inRank = 2;
-            inBox = new double[inRank * 2];
+            inDim = 2;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -100; inBox[1] = 100;
             inBox[2] = -100; inBox[3] = 100;
@@ -235,8 +235,8 @@ int main() {
             break;
         case 21:
             inFun = calcFunBoundsBoxBettsQuadraticSumWithLib;
-            inRank = 3;
-            inBox = new double[inRank * 2];
+            inDim = 3;
+            inBox = new double[inDim * 2];
 
             inBox[0] = 0.9; inBox[1] = 1.2;
             inBox[2] = 9.0; inBox[3] = 11.2;
@@ -245,8 +245,8 @@ int main() {
             break;
         case 22:
             inFun = calcFunBoundsBraninRCOSWithLib;
-            inRank = 2;
-            inBox = new double[inRank * 2];
+            inDim = 2;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -5.0; inBox[1] = 10;
             inBox[2] = 0; inBox[3] = 15.0;
@@ -254,8 +254,8 @@ int main() {
             break;
         case 23:
             inFun = calcFunBoundsBraninRCOS2WithLib;
-            inRank = 2;
-            inBox = new double[inRank * 2];
+            inDim = 2;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -5.0; inBox[1] = 10;
             inBox[2] = 0; inBox[3] = 15.0;
@@ -263,8 +263,8 @@ int main() {
             break;
         case 24:
             inFun = calcFunBoundsBrentWithLib;
-            inRank = 2;
-            inBox = new double[inRank * 2];
+            inDim = 2;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -10.0; inBox[1] = 10.0;
             inBox[2] = -10.0; inBox[3] = 10.0;
@@ -272,8 +272,8 @@ int main() {
             break;
         case 25:
             inFun = calcFunBoundsBrownWithLib;
-            inRank = 2;
-            inBox = new double[inRank * 2];
+            inDim = 2;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -1.0; inBox[1] = 4.0;
             inBox[2] = -1.0; inBox[3] = 4.0;
@@ -281,8 +281,8 @@ int main() {
             break;
         case 26:
             inFun = calcFunBoundsBukin2WithLib;
-            inRank = 2;
-            inBox = new double[inRank * 2];
+            inDim = 2;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -15.0; inBox[1] = -5.0;
             inBox[2] = -3.0; inBox[3] = 3.0;
@@ -290,8 +290,8 @@ int main() {
             break;
         case 27:
             inFun = calcFunBoundsBukin4WithLib;
-            inRank = 2;
-            inBox = new double[inRank * 2];
+            inDim = 2;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -15.0; inBox[1] = -5.0;
             inBox[2] = -3.0; inBox[3] = 3.0;
@@ -299,8 +299,8 @@ int main() {
             break;
         case 28:
             inFun = calcFunBoundsBukin6WithLib;
-            inRank = 2;
-            inBox = new double[inRank * 2];
+            inDim = 2;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -15.0; inBox[1] = -5.0;
             inBox[2] = -3.0; inBox[3] = 3.0;
@@ -308,8 +308,8 @@ int main() {
             break;
         case 29:
             inFun = calcFunBoundsCamelThreeHumpWithLib;
-            inRank = 2;
-            inBox = new double[inRank * 2];
+            inDim = 2;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -5.0; inBox[1] = 5.0;
             inBox[2] = -5.0; inBox[3] = 5.0;
@@ -317,8 +317,8 @@ int main() {
             break;
         case 30:
             inFun = calcFunBoundsCamelSixHumpWithLib;
-            inRank = 2;
-            inBox = new double[inRank * 2];
+            inDim = 2;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -5.0; inBox[1] = 5.0;
             inBox[2] = -5.0; inBox[3] = 5.0;
@@ -326,8 +326,8 @@ int main() {
             break;
         case 31:
             inFun = calcFunBoundsChichinadzeWithLib;
-            inRank = 2;
-            inBox = new double[inRank * 2];
+            inDim = 2;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -30.0; inBox[1] = 30.0;
             inBox[2] = -30.0; inBox[3] = 30.0;
@@ -335,8 +335,8 @@ int main() {
             break;
         case 32:
             inFun = calcFunBoundsChungReynoldsWithLib;
-            inRank = 2;
-            inBox = new double[inRank * 2];
+            inDim = 2;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -100.0; inBox[1] = 100.0;
             inBox[2] = -100.0; inBox[3] = 100.0;
@@ -344,8 +344,8 @@ int main() {
             break;
         case 33:
             inFun = calcFunBoundsColvilleWithLib;
-            inRank = 4;
-            inBox = new double[inRank * 2];
+            inDim = 4;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -10; inBox[1] = 10;
             inBox[2] = -10; inBox[3] = 10;
@@ -355,8 +355,8 @@ int main() {
             break;
         case 34:
             inFun = calcFunBoundsComplexWithLib;
-            inRank = 2;
-            inBox = new double[inRank * 2];
+            inDim = 2;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -2.0; inBox[1] = 2.0;
             inBox[2] = -2.0; inBox[3] = 2.0;
@@ -364,8 +364,8 @@ int main() {
             break;
         case 35:
             inFun = calcFunBoundsCosineMixtureWithLib;
-            inRank = 2;
-            inBox = new double[inRank * 2];
+            inDim = 2;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -1.0; inBox[1] = 1.0;
             inBox[2] = -1.0; inBox[3] = 1.0;
@@ -373,8 +373,8 @@ int main() {
             break;
         case 36:
             inFun = calcFunBoundsCrossInTrayWithLib;
-            inRank = 2;
-            inBox = new double[inRank * 2];
+            inDim = 2;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -15.0; inBox[1] = 15.0;
             inBox[2] = -15.0; inBox[3] = 15.0;
@@ -382,8 +382,8 @@ int main() {
             break;
         case 37:
             inFun = calcFunBoundsCrossLegWithLib;
-            inRank = 2;
-            inBox = new double[inRank * 2];
+            inDim = 2;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -10.0; inBox[1] = 10.0;
             inBox[2] = -10.0; inBox[3] = 10.0;
@@ -391,8 +391,8 @@ int main() {
             break;
         case 38:
             inFun = calcFunBoundsCubeWithLib;
-            inRank = 2;
-            inBox = new double[inRank * 2];
+            inDim = 2;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -10.0; inBox[1] = 10.0;
             inBox[2] = -10.0; inBox[3] = 10.0;
@@ -400,8 +400,8 @@ int main() {
             break;
         case 39:
             inFun = calcFunBoundsDeb1WithLib;
-            inRank = 2;
-            inBox = new double[inRank * 2];
+            inDim = 2;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -1.0; inBox[1] = 1.0;
             inBox[2] = -1.0; inBox[3] = 1.0;
@@ -410,8 +410,8 @@ int main() {
 
         case 40:
             inFun = calcFunBoundsDavisWithLib;
-            inRank = 2;
-            inBox = new double[inRank * 2];
+            inDim = 2;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -100.0; inBox[1] = 100.0;
             inBox[2] = -100.0; inBox[3] = 100.0;
@@ -419,8 +419,8 @@ int main() {
             break;
         case 41:
             inFun = calcFunBoundsDeckkersAartsWithLib;
-            inRank = 2;
-            inBox = new double[inRank * 2];
+            inDim = 2;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -20.0; inBox[1] = 20.0;
             inBox[2] = -20.0; inBox[3] = 20.0;
@@ -428,8 +428,8 @@ int main() {
             break;
         case 42:
             inFun = calcFunBoundsDixonPriceWithLib;
-            inRank = 2;
-            inBox = new double[inRank * 2];
+            inDim = 2;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -10.0; inBox[1] = 10.0;
             inBox[2] = -10.0; inBox[3] = 10.0;
@@ -437,8 +437,8 @@ int main() {
             break;
         case 43:
             inFun = calcFunBoundsDolanWithLib;
-            inRank = 5;
-            inBox = new double[inRank * 2];
+            inDim = 5;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -100.0; inBox[1] = 100.0;
             inBox[2] = -100.0; inBox[3] = 100.0;
@@ -449,8 +449,8 @@ int main() {
             break;
         case 44:
             inFun = calcFunBoundsDropWaveWithLib;
-            inRank = 2;
-            inBox = new double[inRank * 2];
+            inDim = 2;
+            inBox = new double[inDim * 2];
 
             inBox[0] = -5.12; inBox[1] = 5.12;
             inBox[2] = -5.12; inBox[3] = 5.12;
@@ -458,9 +458,9 @@ int main() {
             break;
         case 45:
              inFun = calcFunBoundsRosenbrockWithLib5;
-             inRank = 5;
-             inBox = new double[inRank * 2];
-             for(int i = 0; i < inRank; i++)
+             inDim = 5;
+             inBox = new double[inDim * 2];
+             for(int i = 0; i < inDim; i++)
              {
             	 inBox[i*2] = -30.0;
             	 inBox[i*2+1] = 30.0;
@@ -468,9 +468,9 @@ int main() {
              break;
         case 46:
              inFun = calcFunBoundsRosenbrockWithLib10;
-             inRank = 10;
-             inBox = new double[inRank * 2];
-             for(int i = 0; i < inRank; i++)
+             inDim = 10;
+             inBox = new double[inDim * 2];
+             for(int i = 0; i < inDim; i++)
              {
             	 inBox[i*2] = -30.0;
             	 inBox[i*2+1] = 30.0;
@@ -478,9 +478,9 @@ int main() {
              break;
         case 47:
              inFun = calcFunBoundsRosenbrockWithLib15;
-             inRank = 15;
-             inBox = new double[inRank * 2];
-             for(int i = 0; i < inRank; i++)
+             inDim = 15;
+             inBox = new double[inDim * 2];
+             for(int i = 0; i < inDim; i++)
              {
             	 inBox[i*2] = -30.0;
             	 inBox[i*2+1] = 30.0;
@@ -489,9 +489,9 @@ int main() {
              break;
         case 48:
              inFun = calcFunBoundsRosenbrockWithLib20;
-             inRank = 20;
-             inBox = new double[inRank * 2];
-             for(int i = 0; i < inRank; i++)
+             inDim = 20;
+             inBox = new double[inDim * 2];
+             for(int i = 0; i < inDim; i++)
              {
             	 inBox[i*2] = -30.0;
             	 inBox[i*2+1] = 30.0;
@@ -499,8 +499,8 @@ int main() {
              break;
         case 49:
              inFun = calcFunBoundsRosenbrockModifiedWithLib;
-             inRank = 2;
-             inBox = new double[inRank * 2];
+             inDim = 2;
+             inBox = new double[inDim * 2];
 
 
              inBox[0] = -2.0; inBox[1] = 2.0;
@@ -509,9 +509,9 @@ int main() {
              break;
         case 50:
              inFun = fnCalcFunLimitsRozenbroke;
-             inRank = 5;
-             inBox = new double[inRank * 2];
-             for(int i = 0; i < inRank; i++)
+             inDim = 5;
+             inBox = new double[inDim * 2];
+             for(int i = 0; i < inDim; i++)
              {
             	 inBox[i*2] = -30.0;
             	 inBox[i*2+1] = 30.0;
@@ -519,9 +519,9 @@ int main() {
              break;
         case 51:
              inFun = fnCalcFunLimitsRozenbroke;
-             inRank = 10;
-             inBox = new double[inRank * 2];
-             for(int i = 0; i < inRank; i++)
+             inDim = 10;
+             inBox = new double[inDim * 2];
+             for(int i = 0; i < inDim; i++)
              {
             	 inBox[i*2] = -30.0;
             	 inBox[i*2+1] = 30.0;
@@ -529,9 +529,9 @@ int main() {
              break;
         case 52:
              inFun = fnCalcFunLimitsRozenbroke;
-             inRank = 15;
-             inBox = new double[inRank * 2];
-             for(int i = 0; i < inRank; i++)
+             inDim = 15;
+             inBox = new double[inDim * 2];
+             for(int i = 0; i < inDim; i++)
              {
             	 inBox[i*2] = -30.0;
             	 inBox[i*2+1] = 30.0;
@@ -539,9 +539,9 @@ int main() {
              break;
         case 53:
              inFun = fnCalcFunLimitsRozenbroke;
-             inRank = 20;
-             inBox = new double[inRank * 2];
-             for(int i = 0; i < inRank; i++)
+             inDim = 20;
+             inBox = new double[inDim * 2];
+             for(int i = 0; i < inDim; i++)
              {
             	 inBox[i*2] = -30.0;
             	 inBox[i*2+1] = 30.0;
@@ -549,9 +549,9 @@ int main() {
              break;
         case 54:
              inFun = fnCalcFunLimitsAluffiPentini2;
-             inRank = 2;
-             inBox = new double[inRank * 2];
-             for(int i = 0; i < inRank; i++)
+             inDim = 2;
+             inBox = new double[inDim * 2];
+             for(int i = 0; i < inDim; i++)
              {
             	 inBox[i*2] = -30.0;        
             	 inBox[i*2+1] = 30.0;    
@@ -559,9 +559,9 @@ int main() {
              break;
 	case 55:
              inFun = fnCalcFunLimitsStyblinski;
-             inRank = 2;
-             inBox = new double[inRank * 2];
-             for(int i = 0; i < inRank; i++)
+             inDim = 2;
+             inBox = new double[inDim * 2];
+             for(int i = 0; i < inDim; i++)
              {
             	 inBox[i*2] = -5.0;
             	 inBox[i*2+1] = 5.0;
@@ -572,7 +572,7 @@ int main() {
         default: exit(0);
     }
 
-    argMin = new double[inRank * 2];
+    argMin = new double[inDim * 2];
 	if(!isConfirm) {
 		inFun(inBox,inDim,outFunBounds);
 		initFunRecord = outFunBounds[GO_POSITION_FUN_RECORD];
@@ -583,11 +583,11 @@ int main() {
 
    	GlobOptErrors st;
     switch (type_opt) {
-        case 1: calcOptValueOnCPUBFS(inBox,1, inRank, inNumBoxesSplitCoeff, inFun, inEps, &outMin, &st,argMin); break;
-        case 2: calcOptValueOnCPUBFSWithMmap(inBox, 1,inRank, inNumBoxesSplitCoeff,   inFun, inEps, &outMin,  &st,argMin); break;
-        case 3: calcOptValueOnCPUBFSWithOMP(inBox, 1,inRank, inNumBoxesSplitCoeff,  inFun, inEps, &outMin,  &st,argMin); break;
-        case 4: calcOptValueOnCPUBFSWithMmapAndOMP(inBox, 1,inRank, inNumBoxesSplitCoeff,  inFun, inEps, &outMin,  &st,argMin, initFunRecord); break;
-        default: calcOptValueOnCPUBFS(inBox,1, inRank, inNumBoxesSplitCoeff,  inFun, inEps, &outMin,  &st,argMin);
+        case 1: calcOptValueOnCPUBFS(inBox,1, inDim, inNumBoxesSplitCoeff, inFun, inEps, &outMin, &st,argMin); break;
+        case 2: calcOptValueOnCPUBFSWithMmap(inBox, 1,inDim, inNumBoxesSplitCoeff,   inFun, inEps, &outMin,  &st,argMin); break;
+        case 3: calcOptValueOnCPUBFSWithOMP(inBox, 1,inDim, inNumBoxesSplitCoeff,  inFun, inEps, &outMin,  &st,argMin); break;
+        case 4: calcOptValueOnCPUBFSWithMmapAndOMP(inBox, 1,inDim, inNumBoxesSplitCoeff,  inFun, inEps, &outMin,  &st,argMin, initFunRecord); break;
+        default: calcOptValueOnCPUBFS(inBox,1, inDim, inNumBoxesSplitCoeff,  inFun, inEps, &outMin,  &st,argMin);
     }
 
 	
@@ -609,7 +609,7 @@ int main() {
 	else if(st == GO_SUCCESS)
 	{
 	    std::cout << "Result: ";
-	    for (int i = 0; i < inRank; i++) {
+	    for (int i = 0; i < inDim; i++) {
 	        printf("[%.8lf; %.8lf]\t",argMin[i*2],argMin[i*2+1]);
 	    }
 
