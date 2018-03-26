@@ -24,7 +24,6 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 {
 	int numBoxes = BLOCK_SIZE*NUM_BLOCKS;
 	double *boxes =  new double[numBoxes*(inRank*2+3)*SIZE_BUFFER_PER_THREAD];
-	double *droppedBoxes =  new double[numBoxes*(inRank*2+3)];
 	double h;
 	int hInd;
 	int *workLen;
@@ -45,8 +44,6 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 	h = inBox[1] - inBox[0];
 	hInd = 0;
 	
-	std::ofstream outfile;
-	outfile.open("droppedBoxesCPU", std::ios_base::app);
 
 	
 	
@@ -79,20 +76,10 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 	}
 	
 	
-	for (int j = 0; j < numBoxes; j++) {
-		for (int k = 0; k < inRank; k++) {
-			droppedBoxes[j*(2*inRank+3)+2*k] = 0.0;
-			droppedBoxes[j*(2*inRank+3)+2*k +1] = 0.0;
-				
-		}
-		droppedBoxes[j*(2*inRank+3)+2*inRank] = 0.0;
-		droppedBoxes[j*(2*inRank+3)+2*inRank+1] = 0.0;
-		droppedBoxes[j*(2*inRank+3)+2*inRank+2] = 0.0;
-	}
+
 	
 
 	double *dev_inBox = 0;
-	double *dev_droppedBoxes = 0;
 	int *dev_workLen = 0;
 	long long *dev_workCounts = 0;
 	double *dev_mins = 0;
@@ -124,7 +111,6 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 	std::cout << "start CUDA malloc 1\n";
 		
     CHECKED_CALL(cudaMalloc((void **)&dev_inBox, sizeInBox));
-    CHECKED_CALL(cudaMalloc((void **)&dev_droppedBoxes, numThreads*(inRank*2+3)*sizeof(double)));
 	
 	std::cout << "start CUDA malloc 2\n";
 	
@@ -148,7 +134,6 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 		CHECKED_CALL(cudaEventCreate(&start));
 		CHECKED_CALL(cudaEventCreate(&stop));
 		CHECKED_CALL(cudaMemcpy(dev_inBox, boxes, numBoxes*(2*inRank+3)*sizeof(double)*SIZE_BUFFER_PER_THREAD, cudaMemcpyHostToDevice));
-		CHECKED_CALL(cudaMemcpy(dev_droppedBoxes, droppedBoxes, numBoxes*(2*inRank+3)*sizeof(double), cudaMemcpyHostToDevice));
 		CHECKED_CALL(cudaMemcpy(dev_workLen, workLen, numThreads*sizeof(int), cudaMemcpyHostToDevice));
 		CHECKED_CALL(cudaMemcpy(dev_workCounts, workCounts, numThreads*sizeof(int), cudaMemcpyHostToDevice));
 		CHECKED_CALL(cudaEventRecord(start, 0));
@@ -156,12 +141,12 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 		switch(TYPE_CUDA_OPTIMIZATION)
 		{
 			case 1:
-				globOptCUDA_1<<<GridSize, BLOCK_SIZE>>>(dev_inBox, dev_droppedBoxes,inRank,dev_workLen,dev_mins,funcMin,inEps,dev_workCounts);
+				globOptCUDA_1<<<GridSize, BLOCK_SIZE>>>(dev_inBox,inRank,dev_workLen,dev_mins,funcMin,inEps,dev_workCounts);
 				break;
 				
 				
 			default:
-				globOptCUDA_1<<<GridSize, BLOCK_SIZE>>>(dev_inBox, dev_droppedBoxes,inRank,dev_workLen,dev_mins,funcMin,inEps,dev_workCounts);
+				globOptCUDA_1<<<GridSize, BLOCK_SIZE>>>(dev_inBox, inRank,dev_workLen,dev_mins,funcMin,inEps,dev_workCounts);
 				break;
 		}
 		
@@ -173,7 +158,6 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 		CHECKED_CALL(cudaDeviceSynchronize());
 
 		CHECKED_CALL(cudaMemcpy(boxes, dev_inBox, numBoxes*(2*inRank+3)*sizeof(double)*SIZE_BUFFER_PER_THREAD, cudaMemcpyDeviceToHost));
-		CHECKED_CALL(cudaMemcpy(droppedBoxes, dev_droppedBoxes, numBoxes*(2*inRank+3)*sizeof(double), cudaMemcpyDeviceToHost));
 		CHECKED_CALL(cudaMemcpy(workLen, dev_workLen, numThreads*sizeof(int), cudaMemcpyDeviceToHost));
 		CHECKED_CALL(cudaMemcpy(mins, dev_mins, numThreads*sizeof(double), cudaMemcpyDeviceToHost));
 		CHECKED_CALL(cudaMemcpy(workCounts, dev_workCounts, numThreads*sizeof(long long), cudaMemcpyDeviceToHost));
@@ -204,28 +188,12 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 		printf("mins: %.10f\n",funcMin);
 		printf("\n\n\n");
 		
-		for (int j = 0; j < numThreads; j++) {
-			if(droppedBoxes[j*(2*inRank+3)] == droppedBoxes[j*(2*inRank+3)+1]) continue;
-			for (int k = 0; k < inRank; k++) {
-				std::cout << droppedBoxes[j*(2*inRank+3)+2*k] << "\t" << droppedBoxes[j*(2*inRank+3)+2*k+1] << "\t";
-				outfile << droppedBoxes[j*(2*inRank+3)+2*k] << "\t" << droppedBoxes[j*(2*inRank+3)+2*k+1] << "\t";
-				droppedBoxes[j*(2*inRank+3)+2*k] = 0.0;
-				droppedBoxes[j*(2*inRank+3)+2*k +1] = 0.0;
-			}
-			std::cout << droppedBoxes[j*(2*inRank+3)+2*inRank] << "\t" << droppedBoxes[j*(2*inRank+3)+2*inRank+1] << "\t" << droppedBoxes[j*(2*inRank+3)+2*inRank+2] << "\n";
-
-			outfile << droppedBoxes[j*(2*inRank+3)+2*inRank] << "\t" << droppedBoxes[j*(2*inRank+3)+2*inRank+1] << "\t" << droppedBoxes[j*(2*inRank+3)+2*inRank+2] << "\n";
-			droppedBoxes[j*(2*inRank+3)+2*inRank] = 0.0;
-			droppedBoxes[j*(2*inRank+3)+2*inRank+1] = 0.0;
-			droppedBoxes[j*(2*inRank+3)+2*inRank+2] = 0.0;
-		}
 			
-		
-		
+			
 		printf("\n\n\n");
 		
 		
-			
+	/*		
 	
 		int numWorkBoxes = 0;
 		int averageBoxesPerThread = 0;
@@ -295,7 +263,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 			}
 		}
 		 
-
+*/
 
 		CHECKED_CALL(cudaEventDestroy(start));
 		CHECKED_CALL(cudaEventDestroy(stop));
@@ -361,7 +329,6 @@ __global__ void globOptCUDA_1(double *inBox, double *droppedBoxes, int inRank, i
 		if(min_s[threadIdx.x] - inBox[bInd + 2*inRank] < inEps)
 		{
 			--workLen_s[threadIdx.x];
-			memcpy(droppedBoxes+threadId*(2*inRank+3),inBox + bInd,(2*inRank+3)*sizeof(double));
 			n++;
 		}
 		else
