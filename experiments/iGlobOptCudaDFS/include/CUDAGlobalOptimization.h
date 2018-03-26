@@ -103,41 +103,24 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 	std::cout << "in 1\n";
 	
 	CHECKED_CALL(cudaSetDevice(DEVICE));
-	
-	
-	
-	CHECKED_CALL(cudaDeviceReset());
-	
-	std::cout << "start CUDA malloc 1\n";
-		
+	CHECKED_CALL(cudaDeviceReset());	
     CHECKED_CALL(cudaMalloc((void **)&dev_inBox, sizeInBox));
-	
-	std::cout << "start CUDA malloc 2\n";
-	
 	CHECKED_CALL(cudaMalloc((void **)&dev_workLen, numThreads*sizeof(int)));
-	
-	std::cout << "start CUDA malloc 3\n";
-	
 	CHECKED_CALL(cudaMalloc((void **)&dev_mins, numThreads*sizeof(double)));
-	
-	std::cout << "start CUDA malloc 4\n";
-	
 	CHECKED_CALL(cudaMalloc((void **)&dev_workCounts, numThreads*sizeof(long long)));
 	
 	timeAll = 0;
 	long long wc = 0;
+	long long ls = 0;	
 	for(i = 0; i < MAX_NUM_RUNS ; i++)
 	{
-		//std::cin.get();
-		std::cout << "\nNUMBER #" << (i+1) << "\n";
-		
 		CHECKED_CALL(cudaEventCreate(&start));
 		CHECKED_CALL(cudaEventCreate(&stop));
 		CHECKED_CALL(cudaMemcpy(dev_inBox, boxes, numBoxes*(2*inRank+3)*sizeof(double)*SIZE_BUFFER_PER_THREAD, cudaMemcpyHostToDevice));
 		CHECKED_CALL(cudaMemcpy(dev_workLen, workLen, numThreads*sizeof(int), cudaMemcpyHostToDevice));
 		CHECKED_CALL(cudaMemcpy(dev_workCounts, workCounts, numThreads*sizeof(int), cudaMemcpyHostToDevice));
 		CHECKED_CALL(cudaEventRecord(start, 0));
-		std::cout << "call CUDA\n";
+		
 		switch(TYPE_CUDA_OPTIMIZATION)
 		{
 			case 1:
@@ -150,7 +133,6 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 				break;
 		}
 		
-		std::cout << "stop CUDA\n";
 		CHECKED_CALL(cudaGetLastError());
 
 		CHECKED_CALL(cudaEventRecord(stop, 0));
@@ -164,33 +146,20 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 
 		CHECKED_CALL(cudaEventElapsedTime(&time, start, stop)); 
 		
-
-		std::cout << "time = " << time << "\n";
-		
-		long long ls = 0;
-		
+		ls = 0;	
 		for(int j = 0; j < numThreads; j++)
 		{
 			wc+=workCounts[j];
 			ls += workLen[j];
 			workCounts[j] = 0;
 		}
-		
-		std::cout << "wc = " << wc << "\n";
-		std::cout << "ls = " << ls << "\n";
-		
+
 		funcMin = mins[0];		
 		for(int j  = 1; j < numThreads; j++)
 		{
 			if(funcMin > mins[j]) funcMin = mins[j];
 		}
 		
-		printf("mins: %.10f\n",funcMin);
-		printf("\n\n\n");
-		
-			
-			
-		printf("\n\n\n");
 		
 		
 	/*		
@@ -272,17 +241,12 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 		if(ls ==0) break;
 	}	
 	
-	
-	std::cout << "free start\n";
-	
+
 	CHECKED_CALL(cudaFree(dev_inBox));
     CHECKED_CALL(cudaFree(dev_workLen));
 	CHECKED_CALL(cudaFree(dev_mins));
 	CHECKED_CALL(cudaFree(dev_workCounts));
 	
-	std::cout << "free stop\n";
-	std::cout <<  "\n\n";
-
 	
 	std::cout << "MIN = " << funcMin << "\n";
 	std::cout <<  "timeAll = " << timeAll;
