@@ -17,8 +17,6 @@
 
 
 __global__ void globOptCUDA_1(double *inBox, int inRank, int *workLen, double *min, double inRec, double inEps, long long *workCounts);
-
-
 __global__ void globOptCUDA_2(double *inBox, int inRank, int *workLen, double *min, double inRec, double inEps, long long *workCounts);
 
 
@@ -75,7 +73,6 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 	}
 	
 	
-
 	double *dev_inBox = 0;
 	int *dev_workLen = 0;
 	long long *dev_workCounts = 0;
@@ -86,7 +83,6 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 	int sizeInBox = numThreads*(inRank*2+3)*sizeof(double)*SIZE_BUFFER_PER_THREAD;	
 	
 	long long *workCounts = new long long[numThreads*sizeof(int)];
-	
 	for(i = 0; i < numThreads; i++)
 	{
 		workLen[i] = 1;
