@@ -37,7 +37,10 @@ int main() {
     scanf("%d %d",&type_opt,&type_test_fun);
     printf("\nВведите точность оценивания: ");
     scanf("%lf",&inEps);
-for (int i = 0; i < 10; i++) {
+	inEps = 1;
+	for(int j = 1; j < 10000000; j*=10) {
+		inEps /= j;
+for (int i = 0; i < 5; i++) {
     switch (type_test_fun)
     {
         case 1:
@@ -621,6 +624,7 @@ for (int i = 0; i < 10; i++) {
 
 	}
 }
+	}
     delete [] inBox;
     delete [] argMin;
 
