@@ -103,8 +103,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 	std::cout << "start CUDA malloc 4\n";
 	CHECKED_CALL(cudaMalloc((void **)&dev_workCounts, numThreads*sizeof(long long)));
 	
-	
-	timeAll = 0;
+
 	long long wc = 0;
 	for(i = 0; i < MAX_NUM_RUNS ; i++)
 	{
