@@ -372,7 +372,6 @@ void fnGetOptValueWithCUDA_v2(double *inBox, const int inDim, const double inEps
 		int numWorkBoxes = 0;
 		int averageBoxesPerThread = 0;
 		int curThreadWeTakeBoxesIndex = -1;
-		int curThreadWeTakeBoxesCount = 0;
 		int numBoxesWeTake = 0;
 
 		for (int m = 0; m < numThreads; m++) {
