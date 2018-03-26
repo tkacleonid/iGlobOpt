@@ -40,7 +40,7 @@ int main() {
 	inEps = 1;
 	for(int j = 1; j < 10000000; j*=10) {
 		inEps /= j;
-for (int i = 0; i < 5; i++) {
+for (int ki = 0; k < 5; k++) {
     switch (type_test_fun)
     {
         case 1:
@@ -620,7 +620,7 @@ for (int i = 0; i < 5; i++) {
 	    printf("Record of function: [%.8lf]\t",outMin);
 	    std::cout << "\n";
 	    std::cout << "time in millisecs: " << ((std::chrono::duration_cast<std::chrono::milliseconds>(end - start)).count())/1 << "\t";
-	    std::cout << "\n";
+	    std::cout << "\n\n";
 
 	}
 }
