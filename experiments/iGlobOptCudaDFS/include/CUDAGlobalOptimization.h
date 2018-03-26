@@ -249,6 +249,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 	
 	
 	std::cout << "MIN = " << funcMin << "\n";
+	std::cout << "wc = " << wc << "\n";
 	std::cout <<  "timeAll = " << timeAll << "\n";
 	std::cout <<  "timeAllCPU = " << (std::chrono::duration_cast<std::chrono::milliseconds>(endCPU - startCPU)).count() << "\n";
 
