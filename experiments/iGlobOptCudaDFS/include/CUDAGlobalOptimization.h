@@ -100,8 +100,6 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 
 	cudaEvent_t start, stop;
 	
-	std::cout << "in 1\n";
-	
 	CHECKED_CALL(cudaSetDevice(DEVICE));
 	CHECKED_CALL(cudaDeviceReset());	
     CHECKED_CALL(cudaMalloc((void **)&dev_inBox, sizeInBox));
@@ -111,7 +109,9 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 	
 	timeAll = 0;
 	long long wc = 0;
-	long long ls = 0;	
+	long long ls = 0;
+
+	auto startCPU = std::chrono::high_resolution_clock_now();
 	for(i = 0; i < MAX_NUM_RUNS ; i++)
 	{
 		CHECKED_CALL(cudaEventCreate(&start));
@@ -240,7 +240,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 		timeAll += time;
 		if(ls ==0) break;
 	}	
-	
+	auto endCPU = std::chrono::high_resolution_clock_now();
 
 	CHECKED_CALL(cudaFree(dev_inBox));
     CHECKED_CALL(cudaFree(dev_workLen));
@@ -249,8 +249,8 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 	
 	
 	std::cout << "MIN = " << funcMin << "\n";
-	std::cout <<  "timeAll = " << timeAll;
-	std::cout <<  "\n";
+	std::cout <<  "timeAll = " << timeAll << "\n";
+	std::cout <<  "timeAllCPU = " << (std::chrono::duration_cast<std::chrono_milliseconds>(endCPU - startCPU)).count() << "\n";
 
 }
 
