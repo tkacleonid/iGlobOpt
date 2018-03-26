@@ -29,6 +29,7 @@
 *	@param outMin pointer to optimal value
 *	@param outEps pointer to reached accuracy
 *	@param outEps pointer to status of solving optimization problem
+*	@param _initFunRecord initial function record
 */
 void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int _rank, int _splitCoeff, void (*_fun)(const double *, int, double *), double _eps, double *_min, GlobOptErrors *_status, double *_argmin, double _initFunRecord)
 {

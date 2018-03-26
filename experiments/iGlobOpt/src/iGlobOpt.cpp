@@ -566,14 +566,18 @@ int main() {
             	 inBox[i*2] = -5.0;
             	 inBox[i*2+1] = 5.0;
              }
+			 initFunRecord = -39.1661657038*inDim;
              break;			 
 
         default: exit(0);
     }
 
     argMin = new double[inRank * 2];
-	inFun(inBox,inDim,outFunBounds);
-	initFunRecord = outFunBounds[3];
+	if(!isConfirm) {
+		inFun(inBox,inDim,outFunBounds);
+		initFunRecord = outFunBounds[2];
+	}
+	
 
     auto start = std::chrono::high_resolution_clock::now();
 
