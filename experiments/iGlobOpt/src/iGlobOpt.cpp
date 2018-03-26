@@ -40,7 +40,7 @@ int main() {
 	inEps = 10;
 	for(int j = 1; j < 7; j++) {
 		inEps /= 10;
-for (int k = 0; k < 5; k++) {
+for (int k = 0; k < 2; k++) {
     switch (type_test_fun)
     {
         case 1:
@@ -623,6 +623,7 @@ for (int k = 0; k < 5; k++) {
 	    std::cout << "\n\n";
 
 	}
+	std::cout << "\n\n";
 }
 	}
     delete [] inBox;
