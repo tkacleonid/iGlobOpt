@@ -586,7 +586,7 @@ int main() {
         case 1: calcOptValueOnCPUBFS(inBox,1, inRank, inNumBoxesSplitCoeff, inFun, inEps, &outMin, &st,argMin); break;
         case 2: calcOptValueOnCPUBFSWithMmap(inBox, 1,inRank, inNumBoxesSplitCoeff,   inFun, inEps, &outMin,  &st,argMin); break;
         case 3: calcOptValueOnCPUBFSWithOMP(inBox, 1,inRank, inNumBoxesSplitCoeff,  inFun, inEps, &outMin,  &st,argMin); break;
-        case 4: calcOptValueOnCPUBFSWithMmapAndOMP(inBox, 1,inRank, inNumBoxesSplitCoeff,  inFun, inEps, &outMin,  &st,argMin); break;
+        case 4: calcOptValueOnCPUBFSWithMmapAndOMP(inBox, 1,inRank, inNumBoxesSplitCoeff,  inFun, inEps, &outMin,  &st,argMin, initFunRecord); break;
         default: calcOptValueOnCPUBFS(inBox,1, inRank, inNumBoxesSplitCoeff,  inFun, inEps, &outMin,  &st,argMin);
     }
 
