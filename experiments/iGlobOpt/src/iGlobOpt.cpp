@@ -623,8 +623,9 @@ for (int k = 0; k < 2; k++) {
 	    std::cout << "\n\n";
 
 	}
-	std::cout << "\n\n";
+	
 }
+std::cout << "\n\n";
 	}
     delete [] inBox;
     delete [] argMin;
