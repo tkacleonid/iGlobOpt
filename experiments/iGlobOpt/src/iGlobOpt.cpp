@@ -566,7 +566,7 @@ for (int i = 0; i < 10; i++) {
             	 inBox[i*2] = -5.0;
             	 inBox[i*2+1] = 5.0;
              }
-			 initFunRecord = 0;//-39.1661657038*inDim;
+			 initFunRecord = -39.1661657038*inDim;
              break;			 
 
         default: exit(0);
