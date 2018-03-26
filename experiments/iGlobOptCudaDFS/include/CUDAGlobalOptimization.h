@@ -111,7 +111,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 	long long wc = 0;
 	long long ls = 0;
 
-	auto startCPU = std::chrono::high_resolution_clock.now();
+	auto startCPU = std::chrono::high_resolution_clock::now();
 	for(i = 0; i < MAX_NUM_RUNS ; i++)
 	{
 		CHECKED_CALL(cudaEventCreate(&start));
@@ -240,7 +240,7 @@ void fnGetOptValueWithCUDA(double *inBox, const int inRank, const double inEps, 
 		timeAll += time;
 		if(ls ==0) break;
 	}	
-	auto endCPU = std::chrono::high_resolution_clock.now();
+	auto endCPU = std::chrono::high_resolution_clock::now();
 
 	CHECKED_CALL(cudaFree(dev_inBox));
     CHECKED_CALL(cudaFree(dev_workLen));
