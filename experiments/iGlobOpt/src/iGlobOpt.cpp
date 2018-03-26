@@ -17,7 +17,7 @@ void (*inFun)(const double *,int,double *);
 
 
 int main() {
-    int inDim = 3;
+    int inDim = 2;
 
     double *inBox = NULL;
     double *argMin = NULL;
@@ -562,7 +562,7 @@ for (int k = 0; k < 2; k++) {
              break;
 	case 55:
              inFun = fnCalcFunLimitsStyblinski;
-             inDim = 2;
+             inDim = 3;
              inBox = new double[inDim * 2];
              for(int i = 0; i < inDim; i++)
              {
