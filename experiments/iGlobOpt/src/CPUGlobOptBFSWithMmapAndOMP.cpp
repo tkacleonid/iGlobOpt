@@ -20,7 +20,7 @@
 /**
 *	Calculus minimum value for function on CPU
 *	@param inbox pointer to Box
-*	@param inRank number of variables
+*	@param inDim number of variables
 *	@param inNumBoxesSplitCoeff number of parts for each dimension
 *	@param inEps required accuracy
 *	@param inMaxIter maximum count of iterations

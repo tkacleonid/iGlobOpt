@@ -17,7 +17,7 @@ void (*inFun)(const double *,int,double *);
 
 
 int main() {
-    int inRank = 2;
+    int inDim = 2;
 
     double *inBox = NULL;
     double *argMin = NULL;
@@ -27,6 +27,7 @@ int main() {
     int inNumBoxesSplitCoeff = 2;
     int status = -1;
 	double initFunRecord = 0;
+	bool isConfirm = true;
 
 
     int type_opt = 1;
@@ -46,6 +47,7 @@ int main() {
 
             inBox[0] = -32; inBox[1] = 32;
             inBox[2] = -32; inBox[3] = 32;
+			
 
             break;
         case 2:
@@ -570,6 +572,8 @@ int main() {
     }
 
     argMin = new double[inRank * 2];
+	inFun(inBox,inDim,outFunBounds);
+	initFunRecord = outFunBounds[3];
 
     auto start = std::chrono::high_resolution_clock::now();
 
