@@ -430,7 +430,7 @@ void fnGetOptValueWithCUDA_v2(double *inBox, const int inDim, const double inEps
 	std::cout << "timeAll = " << timeAll << "\n";
 	std::cout << "timeAllCPU = " << (std::chrono::duration_cast<std::chrono::milliseconds>(endCPU - startCPU)).count() << "\n";
 	
-	outfile << inDim << "\t" << inEps << "\t" << timeAll << "\t" << (std::chrono::duration_cast<std::chrono::milliseconds>(endCPU - startCPU)).count() << "\t" << wc << "\n";
+	outfile << inDim << "\t" << inEps << "\t" << timeAll << "\t" << (std::chrono::duration_cast<std::chrono::milliseconds>(endCPU - startCPU)).count() << "\t" << wc << "\t" << MAX_GPU_ITER << "\n";
 	outfile.close();
 
 }
