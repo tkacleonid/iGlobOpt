@@ -277,6 +277,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 		if(numWorkBoxes == 0 && numBoxesInFile == 0)
 		{
 			*_status = GO_WORKBUFFER_IS_EMPTY;
+			*_min = funRecord;
 			delete [] restBoxesToSplit;
 			delete [] workBoxes;
 			delete [] funBounds;
