@@ -367,7 +367,7 @@ __global__ void globOptCUDA_1(double *inBox,  int inRank, int *workLen, double *
 	
 	workLen[threadId] = workLen_s[threadIdx.x];
 	min[threadId] = min_s[threadIdx.x];
-	workCounts[threadId]+=n;
+	workCounts[threadId]=n;
 	
 }
 
