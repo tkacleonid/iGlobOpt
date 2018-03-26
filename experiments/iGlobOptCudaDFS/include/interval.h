@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <stdio.h>
+#include <chrono>
 
 #define DEVICE 0
 #define MAX_NUM_RUNS (1000000)
