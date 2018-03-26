@@ -26,6 +26,7 @@ int main() {
     double inEps = 0.1;
     int inNumBoxesSplitCoeff = 2;
     int status = -1;
+	double initFunRecord = 0;
 
 
     int type_opt = 1;
