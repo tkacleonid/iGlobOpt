@@ -314,7 +314,7 @@ __global__ void globOptCUDA_1(double *inBox,  int inRank, int *workLen, double *
 
 	__syncthreads();
 
-	
+	n = 0;
 	while(workLen_s[threadIdx.x] > 0 && workLen_s[threadIdx.x] < SIZE_BUFFER_PER_THREAD && count[threadIdx.x] < MAX_GPU_ITER)
 	{
 		
