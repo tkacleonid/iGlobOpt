@@ -8,14 +8,14 @@
 #include <chrono>
 
 #define DEVICE 0
-#define MAX_NUM_RUNS (1000000)
+#define MAX_NUM_RUNS (100000000)
 
 
 const int BLOCK_SIZE = 1024;
 const int NUM_BLOCKS = 1;
 const int SIZE_BUFFER_PER_THREAD = 1024; 
 const int TYPE_CUDA_OPTIMIZATION = 1;
-const int MAX_GPU_ITER = 8192*16;
+const int MAX_GPU_ITER = 1;
 const int BORDER_BALANCE = 1;
 const int MAX_ITER_BEFORE_BALANCE = 1;
 
