@@ -123,9 +123,13 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 	
 	numWorkBoxes = 1024;
 	
+	int maxDimensionIndex;
+	double maxDimension;
+	double h; //?ToDO : is it correct to declare variables here
 	
 	auto start = std::chrono::high_resolution_clock::now();
 
+	
 
 	//While global optimum not found
 	while (true) {
@@ -184,13 +188,13 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 			}
 			numWorkBoxes += s;
 		}
-#pragma omp parallel for
+#pragma omp parallel for private(maxDimensionIndex, maxDimension, h)
 		//Splitting all work Boxes
 		for(int k = 0; k < numWorkBoxes; k++) {
 			//Searching max dimension to split
-			int maxDimensionIndex = 0;
-			double maxDimension = restBoxesToSplit[(k*_dim)*2 + 1] - restBoxesToSplit[(k*_dim)*2];
-			double h; //?ToDO : is it correct to declare variables here
+			maxDimensionIndex = 0;
+			maxDimension = restBoxesToSplit[(k*_dim)*2 + 1] - restBoxesToSplit[(k*_dim)*2];
+			h; //?ToDO : is it correct to declare variables here
 			for(int i = 0; i < _dim; i++)
 			{
 				h = (restBoxesToSplit[(k*_dim+i)*2 + 1] - restBoxesToSplit[(k*_dim+i)*2]);
