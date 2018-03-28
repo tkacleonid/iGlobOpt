@@ -258,8 +258,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 		int cnt = 0;
 		for (int i = 0; i < numWorkBoxes*_splitCoeff; i++) {
 			if(funBounds[i*ARRAY_BOUNDS_LENGTH + GO_POSITION_LB] <= funRecord - _eps) {
-				for(int j = 0; j < _dim; j++)
-				{
+				for (int j = 0; j < _dim; j++) {
 					restBoxesToSplit[(cnt*_dim+j)*2] = workBoxes[(i*_dim+j)*2];
 					restBoxesToSplit[(cnt*_dim+j)*2+1] = workBoxes[(i*_dim+j)*2+1];
 				}
