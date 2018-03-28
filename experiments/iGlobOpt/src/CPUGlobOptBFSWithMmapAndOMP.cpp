@@ -128,8 +128,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 
 
 	//While global optimum not found
-	while(true)
-	{
+	while (true) {
 		//Working with file
 		if(numWorkBoxes*_splitCoeff >= MAX_BOXES_IN_BUFFER)
 		{
