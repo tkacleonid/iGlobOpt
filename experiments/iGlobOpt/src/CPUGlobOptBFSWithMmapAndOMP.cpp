@@ -157,8 +157,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 			numWorkBoxes -= s;
 
 		}
-		else if(numWorkBoxes*_splitCoeff <= MAX_BOXES_IN_BUFFER/PART_BUFFER_FROM_FILE && numBoxesInFile > 0)
-		{
+		else if (numWorkBoxes*_splitCoeff <= MAX_BOXES_IN_BUFFER/PART_BUFFER_FROM_FILE && numBoxesInFile > 0) {
 			s = MAX_BOXES_IN_BUFFER/PART_BUFFER_FROM_FILE;
 			if(numBoxesInFile <= s)  s = numBoxesInFile;
 
@@ -168,8 +167,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 			pa_offset = offset & ~(sysconf(_SC_PAGE_SIZE) - 1);
 
 			map = (double *)mmap(0,s*_dim*2*sizeof(double),PROT_READ | PROT_WRITE, MAP_SHARED, fd, pa_offset);
-			if(map == MAP_FAILED)
-			{
+			if (map == MAP_FAILED){
 				close(fd);
 				delete [] restBoxesToSplit;
 				delete [] workBoxes;
@@ -188,8 +186,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 		}
 #pragma omp parallel for
 		//Splitting all work Boxes
-		for(int k = 0; k < numWorkBoxes; k++)
-		{
+		for(int k = 0; k < numWorkBoxes; k++) {
 			//Searching max dimension to split
 			int maxDimensionIndex = 0;
 			double maxDimension = restBoxesToSplit[(k*_dim)*2 + 1] - restBoxesToSplit[(k*_dim)*2];
