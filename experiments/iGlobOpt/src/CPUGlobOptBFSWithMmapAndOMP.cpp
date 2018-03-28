@@ -264,8 +264,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 				}
 				cnt++;
 			}
-			else 
-			{
+			else {
 				wc++;
 			}
 				
