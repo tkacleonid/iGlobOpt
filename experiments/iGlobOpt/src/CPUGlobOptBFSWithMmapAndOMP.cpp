@@ -101,8 +101,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 	double hInd1 = 0;
 	
 	for (int i = 0; i < _dim; i++) {
-		if(h1 < _boxes[i*_dim + 1] - _boxes[i*_dim])
-		{
+		if (h1 < _boxes[i*_dim + 1] - _boxes[i*_dim]) {
 			h1 = _boxes[i*_dim + 1] - _boxes[i*_dim];
 			hInd1 = i;
 		}
