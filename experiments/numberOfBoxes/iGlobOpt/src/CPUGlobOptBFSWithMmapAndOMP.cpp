@@ -30,8 +30,6 @@
 *	@param outEps pointer to reached accuracy
 *	@param outEps pointer to status of solving optimization problem
 */
-
-
 void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int _dim, int _splitCoeff, void (*_fun)(const double *, int, double *), double _eps, double *_min, GlobOptErrors *_status, double *_argmin)
 {
 
@@ -47,9 +45,6 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 
 	std::ofstream outfile;
 	outfile.open("droppedBoxesCPU", std::ios_base::app);
-
-	
-
 
 	long long wc = 0;
 	

@@ -31,12 +31,12 @@
 *	@param outEps pointer to status of solving optimization problem
 *	@param _initFunRecord initial function record
 */
-void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int _rank, int _splitCoeff, void (*_fun)(const double *, int, double *), double _eps, double *_min, GlobOptErrors *_status, double *_argmin, double _initFunRecord)
+void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int _dim, int _splitCoeff, void (*_fun)(const double *, int, double *), double _eps, double *_min, GlobOptErrors *_status, double *_argmin, double _initFunRecord)
 {
 
 	int numThreads = omp_get_num_threads();
-	double *workBoxes = new double[_rank*MAX_BOXES_IN_BUFFER*2];
-	double *restBoxesToSplit = new double[_rank*MAX_BOXES_IN_BUFFER*2];
+	double *workBoxes = new double[_dim*MAX_BOXES_IN_BUFFER*2];
+	double *restBoxesToSplit = new double[_dim*MAX_BOXES_IN_BUFFER*2];
 	double *funBounds = new double[ARRAY_BOUNDS_LENGTH*MAX_BOXES_IN_BUFFER];
 
 
@@ -45,7 +45,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 	//copy Input Boxes in work set #1
 	try
 	{
-		memcpy(restBoxesToSplit, _boxes, _rank*2*_numBoxes*sizeof(double));
+		memcpy(restBoxesToSplit, _boxes, _dim*2*_numBoxes*sizeof(double));
 	}
 	catch (std::exception &e)
 	{
@@ -58,7 +58,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 	//calculate initial function record
 	try
 	{
-		_fun(_boxes,_rank,funBounds);
+		_fun(_boxes,_dim,funBounds);
 	}
 	catch(std::exception &e)
 	{
@@ -107,28 +107,28 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 	double h1 = _boxes[1] - _boxes[0];
 	double hInd1 = 0;
 	
-	for(int i = 0; i < _rank; i++)
+	for(int i = 0; i < _dim; i++)
 	{
-		if(h1 < _boxes[i*_rank + 1] - _boxes[i*_rank])
+		if(h1 < _boxes[i*_dim + 1] - _boxes[i*_dim])
 		{
-			h1 = _boxes[i*_rank + 1] - _boxes[i*_rank];
+			h1 = _boxes[i*_dim + 1] - _boxes[i*_dim];
 			hInd1 = i;
 		}
 	}
 	
 	for(int n = 0; n < numWorkBoxes*1024; n++)
 	{
-		for(int i = 0; i < _rank; i++)
+		for(int i = 0; i < _dim; i++)
 		{
 			if(i == hInd1)
 			{
-				restBoxesToSplit[n*2*_rank + i*2] = _boxes[i*2] + h1/1024.0*n;
-				restBoxesToSplit[n*2*_rank + i*2 + 1] = _boxes[i*2] + h1/1024.0*(n+1);
+				restBoxesToSplit[n*2*_dim + i*2] = _boxes[i*2] + h1/1024.0*n;
+				restBoxesToSplit[n*2*_dim + i*2 + 1] = _boxes[i*2] + h1/1024.0*(n+1);
 			}
 			else
 			{
-				restBoxesToSplit[n*2*_rank + i*2] = _boxes[i*2];
-				restBoxesToSplit[n*2*_rank + i*2 + 1] = _boxes[i*2 + 1];
+				restBoxesToSplit[n*2*_dim + i*2] = _boxes[i*2];
+				restBoxesToSplit[n*2*_dim + i*2 + 1] = _boxes[i*2 + 1];
 			}
 		}
 
@@ -148,9 +148,9 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 		{
 
 			s = numWorkBoxes/PART_BUFFER_TO_FILE;
-			offset = numBoxesInFile*_rank*2*sizeof(double);
+			offset = numBoxesInFile*_dim*2*sizeof(double);
 			pa_offset = offset & ~(sysconf(_SC_PAGE_SIZE) - 1);
-			map = (double *)mmap(0,s*_rank*2*sizeof(double),PROT_READ | PROT_WRITE, MAP_SHARED, fd, pa_offset);
+			map = (double *)mmap(0,s*_dim*2*sizeof(double),PROT_READ | PROT_WRITE, MAP_SHARED, fd, pa_offset);
 			if(map == MAP_FAILED)
 			{
 				close(fd);
@@ -161,8 +161,8 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 				exit(EXIT_FAILURE);
 			}
 			numBoxesInFile += s;
-			memcpy(map,restBoxesToSplit+(numWorkBoxes - s)*_rank*2,s*_rank*2*sizeof(double));
-			if(munmap(map,s*_rank*2*sizeof(double)) == -1)
+			memcpy(map,restBoxesToSplit+(numWorkBoxes - s)*_dim*2,s*_dim*2*sizeof(double));
+			if(munmap(map,s*_dim*2*sizeof(double)) == -1)
 			{
 				close(fd);
 				delete [] restBoxesToSplit;
@@ -181,10 +181,10 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 
 			offset = numBoxesInFile-s > 0? numBoxesInFile-s : 0;
 
-			offset = offset*_rank*2*sizeof(double);
+			offset = offset*_dim*2*sizeof(double);
 			pa_offset = offset & ~(sysconf(_SC_PAGE_SIZE) - 1);
 
-			map = (double *)mmap(0,s*_rank*2*sizeof(double),PROT_READ | PROT_WRITE, MAP_SHARED, fd, pa_offset);
+			map = (double *)mmap(0,s*_dim*2*sizeof(double),PROT_READ | PROT_WRITE, MAP_SHARED, fd, pa_offset);
 			if(map == MAP_FAILED)
 			{
 				close(fd);
@@ -195,8 +195,8 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 				exit(EXIT_FAILURE);
 			}
 			numBoxesInFile -= s;
-			memcpy(restBoxesToSplit+numWorkBoxes*_rank*2,map,s*_rank*2*sizeof(double));
-			if(munmap(map,s*_rank*2*sizeof(double)) == -1)
+			memcpy(restBoxesToSplit+numWorkBoxes*_dim*2,map,s*_dim*2*sizeof(double));
+			if(munmap(map,s*_dim*2*sizeof(double)) == -1)
 			{
 				perror("Error un-mapping the file");
 				exit(EXIT_FAILURE);
@@ -209,11 +209,11 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 		{
 			//Searching max dimension to split
 			int maxDimensionIndex = 0;
-			double maxDimension = restBoxesToSplit[(k*_rank)*2 + 1] - restBoxesToSplit[(k*_rank)*2];
+			double maxDimension = restBoxesToSplit[(k*_dim)*2 + 1] - restBoxesToSplit[(k*_dim)*2];
 			double h; //?ToDO : is it correct to declare variables here
-			for(int i = 0; i < _rank; i++)
+			for(int i = 0; i < _dim; i++)
 			{
-				h = (restBoxesToSplit[(k*_rank+i)*2 + 1] - restBoxesToSplit[(k*_rank+i)*2]);
+				h = (restBoxesToSplit[(k*_dim+i)*2 + 1] - restBoxesToSplit[(k*_dim+i)*2]);
 				if (maxDimension < h)
 				{
 					maxDimension = h;
@@ -225,20 +225,20 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 
 			for(int n = 0; n < _splitCoeff; n++)
 			{
-				for(int i = 0; i < _rank; i++)
+				for(int i = 0; i < _dim; i++)
 				{
 					if (i==maxDimensionIndex)
 					{
-						workBoxes[((k*_splitCoeff + n)*_rank+i)*2] = restBoxesToSplit[(k*_rank+i)*2] + h*n;
-						workBoxes[((k*_splitCoeff + n)*_rank+i)*2 + 1] = restBoxesToSplit[(k*_rank+i)*2] + h*(n+1);
+						workBoxes[((k*_splitCoeff + n)*_dim+i)*2] = restBoxesToSplit[(k*_dim+i)*2] + h*n;
+						workBoxes[((k*_splitCoeff + n)*_dim+i)*2 + 1] = restBoxesToSplit[(k*_dim+i)*2] + h*(n+1);
 					} else
 					{
-						workBoxes[((k*_splitCoeff + n)*_rank+i)*2] = restBoxesToSplit[(k*_rank+i)*2];
-						workBoxes[((k*_splitCoeff + n)*_rank+i)*2 + 1] = restBoxesToSplit[(k*_rank+i)*2 + 1];
+						workBoxes[((k*_splitCoeff + n)*_dim+i)*2] = restBoxesToSplit[(k*_dim+i)*2];
+						workBoxes[((k*_splitCoeff + n)*_dim+i)*2 + 1] = restBoxesToSplit[(k*_dim+i)*2 + 1];
 					}
 				}
 				
-				_fun(&workBoxes[((k*_splitCoeff + n)*_rank)*2],_rank,&funBounds[(k*_splitCoeff + n)*ARRAY_BOUNDS_LENGTH]);
+				_fun(&workBoxes[((k*_splitCoeff + n)*_dim)*2],_dim,&funBounds[(k*_splitCoeff + n)*ARRAY_BOUNDS_LENGTH]);
 			}
 		}
 
@@ -260,10 +260,10 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 		{
 			if(funBounds[i*ARRAY_BOUNDS_LENGTH + GO_POSITION_LB] <= funRecord - _eps)
 			{
-				for(int j = 0; j < _rank; j++)
+				for(int j = 0; j < _dim; j++)
 				{
-					restBoxesToSplit[(cnt*_rank+j)*2] = workBoxes[(i*_rank+j)*2];
-					restBoxesToSplit[(cnt*_rank+j)*2+1] = workBoxes[(i*_rank+j)*2+1];
+					restBoxesToSplit[(cnt*_dim+j)*2] = workBoxes[(i*_dim+j)*2];
+					restBoxesToSplit[(cnt*_dim+j)*2+1] = workBoxes[(i*_dim+j)*2+1];
 				}
 				cnt++;
 			}
