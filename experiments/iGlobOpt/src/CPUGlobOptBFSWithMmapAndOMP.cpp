@@ -77,8 +77,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 	}
 
 	int result = lseek(fd, SIZE_BUFFER_FILE,SEEK_SET);
-	if(result == -1)
-	{
+	if(result == -1) {
 		close(fd);
 		perror("Error calling lseek");
 		exit(EXIT_FAILURE);
