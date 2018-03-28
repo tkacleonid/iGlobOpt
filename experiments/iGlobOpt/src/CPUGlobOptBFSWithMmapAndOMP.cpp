@@ -57,7 +57,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 	try {
 		_fun(_boxes,_dim,funBounds);
 	}
-	catch(std::exception &e) {
+	catch (std::exception &e) {
 		std::cerr << "Error computing initial function record: " << e.what() << std::endl;
 	}
 	double funRecord = funBounds[GO_POSITION_FUN_RECORD];
@@ -70,22 +70,21 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 	int numWorkBoxes = _numBoxes;
 
 	int fd = open(FILEPATH,O_RDWR | O_CREAT | O_TRUNC, (mode_t)0600);
-	if(fd == -1) {
+	if (fd == -1) {
 		perror("Error opening file for writing");
 		exit(EXIT_FAILURE);
 
 	}
 
 	int result = lseek(fd, SIZE_BUFFER_FILE,SEEK_SET);
-	if(result == -1) {
+	if (result == -1) {
 		close(fd);
 		perror("Error calling lseek");
 		exit(EXIT_FAILURE);
 	}
 
 	result = write(fd,"",1);
-	if(result != 1)
-	{
+	if (result != 1) {
 		close(fd);
 		perror("Error calling write");
 		exit(EXIT_FAILURE);
