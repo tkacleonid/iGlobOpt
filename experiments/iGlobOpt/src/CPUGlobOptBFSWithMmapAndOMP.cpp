@@ -46,8 +46,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 	try {
 		memcpy(restBoxesToSplit, _boxes, _dim*2*_numBoxes*sizeof(double));
 	}
-	catch (std::exception &e)
-	{
+	catch (std::exception &e) {
 		delete [] workBoxes;
 		delete [] restBoxesToSplit;
 		delete [] funBounds;
