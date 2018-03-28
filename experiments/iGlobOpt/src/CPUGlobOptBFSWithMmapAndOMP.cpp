@@ -57,8 +57,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 	try {
 		_fun(_boxes,_dim,funBounds);
 	}
-	catch(std::exception &e)
-	{
+	catch(std::exception &e) {
 		std::cerr << "Error computing initial function record: " << e.what() << std::endl;
 	}
 	double funRecord = funBounds[GO_POSITION_FUN_RECORD];
