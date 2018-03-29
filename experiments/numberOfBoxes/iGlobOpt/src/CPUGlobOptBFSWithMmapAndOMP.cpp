@@ -216,8 +216,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 			//Searching max dimension to split
 			maxDimensionIndex = 0;
 			maxDimension = restBoxesToSplit[(k*_dim)*2 + 1] - restBoxesToSplit[(k*_dim)*2];
-			for(int i = 0; i < _dim; i++)
-			{
+			for (int i = 0; i < _dim; i++) {
 				h = (restBoxesToSplit[(k*_dim+i)*2 + 1] - restBoxesToSplit[(k*_dim+i)*2]);
 				if (maxDimension < h)
 				{
