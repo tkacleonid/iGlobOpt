@@ -60,8 +60,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 	}
 
 	//calculate initial function record
-	try
-	{
+	try {
 		_fun(_boxes,_dim,funBounds);
 	}
 	catch(std::exception &e)
