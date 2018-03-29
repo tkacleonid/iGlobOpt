@@ -295,8 +295,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 		
 		//std::cout << "\twc = " << wc << "\n";
 
-		if(numWorkBoxes == 0 && numBoxesInFile == 0)
-		{
+		if (numWorkBoxes == 0 && numBoxesInFile == 0) {
 			*_status = GO_WORKBUFFER_IS_EMPTY;
 			delete [] restBoxesToSplit;
 			delete [] workBoxes;
