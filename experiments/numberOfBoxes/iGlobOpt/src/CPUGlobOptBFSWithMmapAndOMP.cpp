@@ -280,8 +280,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 			}
 			else {
 				wc++;
-				for(int j = 0; j < _dim; j++)
-				{
+				for (int j = 0; j < _dim; j++) {
 					outfile << workBoxes[(i*_dim+j)*2] << "\t" << workBoxes[(i*_dim+j)*2+1] << "\t";
 				}
 				outfile << funBounds[i*ARRAY_BOUNDS_LENGTH + GO_POSITION_LB] << "\t" << funBounds[i*ARRAY_BOUNDS_LENGTH + GO_POSITION_RB] << "\t" << funBounds[i*ARRAY_BOUNDS_LENGTH + GO_POSITION_FUN_RECORD] << "\n";	
