@@ -204,8 +204,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 			}
 			numBoxesInFile -= s;
 			memcpy(restBoxesToSplit+numWorkBoxes*_dim*2,map,s*_dim*2*sizeof(double));
-			if(munmap(map,s*_dim*2*sizeof(double)) == -1)
-			{
+			if (munmap(map,s*_dim*2*sizeof(double)) == -1) {
 				perror("Error un-mapping the file");
 				exit(EXIT_FAILURE);
 			}
