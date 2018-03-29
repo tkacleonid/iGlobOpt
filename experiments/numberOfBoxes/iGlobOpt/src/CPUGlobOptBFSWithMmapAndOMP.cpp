@@ -121,8 +121,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 				restBoxesToSplit[n*2*_dim + i*2] = _boxes[i*2] + h1/1024.0*n;
 				restBoxesToSplit[n*2*_dim + i*2 + 1] = _boxes[i*2] + h1/1024.0*(n+1);
 			}
-			else
-			{
+			else {
 				restBoxesToSplit[n*2*_dim + i*2] = _boxes[i*2];
 				restBoxesToSplit[n*2*_dim + i*2 + 1] = _boxes[i*2 + 1];
 			}
