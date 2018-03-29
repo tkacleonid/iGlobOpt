@@ -91,8 +91,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 	}
 
 	result = write(fd,"",1);
-	if(result != 1)
-	{
+	if (result != 1) {
 		close(fd);
 		perror("Error calling write");
 		exit(EXIT_FAILURE);
