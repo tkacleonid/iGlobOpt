@@ -157,8 +157,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 		*/
 
 		//Workin with file
-		if(numWorkBoxes*_splitCoeff >= MAX_BOXES_IN_BUFFER)
-		{
+		if (numWorkBoxes*_splitCoeff >= MAX_BOXES_IN_BUFFER) {
 
 			s = numWorkBoxes/PART_BUFFER_TO_FILE;
 			offset = numBoxesInFile*_dim*2*sizeof(double);
