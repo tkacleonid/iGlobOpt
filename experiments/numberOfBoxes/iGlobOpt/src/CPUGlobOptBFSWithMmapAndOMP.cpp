@@ -77,8 +77,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 	int numWorkBoxes = _numBoxes;
 
 	int fd = open(FILEPATH,O_RDWR | O_CREAT | O_TRUNC, (mode_t)0600);
-	if(fd == -1)
-	{
+	if (fd == -1) {
 		perror("Error opening file for writing");
 		exit(EXIT_FAILURE);
 
