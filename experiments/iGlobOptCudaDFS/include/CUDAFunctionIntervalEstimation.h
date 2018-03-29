@@ -229,8 +229,7 @@ __device__ void fnCalcFunLimitsStyblinski_CUDA(double *inBox, int inDim)
 	double sup1,sub1,sup2,sub2,val = 0,var1,var2,var3,x;
 	int i;
 
-	for(i = 0; i < inDim; i++)
-	{
+	for (i = 0; i < inDim; i++) {
 			
 		var1 = inBox[i*2 + 1]*inBox[i*2 + 1];
 		var2 = inBox[i*2 + 1]*inBox[i*2];
