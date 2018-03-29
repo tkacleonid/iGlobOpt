@@ -163,8 +163,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 			offset = numBoxesInFile*_dim*2*sizeof(double);
 			pa_offset = offset & ~(sysconf(_SC_PAGE_SIZE) - 1);
 			map = (double *)mmap(0,s*_dim*2*sizeof(double),PROT_READ | PROT_WRITE, MAP_SHARED, fd, pa_offset);
-			if(map == MAP_FAILED)
-			{
+			if (map == MAP_FAILED) {
 				close(fd);
 				delete [] restBoxesToSplit;
 				delete [] workBoxes;
