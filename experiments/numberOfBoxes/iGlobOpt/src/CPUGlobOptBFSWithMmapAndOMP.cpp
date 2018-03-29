@@ -173,8 +173,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 			}
 			numBoxesInFile += s;
 			memcpy(map,restBoxesToSplit+(numWorkBoxes - s)*_dim*2,s*_dim*2*sizeof(double));
-			if(munmap(map,s*_dim*2*sizeof(double)) == -1)
-			{
+			if (munmap(map,s*_dim*2*sizeof(double)) == -1) {
 				close(fd);
 				delete [] restBoxesToSplit;
 				delete [] workBoxes;
