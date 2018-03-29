@@ -226,16 +226,13 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 			}
 			h = maxDimension/_splitCoeff;
 
-			for(int n = 0; n < _splitCoeff; n++)
-			{
-				for(int i = 0; i < _dim; i++)
-				{
-					if (i==maxDimensionIndex)
-					{
+			for (int n = 0; n < _splitCoeff; n++) {
+				for (int i = 0; i < _dim; i++) {
+					if (i==maxDimensionIndex) {
 						workBoxes[((k*_splitCoeff + n)*_dim+i)*2] = restBoxesToSplit[(k*_dim+i)*2] + h*n;
 						workBoxes[((k*_splitCoeff + n)*_dim+i)*2 + 1] = restBoxesToSplit[(k*_dim+i)*2] + h*(n+1);
-					} else
-					{
+					} 
+					else {
 						workBoxes[((k*_splitCoeff + n)*_dim+i)*2] = restBoxesToSplit[(k*_dim+i)*2];
 						workBoxes[((k*_splitCoeff + n)*_dim+i)*2 + 1] = restBoxesToSplit[(k*_dim+i)*2 + 1];
 					}
