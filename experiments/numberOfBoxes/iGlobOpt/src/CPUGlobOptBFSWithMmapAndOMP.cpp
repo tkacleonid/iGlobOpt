@@ -289,9 +289,9 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 		}
 		numWorkBoxes = cnt;
 		
-		//std::cout << "min = ";
-		//printf("%.7f",funRecord);
-		//std::cout << "\tfunLb = " << funLB << "\n";
+		std::cout << "min = ";
+		printf("%.7f",funRecord);
+		std::cout << "\tfunLb = " << funLB << "\n";
 		
 		//std::cout << "\twc = " << wc << "\n";
 
