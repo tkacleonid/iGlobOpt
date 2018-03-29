@@ -138,8 +138,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 
 	char tp[100];
 	//While global optimum not found
-	while(true)
-	{
+	while (true) {
 		//scanf("%s",tp);
 		std::cin.get();
 		std::cout << "\n\n-------------------------";
