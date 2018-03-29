@@ -184,8 +184,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 			numWorkBoxes -= s;
 
 		}
-		else if(numWorkBoxes*_splitCoeff <= MAX_BOXES_IN_BUFFER/PART_BUFFER_FROM_FILE && numBoxesInFile > 0)
-		{
+		else if (numWorkBoxes*_splitCoeff <= MAX_BOXES_IN_BUFFER/PART_BUFFER_FROM_FILE && numBoxesInFile > 0) {
 			s = MAX_BOXES_IN_BUFFER/PART_BUFFER_FROM_FILE;
 			if(numBoxesInFile <= s)  s = numBoxesInFile;
 
