@@ -172,8 +172,7 @@ __device__ void fnCalcFunLimitsRozenbroke_CUDA(double *inBox, int inDim)
 	double sup1,sub1,sup2,sub2,a,b,val = 0,var1,var2,var3,x1,x2;
 	int i;
 
-	for(i = 0; i < inDim - 1; i++)
-	{
+	for (i = 0; i < inDim - 1; i++) {
 		sub1 = 1 - inBox[i*2 + 1];
 		sup1 = 1 - inBox[i*2];
 		
