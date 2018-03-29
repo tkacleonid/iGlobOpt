@@ -129,8 +129,6 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 		}
 		_fun(&restBoxesToSplit[(n*_dim)*2],_dim,&funBounds[n*ARRAY_BOUNDS_LENGTH]);
 		printf("%f\t%f\t%f\n",funBounds[n*ARRAY_BOUNDS_LENGTH] ,funBounds[n*ARRAY_BOUNDS_LENGTH+1], funBounds[n*ARRAY_BOUNDS_LENGTH+2]);
-		
-
 	}
 	
 	numWorkBoxes = 1024;
