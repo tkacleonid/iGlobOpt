@@ -49,8 +49,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 	long long wc = 0;
 	
 	//copy Input Boxes in work set #1
-	try
-	{
+	try {
 		memcpy(restBoxesToSplit, _boxes, _dim*2*_numBoxes*sizeof(double));
 	}
 	catch (std::exception &e)
