@@ -212,8 +212,7 @@ void calcOptValueOnCPUBFSWithMmapAndOMP(const double *_boxes, int _numBoxes, int
 		}
 #pragma omp parallel for private(maxDimensionIndex,h,maxDimension)
 		//Splitting all work Boxes
-		for(int k = 0; k < numWorkBoxes; k++)
-		{
+		for (int k = 0; k < numWorkBoxes; k++) {
 			//Searching max dimension to split
 			maxDimensionIndex = 0;
 			maxDimension = restBoxesToSplit[(k*_dim)*2 + 1] - restBoxesToSplit[(k*_dim)*2];
