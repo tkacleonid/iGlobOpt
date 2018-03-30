@@ -31,7 +31,7 @@ int main()
 
 	for (int i = 0; i < 5; i++) {
 		inEps /= 10;
-		fnGetOptValueWithCUDA_v3(inBox, inDim, inEps, outBox, &outMin, &status, funRecord, "gpu7");
+		fnGetOptValueWithCUDA_v3(inBox, inDim, inEps, outBox, &outMin, &status, funRecord, "gpu8");
 		std::cout << "min = " << outMin << "\n\n";
 	}
 
