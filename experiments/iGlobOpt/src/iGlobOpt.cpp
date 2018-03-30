@@ -562,7 +562,7 @@ for(int j = 0; j < 6; j++) {
 				 break;
 		case 55:
 				 inFun = fnCalcFunLimitsStyblinski;
-				 inDim = 3;
+				 inDim = 2;
 				 inBox = new double[inDim * 2];
 				 for(int i = 0; i < inDim; i++)
 				 {
