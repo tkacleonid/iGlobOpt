@@ -40,7 +40,7 @@ int main() {
 	inEps = 10;
 for(int j = 0; j < 6; j++) {
 	inEps /= 10;
-	for (int k = 0; k < 2; k++) {
+	for (int k = 0; k < 1; k++) {
 		switch (type_test_fun)
 		{
 			case 1:
