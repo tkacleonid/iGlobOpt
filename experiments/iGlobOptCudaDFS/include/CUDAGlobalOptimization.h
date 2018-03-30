@@ -193,8 +193,7 @@ __global__ void globOptCUDA_v1(double *inBox,  int inDim, int *workLen, double *
 	int threadId = blockIdx.x * BLOCK_SIZE + threadIdx.x;
 	
 	workLen_s[threadIdx.x] = workLen[threadId];
-	min_s[threadIdx.x] = inRec;
-	
+	min_s[threadIdx.x] = inRec;	
 	count[threadIdx.x] = 0;
 	
 
@@ -213,8 +212,6 @@ __global__ void globOptCUDA_v1(double *inBox,  int inDim, int *workLen, double *
 			n++;
 		}
 		else {	
-
-			bInd = threadId*SIZE_BUFFER_PER_THREAD*(2*inDim+3) + (workLen_s[threadIdx.x] - 1)*(2*inDim+3);
 			hInd = 0;
 			h = inBox[bInd + 1] - inBox[bInd];
 			for (i = 0; i < inDim; i++) {
