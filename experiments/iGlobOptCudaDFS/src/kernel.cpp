@@ -31,7 +31,7 @@ int main()
 
 	for (int i = 0; i < 5; i++) {
 		inEps /= 10;
-		fnGetOptValueWithCUDA_v3(inBox, inDim, inEps, outBox, &outMin, &status, funRecord, "realWorkingThreads");
+		fnGetOptValueWithCUDA_v3(inBox, inDim, inEps, outBox, &outMin, &status, funRecord, "realWorking");
 		std::cout << "min = " << outMin << "\n\n";
 	}
 
