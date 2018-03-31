@@ -17,7 +17,7 @@ int main()
 	double *inBox = new double[inDim*2];
 	double *outBox = new double[inDim*2];
 	double outMin = 0.0;
-	double inEps = 0.0001;
+	double inEps = 0.00001;
 	int status = -1;
 	double funRecord = 39.1661657038*inDim;
 
