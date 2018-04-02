@@ -316,7 +316,7 @@ __global__ void globOptCUDA_v2(double *inBox,  int inDim, int *workLen, double *
 		if (workLen_s[threadIdx.x] == 0) {
 			atomicAdd(&numRealThreads, -1);
 		}
-		else if (numRealThreads < BLOCK_SIZE/5) break;
+		else if (numRealThreads < BLOCK_SIZE/4) break;
 	}
 	
 	
