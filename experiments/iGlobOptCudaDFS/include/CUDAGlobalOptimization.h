@@ -583,6 +583,89 @@ void fnGetOptValueWithCUDA_v3(double *inBox, const int inDim, const double inEps
 }
 
 
+/**
+*	Global optimization with CUDA kernel version 2 (no balancing)
+*	@param inbox pointer to Box
+*	@param inDim number of variables
+*	@param inEps accuracy
+*	@param workLen the array of numbers of boxes per thread
+*	@param min the array of fun records per thread
+*	@param inRec initial value of function record
+*	@param workCount the array of dropped boxes
+*/
+__global__ void globOptCUDA_v1(double *inBox,  int inDim, int *workLen, double *min, double inRec, double inEps, long long *workCounts)
+
+{
+	__shared__ double min_s[BLOCK_SIZE];
+	__shared__ int workLen_s[BLOCK_SIZE];
+	__shared__ int count[BLOCK_SIZE];
+	__shared__ int numRealThreads;
+	
+	if (threadIdx.x == 0) numRealThreads = BLOCK_SIZE;
+	__syncthreads();
+	
+	int i,bInd, hInd, n;
+	double  h;
+	
+	int threadId = blockIdx.x * BLOCK_SIZE + threadIdx.x;
+	
+	workLen_s[threadIdx.x] = workLen[threadId];
+	min_s[threadIdx.x] = inRec;	
+	count[threadIdx.x] = 0;
+	
+
+	__syncthreads();
+
+	n = 0;
+	while (workLen_s[threadIdx.x] > 0 && workLen_s[threadIdx.x] < SIZE_BUFFER_PER_THREAD && count[threadIdx.x] < MAX_GPU_ITER) {
+		bInd = threadId*SIZE_BUFFER_PER_THREAD*(2*inDim+3) + (workLen_s[threadIdx.x] - 1)*(2*inDim+3);
+		fnCalcFunLimitsStyblinski_CUDA(inBox + bInd, inDim);	
+		if (min_s[threadIdx.x] > inBox[bInd + 2*inDim + 2]) {
+			min_s[threadIdx.x] = inBox[bInd + 2*inDim + 2];
+		}
+			
+		if (min_s[threadIdx.x] - inBox[bInd + 2*inDim] < inEps) {
+			--workLen_s[threadIdx.x];
+			n++;
+		}
+		else {	
+			hInd = 0;
+			h = inBox[bInd + 1] - inBox[bInd];
+			for (i = 0; i < inDim; i++) {
+				if ( h < inBox[bInd + i*2 + 1] - inBox[bInd + i*2]) {
+					h = inBox[bInd + i*2 + 1] - inBox[bInd + i*2];
+					hInd = i;
+				}
+			}
+			for (i = 0; i < inDim; i++) {
+				if(i == hInd) {
+					inBox[bInd + i*2 + 1] = inBox[bInd + i*2] + h/2.0;
+					inBox[bInd + 2*inDim + 3 + i*2] = inBox[bInd + i*2] + h/2.0;
+					inBox[bInd + 2*inDim + 3 + i*2 + 1] = inBox[bInd + i*2] + h;
+				}
+				else {
+					inBox[bInd + 2*inDim + 3 + i*2] = inBox[bInd + i*2];
+					inBox[bInd + 2*inDim + 3 + i*2 + 1] = inBox[bInd + i*2 + 1];
+				}
+			}
+			++workLen_s[threadIdx.x];
+		}
+
+		
+		++count[threadIdx.x];	
+		
+		if (workLen_s[threadIdx.x] == 0) {
+			atomicAdd(&numRealThreads, -1);
+		}
+		else if (numRealThreads < BLOCK_SIZE/2) break;
+	}
+	
+	
+	
+	workLen[threadId] = workLen_s[threadIdx.x];
+	min[threadId] = min_s[threadIdx.x];
+	workCounts[threadId] = n;	
+}
 
 
 
