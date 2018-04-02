@@ -276,7 +276,7 @@ __global__ void globOptCUDA_v2(double *inBox,  int inDim, int *workLen, double *
 	__syncthreads();
 
 	n = 0;
-	while (workLen_s[threadIdx.x] > 0 && workLen_s[threadIdx.x] < SIZE_BUFFER_PER_THREAD && count[threadIdx.x] < MAX_GPU_ITER) {
+	while (workLen_s[threadIdx.x] > 0 && workLen_s[threadIdx.x] < SIZE_BUFFER_PER_THREAD && count[threadIdx.x] < MAX_GPU_ITER && numRealThreads > BLOCK_SIZE/2) {
 		bInd = threadId*SIZE_BUFFER_PER_THREAD*(2*inDim+3) + (workLen_s[threadIdx.x] - 1)*(2*inDim+3);
 		fnCalcFunLimitsStyblinski_CUDA(inBox + bInd, inDim);	
 		if (min_s[threadIdx.x] > inBox[bInd + 2*inDim + 2]) {
@@ -316,7 +316,6 @@ __global__ void globOptCUDA_v2(double *inBox,  int inDim, int *workLen, double *
 		if (workLen_s[threadIdx.x] == 0) {
 			atomicAdd(&numRealThreads, -1);
 		}
-		else if (numRealThreads < BLOCK_SIZE/2) break;
 	}
 	
 	
