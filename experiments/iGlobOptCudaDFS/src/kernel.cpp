@@ -29,9 +29,9 @@ int main()
 	std::cout << "start Main\n";
 	std::cout << "start \n";
 
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 6; i++) {
 		inEps /= 10;
-		fnGetOptValueWithCUDA_v1(inBox, inDim, inEps, outBox, &outMin, &status, funRecord, "testGPU1");
+		fnGetOptValueWithCUDA_v1(inBox, inDim, inEps, outBox, &outMin, &status, funRecord, "testGPU21");
 		std::cout << "min = " << outMin << "\n\n";
 	}
 
