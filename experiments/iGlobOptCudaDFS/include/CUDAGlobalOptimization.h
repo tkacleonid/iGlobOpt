@@ -424,7 +424,7 @@ void fnGetOptValueWithCUDA_v2(double *inBox, const int inDim, const double inEps
 		CHECKED_CALL(cudaMemcpy(dev_workCounts, workCounts, numThreads*sizeof(int), cudaMemcpyHostToDevice));
 		CHECKED_CALL(cudaEventRecord(start, 0));
 		
-		globOptCUDA_v2<<<GridSize, BLOCK_SIZE>>>(dev_inBox,inDim,dev_workLen,dev_mins,funcMin,inEps,dev_workCounts);
+		globOptCUDA_v1<<<GridSize, BLOCK_SIZE>>>(dev_inBox,inDim,dev_workLen,dev_mins,funcMin,inEps,dev_workCounts);
 
 		CHECKED_CALL(cudaGetLastError());
 		CHECKED_CALL(cudaEventRecord(stop, 0));
