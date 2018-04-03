@@ -186,6 +186,7 @@ __global__ void globOptCUDA_v1(double *inBox,  int inDim, int *workLen, double *
 	__shared__ double min_s[BLOCK_SIZE];
 	__shared__ int workLen_s[BLOCK_SIZE];
 	__shared__ int count[BLOCK_SIZE];
+	__shared__ bool isWork[BLOCK_SIZE];
 	
 	int i,bInd, hInd, n;
 	double  h;
@@ -195,27 +196,23 @@ __global__ void globOptCUDA_v1(double *inBox,  int inDim, int *workLen, double *
 	workLen_s[threadIdx.x] = workLen[threadId];
 	min_s[threadIdx.x] = inRec;	
 	count[threadIdx.x] = 0;
+	isWork[threadIdx.x] = false;
 
 	__syncthreads();
 
 	n = 0;
 	while (workLen_s[threadIdx.x] > 0 && workLen_s[threadIdx.x] < SIZE_BUFFER_PER_THREAD && count[threadIdx.x] < MAX_GPU_ITER) {
-		/*
+		
 		bInd = threadId*SIZE_BUFFER_PER_THREAD*(2*inDim+3) + (workLen_s[threadIdx.x] - 1)*(2*inDim+3);
 		fnCalcFunLimitsStyblinski_CUDA(inBox + bInd, inDim);	
 		if (min_s[threadIdx.x] > inBox[bInd + 2*inDim + 2]) {
 			min_s[threadIdx.x] = inBox[bInd + 2*inDim + 2];
 		}		
-		while (workLen_s[threadIdx.x] > 0 && min_s[threadIdx.x] - inBox[bInd + 2*inDim] < inEps) {
+		if (min_s[threadIdx.x] - inBox[bInd + 2*inDim] < inEps) {
 			--workLen_s[threadIdx.x];
-			bInd = threadId*SIZE_BUFFER_PER_THREAD*(2*inDim+3) + (workLen_s[threadIdx.x] - 1)*(2*inDim+3);
-			fnCalcFunLimitsStyblinski_CUDA(inBox + bInd, inDim);
-			if (min_s[threadIdx.x] > inBox[bInd + 2*inDim + 2]) {
-				min_s[threadIdx.x] = inBox[bInd + 2*inDim + 2];
-			}
 			n++;
 		}
-		if (workLen_s[threadIdx.x] > 0) {	
+		else {	
 			hInd = 0;
 			h = inBox[bInd + 1] - inBox[bInd];
 			for (i = 0; i < inDim; i++) {
@@ -240,7 +237,9 @@ __global__ void globOptCUDA_v1(double *inBox,  int inDim, int *workLen, double *
 			++workLen_s[threadIdx.x];
 		}
 
-*/
+
+
+/*
 			bInd = threadId*SIZE_BUFFER_PER_THREAD*(2*inDim+3) + (workLen_s[threadIdx.x] - 1)*(2*inDim+3);
 			hInd = 0;
 			h = inBox[bInd + 1] - inBox[bInd];
@@ -280,7 +279,7 @@ __global__ void globOptCUDA_v1(double *inBox,  int inDim, int *workLen, double *
 				--workLen_s[threadIdx.x];
 				n++;
 			}
-			
+*/			
 
 		
 		++count[threadIdx.x];	
