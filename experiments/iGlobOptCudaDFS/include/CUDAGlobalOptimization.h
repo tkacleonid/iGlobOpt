@@ -207,8 +207,7 @@ __global__ void globOptCUDA_v1(double *inBox,  int inDim, int *workLen, double *
 		fnCalcFunLimitsStyblinski_CUDA(inBox + bInd, inDim);	
 		if (min_s[threadIdx.x] > inBox[bInd + 2*inDim + 2]) {
 			min_s[threadIdx.x] = inBox[bInd + 2*inDim + 2];
-		}
-		break;	
+		}		
 		if (min_s[threadIdx.x] - inBox[bInd + 2*inDim] < inEps) {
 			--workLen_s[threadIdx.x];
 			n++;
@@ -225,7 +224,7 @@ __global__ void globOptCUDA_v1(double *inBox,  int inDim, int *workLen, double *
 				//hInd = 0;
 			//}
 			//h = inBox[bInd + hInd*2 + 1] - inBox[bInd + hInd*2];
-			break;
+			
 			
 			
 			hInd = 0;
