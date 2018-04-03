@@ -214,12 +214,12 @@ __global__ void globOptCUDA_v1(double *inBox,  int inDim, int *workLen, double *
 			n++;
 		}
 		else {	
-			//hInd = 0;
-			splitIndex[threadIdx.x] = (splitIndex[threadIdx.x] + 1) % inDim;
-			h = inBox[bInd + 1 + splitIndex[threadIdx.x]] - inBox[bInd + splitIndex[threadIdx.x]];
-			hInd = splitIndex[threadIdx.x];
+		
+			//splitIndex[threadIdx.x] = (splitIndex[threadIdx.x] + 1) % inDim;
+			//h = inBox[bInd + 1 + splitIndex[threadIdx.x]] - inBox[bInd + splitIndex[threadIdx.x]];
+			//hInd = splitIndex[threadIdx.x];
 			
-			/*
+			hInd = 0;
 			h = inBox[bInd + 1] - inBox[bInd];
 			for (i = 0; i < inDim; i++) {
 				if ( h < inBox[bInd + i*2 + 1] - inBox[bInd + i*2]) {
@@ -227,7 +227,7 @@ __global__ void globOptCUDA_v1(double *inBox,  int inDim, int *workLen, double *
 					hInd = i;
 				}
 			}
-			*/
+			
 			splitIndex[threadIdx.x] = splitIndex[threadIdx.x] % inDim;
 			for (i = 0; i < inDim; i++) {
 				if(i == hInd) {
