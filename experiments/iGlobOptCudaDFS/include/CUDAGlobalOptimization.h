@@ -516,6 +516,7 @@ void fnGetOptValueWithCUDA_v2(double *inBox, const int inDim, const double inEps
 			}
 			if (curThreadWeTakeBoxesIndex == numThreads - 1 && workLen[curThreadWeTakeBoxesIndex] <= averageBoxesPerThread + 1) break;
 		}
+		printf("-");
 	}
 	auto endCPU = std::chrono::high_resolution_clock::now();
 	
