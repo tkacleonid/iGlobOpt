@@ -208,7 +208,7 @@ __global__ void globOptCUDA_v1(double *inBox,  int inDim, int *workLen, double *
 		if (min_s[threadIdx.x] > inBox[bInd + 2*inDim + 2]) {
 			min_s[threadIdx.x] = inBox[bInd + 2*inDim + 2];
 		}
-			
+		break;	
 		if (min_s[threadIdx.x] - inBox[bInd + 2*inDim] < inEps) {
 			--workLen_s[threadIdx.x];
 			n++;
