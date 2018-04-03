@@ -220,10 +220,10 @@ __global__ void globOptCUDA_v1(double *inBox,  int inDim, int *workLen, double *
 			//h = inBox[bInd + 1 + splitIndex[threadIdx.x]*2] - inBox[bInd + splitIndex[threadIdx.x]*2];
 			//hInd = splitIndex[threadIdx.x];
 			
-			++hInd;
-			if(hInd == inDim) hInd = 0;
-			h = inBox[bInd + 1 + hInd*2] - inBox[bInd + hInd*2];
 			
+			if (hInd == inDim) hInd = 0;
+			h = inBox[bInd + 1 + hInd*2] - inBox[bInd + hInd*2];
+			++hInd;
 			
 			/*
 			hInd = 0;
