@@ -186,6 +186,7 @@ __global__ void globOptCUDA_v1(double *inBox,  int inDim, int *workLen, double *
 	__shared__ double min_s[BLOCK_SIZE];
 	__shared__ int workLen_s[BLOCK_SIZE];
 	__shared__ int count[BLOCK_SIZE];
+	__shared__ int splitIndex[BLOCK_SIZE];
 	
 	int i,bInd, hInd, n;
 	double  h;
@@ -195,6 +196,7 @@ __global__ void globOptCUDA_v1(double *inBox,  int inDim, int *workLen, double *
 	workLen_s[threadIdx.x] = workLen[threadId];
 	min_s[threadIdx.x] = inRec;	
 	count[threadIdx.x] = 0;
+	splitIndex[threadIdx.x] = 0;
 	
 
 	__syncthreads();
@@ -212,7 +214,11 @@ __global__ void globOptCUDA_v1(double *inBox,  int inDim, int *workLen, double *
 			n++;
 		}
 		else {	
-			hInd = 0;
+			//hInd = 0;
+			splitIndex[threadIdx.x] = splitIndex[threadIdx.x] % inDim;
+			h = inBox[bInd + 1 + splitIndex[threadIdx.x]] - inBox[bInd + splitIndex[threadIdx.x]];
+			hInd = splitIndex[threadIdx.x];
+			/*
 			h = inBox[bInd + 1] - inBox[bInd];
 			for (i = 0; i < inDim; i++) {
 				if ( h < inBox[bInd + i*2 + 1] - inBox[bInd + i*2]) {
@@ -220,6 +226,8 @@ __global__ void globOptCUDA_v1(double *inBox,  int inDim, int *workLen, double *
 					hInd = i;
 				}
 			}
+			*/
+			splitIndex[threadIdx.x] = splitIndex[threadIdx.x] % inDim;
 			for (i = 0; i < inDim; i++) {
 				if(i == hInd) {
 					inBox[bInd + i*2 + 1] = inBox[bInd + i*2] + h/2.0;
