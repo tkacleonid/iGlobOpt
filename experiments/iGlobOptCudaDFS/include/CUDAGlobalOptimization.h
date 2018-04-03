@@ -306,7 +306,7 @@ __global__ void globOptCUDA_v1(double *inBox,  int inDim, int *workLen, double *
 			}
 		}
 		
-		__syncthreads();
+		
 		
 	}
 	
