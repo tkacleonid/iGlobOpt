@@ -224,7 +224,7 @@ __global__ void globOptCUDA_v1(double *inBox,  int inDim, int *workLen, double *
 			//if (hInd > inDim - 1) {
 				//hInd = 0;
 			//}
-			h = inBox[bInd + hInd*2 + 1] - inBox[bInd + hInd*2];
+			//h = inBox[bInd + hInd*2 + 1] - inBox[bInd + hInd*2];
 			break;
 			
 	/*		
