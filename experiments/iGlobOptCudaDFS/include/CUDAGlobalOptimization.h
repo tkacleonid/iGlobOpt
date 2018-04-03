@@ -442,7 +442,7 @@ void fnGetOptValueWithCUDA_v2(double *inBox, const int inDim, const double inEps
 		CHECKED_CALL(cudaEventRecord(start, 0));
 		
 		globOptCUDA_v1<<<GridSize, BLOCK_SIZE>>>(dev_inBox,inDim,dev_workLen,dev_mins,funcMin,inEps,dev_workCounts);
-		printf("-");
+		std::cout << "-";
 		CHECKED_CALL(cudaGetLastError());
 		//printf("-");
 		CHECKED_CALL(cudaEventRecord(stop, 0));
