@@ -213,7 +213,7 @@ __global__ void globOptCUDA_v1(double *inBox,  int inDim, int *workLen, double *
 			bInd = threadId*SIZE_BUFFER_PER_THREAD*(2*inDim+3) + (workLen_s[threadIdx.x] - 1)*(2*inDim+3);
 			n++;
 		}
-		else {	
+		if (workLen_s[threadIdx.x] > 0) {	
 			//++splitIndex[threadIdx.x];
 			//if(splitIndex[threadIdx.x] == inDim) splitIndex[threadIdx.x] = 0;
 			//splitIndex[threadIdx.x] = (splitIndex[threadIdx.x] + 1) % inDim;
