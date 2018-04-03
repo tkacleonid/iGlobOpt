@@ -200,6 +200,7 @@ __global__ void globOptCUDA_v1(double *inBox,  int inDim, int *workLen, double *
 
 	n = 0;
 	while (workLen_s[threadIdx.x] > 0 && workLen_s[threadIdx.x] < SIZE_BUFFER_PER_THREAD && count[threadIdx.x] < MAX_GPU_ITER) {
+		/*
 		bInd = threadId*SIZE_BUFFER_PER_THREAD*(2*inDim+3) + (workLen_s[threadIdx.x] - 1)*(2*inDim+3);
 		fnCalcFunLimitsStyblinski_CUDA(inBox + bInd, inDim);	
 		if (min_s[threadIdx.x] > inBox[bInd + 2*inDim + 2]) {
@@ -237,7 +238,51 @@ __global__ void globOptCUDA_v1(double *inBox,  int inDim, int *workLen, double *
 				}
 			}
 			++workLen_s[threadIdx.x];
-		}		
+		}
+
+*/
+			bInd = threadId*SIZE_BUFFER_PER_THREAD*(2*inDim+3) + (workLen_s[threadIdx.x] - 1)*(2*inDim+3);
+			hInd = 0;
+			h = inBox[bInd + 1] - inBox[bInd];
+			for (i = 0; i < inDim; i++) {
+				if ( h < inBox[bInd + i*2 + 1] - inBox[bInd + i*2]) {
+					h = inBox[bInd + i*2 + 1] - inBox[bInd + i*2];
+					hInd = i;
+				}
+			}
+			
+			
+			for (i = 0; i < inDim; i++) {
+				if(i == hInd) {
+					inBox[bInd + i*2 + 1] = inBox[bInd + i*2] + h/2.0;
+					inBox[bInd + 2*inDim + 3 + i*2] = inBox[bInd + i*2] + h/2.0;
+					inBox[bInd + 2*inDim + 3 + i*2 + 1] = inBox[bInd + i*2] + h;
+				}
+				else {
+					inBox[bInd + 2*inDim + 3 + i*2] = inBox[bInd + i*2];
+					inBox[bInd + 2*inDim + 3 + i*2 + 1] = inBox[bInd + i*2 + 1];
+				}
+			}
+			++workLen_s[threadIdx.x];
+			fnCalcFunLimitsStyblinski_CUDA(inBox + bInd, inDim);
+			if (min_s[threadIdx.x] > inBox[bInd + 2*inDim + 2]) {
+				min_s[threadIdx.x] = inBox[bInd + 2*inDim + 2];
+			}
+			if (min_s[threadIdx.x] - inBox[bInd + 2*inDim] < inEps) {
+				--workLen_s[threadIdx.x];
+				n++;
+			}
+			fnCalcFunLimitsStyblinski_CUDA(inBox + bInd + 2*inDim + 3, inDim);
+			if (min_s[threadIdx.x] > inBox[bInd + 2*inDim + 3 + 2*inDim + 2]) {
+				min_s[threadIdx.x] = inBox[bInd + 2*inDim + 3 + 2*inDim + 2];
+			}
+			if (min_s[threadIdx.x] - inBox[bInd + 2*inDim] < inEps) {
+				--workLen_s[threadIdx.x];
+				n++;
+			}
+			
+
+		
 		++count[threadIdx.x];	
 	}
 	
