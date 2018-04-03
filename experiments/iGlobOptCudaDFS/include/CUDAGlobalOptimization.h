@@ -195,8 +195,6 @@ __global__ void globOptCUDA_v1(double *inBox,  int inDim, int *workLen, double *
 	workLen_s[threadIdx.x] = workLen[threadId];
 	min_s[threadIdx.x] = inRec;	
 	count[threadIdx.x] = 0;
-	splitIndex[threadIdx.x] = 0;
-	hInd = 1;
 
 	__syncthreads();
 
