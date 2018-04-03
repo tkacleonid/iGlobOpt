@@ -289,12 +289,12 @@ __global__ void globOptCUDA_v1(double *inBox,  int inDim, int *workLen, double *
 		if (workLen_s[threadIdx.x] == 0) {
 			for (i = 0; i < BLOCK_SIZE; i++) {
 				if (workLen_s[i] >= 2) {
-					atomicAdd(&workLen_s[i],-1);
+					hInd = atomicAdd(&workLen_s[i],-1);
 					if (workLen_s[i] < 1) {
 						atomicAdd(&workLen_s[i],1);
 						continue;
 					}
-					bInd = i*SIZE_BUFFER_PER_THREAD*(2*inDim+3) + workLen_s[i]*(2*inDim+3);
+					bInd = i*SIZE_BUFFER_PER_THREAD*(2*inDim+3) + (hInd - 1)*(2*inDim+3);
 					for (int j = 0; j < inDim; j++) {
 						inBox[threadId*SIZE_BUFFER_PER_THREAD*(2*inDim+3) + j*2] = inBox[bInd + j*2];
 						inBox[threadId*SIZE_BUFFER_PER_THREAD*(2*inDim+3) + j*2 + 1] = inBox[bInd + j*2 + 1];
