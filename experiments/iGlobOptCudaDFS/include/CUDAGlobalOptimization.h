@@ -290,7 +290,7 @@ __global__ void globOptCUDA_v1(double *inBox,  int inDim, int *workLen, double *
 			for (i = 0; i < BLOCK_SIZE; i++) {
 				if (workLen_s[i] >= 2) {
 					hInd = atomicAdd(&workLen_s[i],-1);
-					if (workLen_s[i] < 1) {
+					if (hInd <= 1) {
 						atomicAdd(&workLen_s[i],1);
 						continue;
 					}
