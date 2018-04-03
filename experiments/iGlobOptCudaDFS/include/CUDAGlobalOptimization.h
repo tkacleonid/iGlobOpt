@@ -202,7 +202,7 @@ __global__ void globOptCUDA_v1(double *inBox,  int inDim, int *workLen, double *
 
 	n = 0;
 	while (workLen_s[threadIdx.x] > 0 && workLen_s[threadIdx.x] < SIZE_BUFFER_PER_THREAD && count[threadIdx.x] < MAX_GPU_ITER) {
-		if(isWork[threadIdx.x]) {
+	
 		bInd = threadId*SIZE_BUFFER_PER_THREAD*(2*inDim+3) + (workLen_s[threadIdx.x] - 1)*(2*inDim+3);
 		fnCalcFunLimitsStyblinski_CUDA(inBox + bInd, inDim);	
 		if (min_s[threadIdx.x] > inBox[bInd + 2*inDim + 2]) {
@@ -283,7 +283,24 @@ __global__ void globOptCUDA_v1(double *inBox,  int inDim, int *workLen, double *
 
 		
 		++count[threadIdx.x];
+		
+		__syncthreads();
+		
+		if (workLen_s[threadIdx.x] == 0) {
+			for (i = 0; i < BLOCK_SIZE; i++) {
+				if (workLen_s[i] >= 2) {
+					--workLen_s[i];
+					bInd = threadId*SIZE_BUFFER_PER_THREAD*(2*inDim+3) + (workLen_s[i] - 1)*(2*inDim+3);
+					for (int j = 0; j < inDim; j++) {
+						inBox[threadId*SIZE_BUFFER_PER_THREAD*(2*inDim+3) + j*2] = inBox[bInd + j*2];
+						inBox[threadId*SIZE_BUFFER_PER_THREAD*(2*inDim+3) + j*2 + 1] = inBox[bInd + j*2 + 1];
+					}
+					++workLen_s[threadIdx.x];
+					break;
+				}
+			}
 		}
+		
 		__syncthreads();
 		
 	}
