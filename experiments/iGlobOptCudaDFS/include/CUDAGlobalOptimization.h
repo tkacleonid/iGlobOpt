@@ -281,7 +281,8 @@ __global__ void globOptCUDA_v1(double *inBox,  int inDim, int *workLen, double *
 			}
 */			
 
-		
+
+/*		
 		++count[threadIdx.x];
 		
 		__syncthreads();
@@ -305,8 +306,9 @@ __global__ void globOptCUDA_v1(double *inBox,  int inDim, int *workLen, double *
 				}
 			}
 		}
-		
-		
+
+*/		
+		__syncthreads();
 		
 	}
 	
