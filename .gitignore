@@ -1,5 +1,7 @@
 /build/*
 /.settings/*
+**/.cproject
+/nbproject/*
 *.cmake
 *.project
 CMakeCache.txt
