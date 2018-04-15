@@ -896,7 +896,7 @@ void fnGetOptValueWithCUDA_v4(double *inBox, const int inDim, const double inEps
                                                             boxes[(workLen[m] + b)*numThreads*(2*dim+3) + m*(2*dim+3) + j] = boxes[(workLen[n] + b)*numThreads*(2*dim+3) + n*(2*dim+3) + j];
                                                     }
                                                 }
-						memcpy(boxes + m*SIZE_BUFFER_PER_THREAD*(2*inDim+3) + (workLen[m])*(2*inDim+3), boxes + n*SIZE_BUFFER_PER_THREAD*(2*inDim+3) + (workLen[n])*(2*inDim+3), sizeof(double)*(2*inDim+3)*numBoxesWeTake);
+						//memcpy(boxes + m*SIZE_BUFFER_PER_THREAD*(2*inDim+3) + (workLen[m])*(2*inDim+3), boxes + n*SIZE_BUFFER_PER_THREAD*(2*inDim+3) + (workLen[n])*(2*inDim+3), sizeof(double)*(2*inDim+3)*numBoxesWeTake);
 						workLen[m] += numBoxesWeTake;	
 						if (workLen[m] == averageBoxesPerThread) {
 							curThreadWeTakeBoxesIndex = n;
