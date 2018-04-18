@@ -1,4 +1,4 @@
-PROGRAM=iGlobOpt
+PROGRAM=iGlobOptCuda
 BINDIR = build/bin
 SRC = src
 OBJ = build/obj
