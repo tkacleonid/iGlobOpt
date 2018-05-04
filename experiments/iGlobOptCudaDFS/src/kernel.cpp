@@ -19,7 +19,7 @@ int main()
 	double outMin = 0.0;
 	double inEps = 1;
 	int status = -1;
-	double funRecord = -39.1661657038*inDim;
+	double funRecord = 39.1661657038*inDim;
 
 	for(int i = 0; i < inDim; i++) {
 		inBox[i*2] = -5.0;
