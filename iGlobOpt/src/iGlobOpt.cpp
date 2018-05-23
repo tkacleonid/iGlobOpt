@@ -17,7 +17,7 @@ void (*inFun)(const double *,int,double *);
 
 
 int main() {
-    int inRank = 8;
+    int inRank = 2;
 
     double *inBox = NULL;
     double *argMin = NULL;
