@@ -27,7 +27,7 @@ int main() {
     int inNumBoxesSplitCoeff = 2;
     int status = -1;
     double initFunRecord = 0;
-	bool isConfirm = true;
+    bool isConfirm = true;
 
 
     int type_opt = 1;
