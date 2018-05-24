@@ -17,7 +17,7 @@ void (*inFun)(const double *,int,double *);
 
 
 int main() {
-    int inDim = 11;
+    int inDim = 10;
 
     double *inBox = NULL;
     double *argMin = NULL;
