@@ -17,13 +17,13 @@ void (*inFun)(const double *,int,double *);
 
 
 int main() {
-    int inDim = 10;
+    int inDim = 9;
 
     double *inBox = NULL;
     double *argMin = NULL;
     double *outFunBounds = NULL;
     double outMin = 0.0;
-    double inEps = 0.1;
+    double inEps = 0.01;
     int inNumBoxesSplitCoeff = 2;
     int status = -1;
     double initFunRecord = 0;
