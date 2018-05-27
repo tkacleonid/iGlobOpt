@@ -45,7 +45,7 @@ for(int j = 0; j < 6; j++) {
 		{
 			case 1:
 				inFun = calcFunBoundsAckley1WithLib;
-				inDim = 5;
+				inDim = 2;
 				inBox = new double[inDim * 2];
 
 				inBox[0] = -32; inBox[1] = 32;
