@@ -13,7 +13,7 @@
 
 const int BLOCK_SIZE = 1024;
 const int NUM_BLOCKS = 1;
-const int SIZE_BUFFER_PER_THREAD = 512; 
+const int SIZE_BUFFER_PER_THREAD = 1024; 
 const int TYPE_CUDA_OPTIMIZATION = 1;
 const int MAX_GPU_ITER = 409600000;
 const int MAX_GPU_ITER_CHECK_WORKLEN = 100;
