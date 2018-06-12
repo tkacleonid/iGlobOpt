@@ -12,7 +12,7 @@
 int main()
 {
 	
-    int inDim = 2;
+    int inDim = 8;
 
 	double *inBox = new double[inDim*2];
 	double *outBox = new double[inDim*2];
